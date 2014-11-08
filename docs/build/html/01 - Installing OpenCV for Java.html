@@ -1,0 +1,180 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Installing OpenCV for Java &mdash; Polito-Java-OpenCV-Tutorials 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Polito-Java-OpenCV-Tutorials 0.1 documentation" href="index.html" />
+    <link rel="next" title="First Java Application with OpenCV" href="02 - First Java Application with OpenCV.html" />
+    <link rel="prev" title="Welcome to Polito-Java-OpenCV-Tutorials’s documentation!" href="index.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="02 - First Java Application with OpenCV.html" title="First Java Application with OpenCV"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to Polito-Java-OpenCV-Tutorials’s documentation!"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Polito-Java-OpenCV-Tutorials 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="installing-opencv-for-java">
+<h1>Installing OpenCV for Java<a class="headerlink" href="#installing-opencv-for-java" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="introduction-to-opencv-for-java">
+<h2>Introduction to OpenCV for Java.<a class="headerlink" href="#introduction-to-opencv-for-java" title="Permalink to this headline">¶</a></h2>
+<p>As of OpenCV 2.4.4, OpenCV supports desktop Java development. This tutorial will help you install OpenCV on your desktop SO.</p>
+</div>
+<div class="section" id="install-the-latest-java-version">
+<h2>Install the latest Java version.<a class="headerlink" href="#install-the-latest-java-version" title="Permalink to this headline">¶</a></h2>
+<p>Download the latest Java JDK at the <a class="reference external" href="http://www.oracle.com/technetwork/java/javase/downloads/index.html">Oracle link</a>. Now you should be able to install the last Java JDK by open the file just downloaded.</p>
+</div>
+<div class="section" id="install-the-latest-eclispe-version">
+<h2>Install the latest Eclispe version.<a class="headerlink" href="#install-the-latest-eclispe-version" title="Permalink to this headline">¶</a></h2>
+<p>Download the latest Eclipse version at the <a class="reference external" href="https://www.eclipse.org/downloads/">Eclipse Download page</a> choosing the <code class="docutils literal"><span class="pre">Eclipse</span> <span class="pre">IDE</span> <span class="pre">for</span> <span class="pre">Java</span> <span class="pre">Developers</span></code> version (suggested).
+Put the downloaded folder wherever you want to. You don&#8217;t need to install anything.</p>
+</div>
+<div class="section" id="install-open-cv-2-4-6-under-windows">
+<h2>Install Open CV 2.4.6 under Windows.<a class="headerlink" href="#install-open-cv-2-4-6-under-windows" title="Permalink to this headline">¶</a></h2>
+<p>First of all you should download the OpenCV library (version 2.4.6) from <a class="reference external" href="http://opencv.org/downloads.html">here</a>.
+Once you get the folder <code class="docutils literal"><span class="pre">opencv</span></code> put in wherever you prefer.
+Now the only two things you will need are: the <code class="docutils literal"><span class="pre">opencv-246.jar</span></code>  file located at <code class="docutils literal"><span class="pre">\opencv\build\java</span></code> and the dll library located at <code class="docutils literal"><span class="pre">\opencv\build\java\x64</span></code> (for 64-bit systems) or <code class="docutils literal"><span class="pre">\opencv\build\java\x86</span></code> (for 32-bit systems).
+If not present create a <code class="docutils literal"><span class="pre">data</span></code> folder under <code class="docutils literal"><span class="pre">\opencv</span></code>.</p>
+</div>
+<div class="section" id="install-open-cv-2-4-6-under-linux-or-mac">
+<h2>Install Open CV 2.4.6 under Linux or Mac.<a class="headerlink" href="#install-open-cv-2-4-6-under-linux-or-mac" title="Permalink to this headline">¶</a></h2>
+<p>The following instructions are useful if you wan to compile OpenCV under Windows.
+As first step, if you don&#8217;t have these already, download and install <a class="reference external" href="http://www.cmake.org/download/">CMake</a> and <a class="reference external" href="http://ant.apache.org/">Apache Ant</a>.
+Extract the downloaded OpenCV file in a location of your choice and open CMake ( cmake-gui ).
+Put the location of the extracted OpenCV library in the <code class="docutils literal"><span class="pre">Where</span> <span class="pre">is</span> <span class="pre">the</span> <span class="pre">source</span> <span class="pre">code</span> <span class="pre">field</span></code> (e.g., /opencv2.4.6.1/) and put the destination directory of your build in the <code class="docutils literal"><span class="pre">Where</span> <span class="pre">to</span> <span class="pre">build</span> <span class="pre">the</span> <span class="pre">binaries</span></code> field (e.g., /opencv2.4.6.1/build), at last, check the <code class="docutils literal"><span class="pre">Grouped</span></code> and <code class="docutils literal"><span class="pre">Advanced</span></code> checkboxes.</p>
+<img alt="res/01-00.png" src="res/01-00.png" />
+<p>Now press <code class="docutils literal"><span class="pre">Configure</span></code> and use the default compilers for <code class="docutils literal"><span class="pre">Unix</span> <span class="pre">Makefiles</span></code>.
+In the <code class="docutils literal"><span class="pre">Ungrouped</span> <span class="pre">Entries</span></code> group, insert the path to the Apache Ant executable (e.g., <code class="docutils literal"><span class="pre">/apacheant1.9.2/bin/ant</span></code>).
+In the <code class="docutils literal"><span class="pre">BUILD</span></code> group, unselect:
+* <code class="docutils literal"><span class="pre">BUILD_PERF_TESTS</span></code>.
+* <code class="docutils literal"><span class="pre">BUILD_SHARED_LIBRARY</span></code> to make the Java bindings dynamic library all-sufficient.
+* <code class="docutils literal"><span class="pre">BUILD_TESTS</span></code>.
+* <code class="docutils literal"><span class="pre">BUILD_opencv_python</span></code>.</p>
+<p>In the <code class="docutils literal"><span class="pre">CMAKE</span></code> group, set to <code class="docutils literal"><span class="pre">Debug</span></code> (or <code class="docutils literal"><span class="pre">Release</span></code>) the <code class="docutils literal"><span class="pre">CMAKE_BUILD_TYPE</span></code>
+In the <code class="docutils literal"><span class="pre">JAVA</span></code> group:
+insert the Java AWT include path (e.g., <code class="docutils literal"><span class="pre">/usr/lib/jvm/java7oracle/include/</span></code>)
+insert the Java include path (e.g., <code class="docutils literal"><span class="pre">/usr/lib/jvm/java7oracle/include/</span></code>)
+insert the alternative Java include path (e.g., <code class="docutils literal"><span class="pre">/usr/lib/jvm/java7oracle/include/linux</span></code>)
+Once we have pressed <code class="docutils literal"><span class="pre">Generate</span></code> twice the CMake window should appear with a white background. Now close CMake.</p>
+<img alt="res/01-01.png" src="res/01-01.png" />
+<p>Now open the terminal , go to the <code class="docutils literal"><span class="pre">build</span></code> folder of OpenCV and build everything with the command: <code class="docutils literal"><span class="pre">make</span> <span class="pre">-j8</span></code> (wait for the process to be completed...).
+If everything went well you should have <code class="docutils literal"><span class="pre">opencv-246.jar</span></code> and <code class="docutils literal"><span class="pre">libopencv_java246.so</span></code> files in the <code class="docutils literal"><span class="pre">/opencv-2.4.6.1/build/bin</span></code> directory and the <code class="docutils literal"><span class="pre">data</span></code> folder in the <code class="docutils literal"><span class="pre">/opencv-2.4.6.1/</span></code> directory.</p>
+</div>
+<div class="section" id="set-up-opencv-for-java-in-eclipse">
+<h2>Set up OpenCV for Java in Eclipse<a class="headerlink" href="#set-up-opencv-for-java-in-eclipse" title="Permalink to this headline">¶</a></h2>
+<p>Open Eclipse and select a workspace of your choice. Create a User Library, ready to be used on all the next projects: go to  <code class="docutils literal"><span class="pre">Window</span> <span class="pre">&gt;</span> <span class="pre">Preferences...</span></code>.</p>
+<img alt="res/01-02.png" src="res/01-02.png" />
+<p>From the menu navigate under <code class="docutils literal"><span class="pre">Java</span> <span class="pre">&gt;</span> <span class="pre">Build</span> <span class="pre">Path</span> <span class="pre">&gt;</span> <span class="pre">User</span> <span class="pre">Libraries</span></code> and choose <code class="docutils literal"><span class="pre">New...</span></code>.
+Enter a name for the library (e.g., opencv246) and select the newly created user library.
+Choose <code class="docutils literal"><span class="pre">Add</span> <span class="pre">External</span> <span class="pre">JARs...</span></code>, browse to select <code class="docutils literal"><span class="pre">opencv246.jar</span></code>.
+After adding the jar, extend it and select <code class="docutils literal"><span class="pre">Native</span> <span class="pre">library</span> <span class="pre">location</span></code> and press <code class="docutils literal"><span class="pre">Edit...</span></code>.</p>
+<img alt="res/01-03.png" src="res/01-03.png" />
+<p>Select <code class="docutils literal"><span class="pre">External</span> <span class="pre">Folder...</span></code> and browse to select the folder containing the OpenCV libraries (e.g., <code class="docutils literal"><span class="pre">C:\opencv\build\java\x64</span></code> under Windows).</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Installing OpenCV for Java</a><ul>
+<li><a class="reference internal" href="#introduction-to-opencv-for-java">Introduction to OpenCV for Java.</a></li>
+<li><a class="reference internal" href="#install-the-latest-java-version">Install the latest Java version.</a></li>
+<li><a class="reference internal" href="#install-the-latest-eclispe-version">Install the latest Eclispe version.</a></li>
+<li><a class="reference internal" href="#install-open-cv-2-4-6-under-windows">Install Open CV 2.4.6 under Windows.</a></li>
+<li><a class="reference internal" href="#install-open-cv-2-4-6-under-linux-or-mac">Install Open CV 2.4.6 under Linux or Mac.</a></li>
+<li><a class="reference internal" href="#set-up-opencv-for-java-in-eclipse">Set up OpenCV for Java in Eclipse</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Welcome to Polito-Java-OpenCV-Tutorials&#8217;s documentation!</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="02 - First Java Application with OpenCV.html"
+                        title="next chapter">First Java Application with OpenCV</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/01 - Installing OpenCV for Java.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="02 - First Java Application with OpenCV.html" title="First Java Application with OpenCV"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to Polito-Java-OpenCV-Tutorials’s documentation!"
+             >previous</a> |</li>
+        <li><a href="index.html">Polito-Java-OpenCV-Tutorials 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2014, Alberto Sacco.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3b1.
+    </div>
+  </body>
+</html>

@@ -1,0 +1,607 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Fourier Transform &mdash; Polito-Java-OpenCV-Tutorials 0.1 documentation</title>
+    
+    <link rel="stylesheet" href="_static/default.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '0.1',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Polito-Java-OpenCV-Tutorials 0.1 documentation" href="index.html" />
+    <link rel="next" title="Image Segmentation" href="07 - Image Segmentation.html" />
+    <link rel="prev" title="OpenCV Basics" href="04 - OpenCV Basics.html" /> 
+  </head>
+  <body role="document">
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="07 - Image Segmentation.html" title="Image Segmentation"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="04 - OpenCV Basics.html" title="OpenCV Basics"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Polito-Java-OpenCV-Tutorials 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="fourier-transform">
+<h1>Fourier Transform<a class="headerlink" href="#fourier-transform" title="Permalink to this headline">¶</a></h1>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">We assume that by now you have already read the previous tutorials.</p>
+</div>
+<div class="section" id="goal">
+<h2>Goal<a class="headerlink" href="#goal" title="Permalink to this headline">¶</a></h2>
+<p>In this tutorial we are going to create a JavaFX application where we can load a picture from our file system and apply to it the <em>DFT</em> and the <em>inverse DFT</em>.</p>
+</div>
+<div class="section" id="what-is-the-fourier-transform">
+<h2>What is the Fourier Transform?<a class="headerlink" href="#what-is-the-fourier-transform" title="Permalink to this headline">¶</a></h2>
+<p>The Fourier Transform will decompose an image into its sinus and cosines components. In other words, it will transform an image from its spatial domain to its frequency domain. The result of the transformation is complex numbers. Displaying this is possible either via a real image and a complex image or via a magnitude and a phase image. However, throughout the image processing algorithms only the magnitude image is interesting as this contains all the information we need about the images geometric structure.
+For this tutorial we are going to use basic gray scale image, whose values usually are between zero and 255. Therefore the Fourier Transform too needs to be of a discrete type resulting in a Discrete Fourier Transform (DFT). The DFT is the sampled Fourier Transform and therefore does not contain all frequencies forming an image, but only a set of samples which is large enough to fully describe the spatial domain image. The number of frequencies corresponds to the number of pixels in the spatial domain image, i.e. the image in the spatial and Fourier domain are of the same size.</p>
+</div>
+<div class="section" id="what-we-will-do-in-this-tutorial">
+<h2>What we will do in this tutorial<a class="headerlink" href="#what-we-will-do-in-this-tutorial" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt>In this guide, we will:</dt>
+<dd><ul class="first last simple">
+<li>Load an image from a <em>file chooser</em>.</li>
+<li>Apply the <em>DFT</em> to the loaded image  and show it.</li>
+<li>Apply the <em>iDFT</em> to the transformed image and show it.</li>
+</ul>
+</dd>
+</dl>
+</div>
+<div class="section" id="source-code">
+<h2>Source Code<a class="headerlink" href="#source-code" title="Permalink to this headline">¶</a></h2>
+<blockquote>
+<div><ul class="simple">
+<li>FourierTransform.java</li>
+</ul>
+</div></blockquote>
+<div class="highlight-java"><div class="highlight"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">FourierTransform</span> <span class="kd">extends</span> <span class="n">Application</span> <span class="o">{</span>
+    <span class="c1">// the main stage</span>
+    <span class="kd">private</span> <span class="n">Stage</span> <span class="n">primaryStage</span><span class="o">;</span>
+
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">start</span><span class="o">(</span><span class="n">Stage</span> <span class="n">primaryStage</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">try</span>
+            <span class="o">{</span>
+                    <span class="c1">// load the FXML resource</span>
+                    <span class="n">FXMLLoader</span> <span class="n">loader</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">FXMLLoader</span><span class="o">(</span><span class="n">getClass</span><span class="o">().</span><span class="na">getResource</span><span class="o">(</span><span class="s">&quot;FT_FX.fxml&quot;</span><span class="o">));</span>
+                    <span class="n">BorderPane</span> <span class="n">root</span> <span class="o">=</span> <span class="o">(</span><span class="n">BorderPane</span><span class="o">)</span> <span class="n">loader</span><span class="o">.</span><span class="na">load</span><span class="o">();</span>
+                    <span class="c1">// set a whitesmoke background</span>
+                    <span class="n">root</span><span class="o">.</span><span class="na">setStyle</span><span class="o">(</span><span class="s">&quot;-fx-background-color: whitesmoke;&quot;</span><span class="o">);</span>
+                    <span class="n">Scene</span> <span class="n">scene</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">Scene</span><span class="o">(</span><span class="n">root</span><span class="o">,</span> <span class="mi">800</span><span class="o">,</span> <span class="mi">600</span><span class="o">);</span>
+                    <span class="n">scene</span><span class="o">.</span><span class="na">getStylesheets</span><span class="o">().</span><span class="na">add</span><span class="o">(</span><span class="n">getClass</span><span class="o">().</span><span class="na">getResource</span><span class="o">(</span><span class="s">&quot;application.css&quot;</span><span class="o">).</span><span class="na">toExternalForm</span><span class="o">());</span>
+                    <span class="c1">// create the stage with the given title and the previously created scene</span>
+                    <span class="k">this</span><span class="o">.</span><span class="na">primaryStage</span> <span class="o">=</span> <span class="n">primaryStage</span><span class="o">;</span>
+                    <span class="k">this</span><span class="o">.</span><span class="na">primaryStage</span><span class="o">.</span><span class="na">setTitle</span><span class="o">(</span><span class="s">&quot;Fourier Transform&quot;</span><span class="o">);</span>
+                    <span class="k">this</span><span class="o">.</span><span class="na">primaryStage</span><span class="o">.</span><span class="na">setScene</span><span class="o">(</span><span class="n">scene</span><span class="o">);</span>
+                    <span class="k">this</span><span class="o">.</span><span class="na">primaryStage</span><span class="o">.</span><span class="na">show</span><span class="o">();</span>
+
+                    <span class="c1">// init the controller</span>
+                    <span class="n">FT_Controller</span> <span class="n">controller</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="na">getController</span><span class="o">();</span>
+                    <span class="n">controller</span><span class="o">.</span><span class="na">setMainApp</span><span class="o">(</span><span class="k">this</span><span class="o">);</span>
+                    <span class="n">controller</span><span class="o">.</span><span class="na">init</span><span class="o">();</span>
+            <span class="o">}</span>
+            <span class="k">catch</span><span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span> <span class="o">{</span>
+                    <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+            <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="cm">/**</span>
+<span class="cm">     * Get the main stage</span>
+<span class="cm">     *</span>
+<span class="cm">     * @return the stage</span>
+<span class="cm">     */</span>
+    <span class="kd">protected</span> <span class="n">Stage</span> <span class="nf">getStage</span><span class="o">()</span>
+    <span class="o">{</span>
+            <span class="k">return</span> <span class="k">this</span><span class="o">.</span><span class="na">primaryStage</span><span class="o">;</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+            <span class="c1">// load the native OpenCV library</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">loadLibrary</span><span class="o">(</span><span class="n">Core</span><span class="o">.</span><span class="na">NATIVE_LIBRARY_NAME</span><span class="o">);</span>
+
+            <span class="n">launch</span><span class="o">(</span><span class="n">args</span><span class="o">);</span>
+    <span class="o">}</span>
+</pre></div>
+</div>
+<p>}</p>
+<ul class="simple">
+<li>FT_Controller.java</li>
+</ul>
+<div class="highlight-java"><div class="highlight"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">FT_Controller</span> <span class="o">{</span>
+            <span class="c1">// images to show in the view</span>
+            <span class="nd">@FXML</span>
+            <span class="kd">private</span> <span class="n">ImageView</span> <span class="n">originalImage</span><span class="o">;</span>
+            <span class="nd">@FXML</span>
+            <span class="kd">private</span> <span class="n">ImageView</span> <span class="n">transformedImage</span><span class="o">;</span>
+            <span class="nd">@FXML</span>
+            <span class="kd">private</span> <span class="n">ImageView</span> <span class="n">antitransformedImage</span><span class="o">;</span>
+            <span class="c1">// a FXML button for performing the transformation</span>
+            <span class="nd">@FXML</span>
+            <span class="kd">private</span> <span class="n">Button</span> <span class="n">transformButton</span><span class="o">;</span>
+            <span class="c1">// a FXML button for performing the antitransformation</span>
+            <span class="nd">@FXML</span>
+            <span class="kd">private</span> <span class="n">Button</span> <span class="n">antitransformButton</span><span class="o">;</span>
+
+            <span class="c1">// the main app</span>
+            <span class="kd">private</span> <span class="n">FourierTransform</span> <span class="n">main</span><span class="o">;</span>
+            <span class="c1">// the JavaFX file chooser</span>
+            <span class="kd">private</span> <span class="n">FileChooser</span> <span class="n">fileChooser</span><span class="o">;</span>
+            <span class="c1">// support variables</span>
+            <span class="kd">private</span> <span class="n">Mat</span> <span class="n">image</span><span class="o">;</span>
+            <span class="kd">private</span> <span class="n">List</span><span class="o">&lt;</span><span class="n">Mat</span><span class="o">&gt;</span> <span class="n">planes</span><span class="o">;</span>
+            <span class="c1">// the final complex image</span>
+            <span class="kd">private</span> <span class="n">Mat</span> <span class="n">complexImage</span><span class="o">;</span>
+
+            <span class="cm">/**</span>
+<span class="cm">             * Init the needed variables</span>
+<span class="cm">             */</span>
+            <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">init</span><span class="o">()</span>
+            <span class="o">{</span>
+                    <span class="k">this</span><span class="o">.</span><span class="na">fileChooser</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">FileChooser</span><span class="o">();</span>
+                    <span class="k">this</span><span class="o">.</span><span class="na">image</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">Mat</span><span class="o">();</span>
+                    <span class="k">this</span><span class="o">.</span><span class="na">planes</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
+                    <span class="k">this</span><span class="o">.</span><span class="na">complexImage</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">Mat</span><span class="o">();</span>
+            <span class="o">}</span>
+
+            <span class="cm">/**</span>
+<span class="cm">             * Load an image from disk</span>
+<span class="cm">             */</span>
+            <span class="nd">@FXML</span>
+            <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">loadImage</span><span class="o">()</span>
+            <span class="o">{</span>
+                    <span class="c1">// show the open dialog window</span>
+                    <span class="n">File</span> <span class="n">file</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">File</span><span class="o">(</span><span class="s">&quot;./resources/&quot;</span><span class="o">);</span>
+                    <span class="k">this</span><span class="o">.</span><span class="na">fileChooser</span><span class="o">.</span><span class="na">setInitialDirectory</span><span class="o">(</span><span class="n">file</span><span class="o">);</span>
+                    <span class="n">file</span> <span class="o">=</span> <span class="k">this</span><span class="o">.</span><span class="na">fileChooser</span><span class="o">.</span><span class="na">showOpenDialog</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">main</span><span class="o">.</span><span class="na">getStage</span><span class="o">());</span>
+                    <span class="k">if</span> <span class="o">(</span><span class="n">file</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span>
+                    <span class="o">{</span>
+                            <span class="c1">// read the image in gray scale</span>
+                            <span class="k">this</span><span class="o">.</span><span class="na">image</span> <span class="o">=</span> <span class="n">Highgui</span><span class="o">.</span><span class="na">imread</span><span class="o">(</span><span class="n">file</span><span class="o">.</span><span class="na">getAbsolutePath</span><span class="o">(),</span> <span class="n">Highgui</span><span class="o">.</span><span class="na">CV_LOAD_IMAGE_GRAYSCALE</span><span class="o">);</span>
+                            <span class="c1">// show the image</span>
+                            <span class="k">this</span><span class="o">.</span><span class="na">originalImage</span><span class="o">.</span><span class="na">setImage</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">mat2Image</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">image</span><span class="o">));</span>
+                            <span class="c1">// set a fixed width</span>
+                            <span class="k">this</span><span class="o">.</span><span class="na">originalImage</span><span class="o">.</span><span class="na">setFitWidth</span><span class="o">(</span><span class="mi">250</span><span class="o">);</span>
+                            <span class="c1">// preserve image ratio</span>
+                            <span class="k">this</span><span class="o">.</span><span class="na">originalImage</span><span class="o">.</span><span class="na">setPreserveRatio</span><span class="o">(</span><span class="kc">true</span><span class="o">);</span>
+                            <span class="c1">// update the UI</span>
+                            <span class="k">this</span><span class="o">.</span><span class="na">transformButton</span><span class="o">.</span><span class="na">setDisable</span><span class="o">(</span><span class="kc">false</span><span class="o">);</span>
+                            <span class="c1">// empty the image planes if it is not the first image to be loaded</span>
+                            <span class="k">if</span> <span class="o">(!</span><span class="k">this</span><span class="o">.</span><span class="na">planes</span><span class="o">.</span><span class="na">isEmpty</span><span class="o">())</span>
+                                    <span class="k">this</span><span class="o">.</span><span class="na">planes</span><span class="o">.</span><span class="na">clear</span><span class="o">();</span>
+                    <span class="o">}</span>
+            <span class="o">}</span>
+
+            <span class="cm">/**</span>
+<span class="cm">             * The action triggered by pushing the button for apply the dft to the</span>
+<span class="cm">             * loaded image</span>
+<span class="cm">             */</span>
+            <span class="nd">@FXML</span>
+            <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">transformImage</span><span class="o">()</span>
+            <span class="o">{</span>
+                    <span class="c1">// optimize the dimension of the loaded image</span>
+                    <span class="n">Mat</span> <span class="n">padded</span> <span class="o">=</span> <span class="k">this</span><span class="o">.</span><span class="na">optimizeImageDim</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">image</span><span class="o">);</span>
+                    <span class="n">padded</span><span class="o">.</span><span class="na">convertTo</span><span class="o">(</span><span class="n">padded</span><span class="o">,</span> <span class="n">CvType</span><span class="o">.</span><span class="na">CV_32F</span><span class="o">);</span>
+                    <span class="c1">// prepare the image planes to obtain the complex image</span>
+                    <span class="k">this</span><span class="o">.</span><span class="na">planes</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">padded</span><span class="o">);</span>
+                    <span class="k">this</span><span class="o">.</span><span class="na">planes</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">Mat</span><span class="o">.</span><span class="na">zeros</span><span class="o">(</span><span class="n">padded</span><span class="o">.</span><span class="na">size</span><span class="o">(),</span> <span class="n">CvType</span><span class="o">.</span><span class="na">CV_32F</span><span class="o">));</span>
+                    <span class="c1">// prepare a complex image for performing the dft</span>
+                    <span class="n">Core</span><span class="o">.</span><span class="na">merge</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">planes</span><span class="o">,</span> <span class="k">this</span><span class="o">.</span><span class="na">complexImage</span><span class="o">);</span>
+
+                    <span class="c1">// dft</span>
+                    <span class="n">Core</span><span class="o">.</span><span class="na">dft</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">complexImage</span><span class="o">,</span> <span class="k">this</span><span class="o">.</span><span class="na">complexImage</span><span class="o">);</span>
+
+                    <span class="c1">// optimize the image resulting from the dft operation</span>
+                    <span class="n">Mat</span> <span class="n">magnitude</span> <span class="o">=</span> <span class="k">this</span><span class="o">.</span><span class="na">createOptimizedMagnitude</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">complexImage</span><span class="o">);</span>
+
+                    <span class="c1">// show the result of the transformation as an image</span>
+                    <span class="k">this</span><span class="o">.</span><span class="na">transformedImage</span><span class="o">.</span><span class="na">setImage</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">mat2Image</span><span class="o">(</span><span class="n">magnitude</span><span class="o">));</span>
+                    <span class="c1">// set a fixed width</span>
+                    <span class="k">this</span><span class="o">.</span><span class="na">transformedImage</span><span class="o">.</span><span class="na">setFitWidth</span><span class="o">(</span><span class="mi">250</span><span class="o">);</span>
+                    <span class="c1">// preserve image ratio</span>
+                    <span class="k">this</span><span class="o">.</span><span class="na">transformedImage</span><span class="o">.</span><span class="na">setPreserveRatio</span><span class="o">(</span><span class="kc">true</span><span class="o">);</span>
+
+                    <span class="c1">// enable the button for perform the antitransformation</span>
+                    <span class="k">this</span><span class="o">.</span><span class="na">antitransformButton</span><span class="o">.</span><span class="na">setDisable</span><span class="o">(</span><span class="kc">false</span><span class="o">);</span>
+            <span class="o">}</span>
+
+            <span class="cm">/**</span>
+<span class="cm">             * Optimize the image dimensions</span>
+<span class="cm">             *</span>
+<span class="cm">             * @param image</span>
+<span class="cm">             *            the {@link Mat} to optimize</span>
+<span class="cm">             * @return the image whose dimensions have been optimized</span>
+<span class="cm">             */</span>
+            <span class="kd">private</span> <span class="n">Mat</span> <span class="nf">optimizeImageDim</span><span class="o">(</span><span class="n">Mat</span> <span class="n">image</span><span class="o">)</span>
+            <span class="o">{</span>
+                    <span class="c1">// init</span>
+                    <span class="n">Mat</span> <span class="n">padded</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">Mat</span><span class="o">();</span>
+                    <span class="c1">// get the optimal rows size for dft</span>
+                    <span class="kt">int</span> <span class="n">addPixelRows</span> <span class="o">=</span> <span class="n">Core</span><span class="o">.</span><span class="na">getOptimalDFTSize</span><span class="o">(</span><span class="n">image</span><span class="o">.</span><span class="na">rows</span><span class="o">());</span>
+                    <span class="c1">// get the optimal cols size for dft</span>
+                    <span class="kt">int</span> <span class="n">addPixelCols</span> <span class="o">=</span> <span class="n">Core</span><span class="o">.</span><span class="na">getOptimalDFTSize</span><span class="o">(</span><span class="n">image</span><span class="o">.</span><span class="na">cols</span><span class="o">());</span>
+                    <span class="c1">// apply the optimal cols and rows size to the image</span>
+                    <span class="n">Imgproc</span><span class="o">.</span><span class="na">copyMakeBorder</span><span class="o">(</span><span class="n">image</span><span class="o">,</span> <span class="n">padded</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">addPixelRows</span> <span class="o">-</span> <span class="n">image</span><span class="o">.</span><span class="na">rows</span><span class="o">(),</span> <span class="mi">0</span><span class="o">,</span> <span class="n">addPixelCols</span> <span class="o">-</span> <span class="n">image</span><span class="o">.</span><span class="na">cols</span><span class="o">(),</span><span class="n">Imgproc</span><span class="o">.</span><span class="na">BORDER_CONSTANT</span><span class="o">,</span> <span class="n">Scalar</span><span class="o">.</span><span class="na">all</span><span class="o">(</span><span class="mi">0</span><span class="o">));</span>
+
+                    <span class="k">return</span> <span class="n">padded</span><span class="o">;</span>
+            <span class="o">}</span>
+
+            <span class="cm">/**</span>
+<span class="cm">             * Optimize the magnitude of the complex image obtained from the DFT, to</span>
+<span class="cm">             * improve its visualization</span>
+<span class="cm">             *</span>
+<span class="cm">             * @param complexImage</span>
+<span class="cm">             *            the complex image obtained from the DFT</span>
+<span class="cm">             * @return the optimized image</span>
+<span class="cm">             */</span>
+            <span class="kd">private</span> <span class="n">Mat</span> <span class="nf">createOptimizedMagnitude</span><span class="o">(</span><span class="n">Mat</span> <span class="n">complexImage</span><span class="o">)</span>
+            <span class="o">{</span>
+                    <span class="c1">// init</span>
+                    <span class="n">List</span><span class="o">&lt;</span><span class="n">Mat</span><span class="o">&gt;</span> <span class="n">newPlanes</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;&gt;();</span>
+                    <span class="n">Mat</span> <span class="n">mag</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">Mat</span><span class="o">();</span>
+                    <span class="c1">// split the comples image in two planes</span>
+                    <span class="n">Core</span><span class="o">.</span><span class="na">split</span><span class="o">(</span><span class="n">complexImage</span><span class="o">,</span> <span class="n">newPlanes</span><span class="o">);</span>
+                    <span class="c1">// compute the magnitude</span>
+                    <span class="n">Core</span><span class="o">.</span><span class="na">magnitude</span><span class="o">(</span><span class="n">newPlanes</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="mi">0</span><span class="o">),</span> <span class="n">newPlanes</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="mi">1</span><span class="o">),</span> <span class="n">mag</span><span class="o">);</span>
+
+                    <span class="c1">// move to a logarithmic scale</span>
+                    <span class="n">Core</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">mag</span><span class="o">,</span> <span class="n">Scalar</span><span class="o">.</span><span class="na">all</span><span class="o">(</span><span class="mi">1</span><span class="o">),</span> <span class="n">mag</span><span class="o">);</span>
+                    <span class="n">Core</span><span class="o">.</span><span class="na">log</span><span class="o">(</span><span class="n">mag</span><span class="o">,</span> <span class="n">mag</span><span class="o">);</span>
+                    <span class="c1">// optionally reorder the 4 quadrants of the magnitude image</span>
+                    <span class="k">this</span><span class="o">.</span><span class="na">shiftDFT</span><span class="o">(</span><span class="n">mag</span><span class="o">);</span>
+                    <span class="c1">// normalize the magnitude image for the visualization since both JavaFX</span>
+                    <span class="c1">// and OpenCV need images with value between 0 and 255</span>
+                    <span class="n">Core</span><span class="o">.</span><span class="na">normalize</span><span class="o">(</span><span class="n">mag</span><span class="o">,</span> <span class="n">mag</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">255</span><span class="o">,</span> <span class="n">Core</span><span class="o">.</span><span class="na">NORM_MINMAX</span><span class="o">);</span>
+
+                    <span class="c1">// you can also write on disk the resulting image...</span>
+                    <span class="c1">// Highgui.imwrite(&quot;../magnitude.png&quot;, mag);</span>
+
+                    <span class="k">return</span> <span class="n">mag</span><span class="o">;</span>
+            <span class="o">}</span>
+
+            <span class="cm">/**</span>
+<span class="cm">             * Reorder the 4 quadrants of the image representing the magnitude, after</span>
+<span class="cm">             * the DFT</span>
+<span class="cm">             *</span>
+<span class="cm">             * @param image</span>
+<span class="cm">             *            the {@link Mat} object whose quadrants are to reorder</span>
+<span class="cm">             */</span>
+            <span class="kd">private</span> <span class="kt">void</span> <span class="nf">shiftDFT</span><span class="o">(</span><span class="n">Mat</span> <span class="n">image</span><span class="o">)</span>
+            <span class="o">{</span>
+                    <span class="n">image</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="na">submat</span><span class="o">(</span><span class="k">new</span> <span class="nf">Rect</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">image</span><span class="o">.</span><span class="na">cols</span><span class="o">()</span> <span class="o">&amp;</span> <span class="o">-</span><span class="mi">2</span><span class="o">,</span> <span class="n">image</span><span class="o">.</span><span class="na">rows</span><span class="o">()</span> <span class="o">&amp;</span> <span class="o">-</span><span class="mi">2</span><span class="o">));</span>
+                    <span class="kt">int</span> <span class="n">cx</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="na">cols</span><span class="o">()</span> <span class="o">/</span> <span class="mi">2</span><span class="o">;</span>
+                    <span class="kt">int</span> <span class="n">cy</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="na">rows</span><span class="o">()</span> <span class="o">/</span> <span class="mi">2</span><span class="o">;</span>
+
+                    <span class="n">Mat</span> <span class="n">q0</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">Mat</span><span class="o">(</span><span class="n">image</span><span class="o">,</span> <span class="k">new</span> <span class="nf">Rect</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">cx</span><span class="o">,</span> <span class="n">cy</span><span class="o">));</span>
+                    <span class="n">Mat</span> <span class="n">q1</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">Mat</span><span class="o">(</span><span class="n">image</span><span class="o">,</span> <span class="k">new</span> <span class="nf">Rect</span><span class="o">(</span><span class="n">cx</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">cx</span><span class="o">,</span> <span class="n">cy</span><span class="o">));</span>
+                    <span class="n">Mat</span> <span class="n">q2</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">Mat</span><span class="o">(</span><span class="n">image</span><span class="o">,</span> <span class="k">new</span> <span class="nf">Rect</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="n">cy</span><span class="o">,</span> <span class="n">cx</span><span class="o">,</span> <span class="n">cy</span><span class="o">));</span>
+                    <span class="n">Mat</span> <span class="n">q3</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">Mat</span><span class="o">(</span><span class="n">image</span><span class="o">,</span> <span class="k">new</span> <span class="nf">Rect</span><span class="o">(</span><span class="n">cx</span><span class="o">,</span> <span class="n">cy</span><span class="o">,</span> <span class="n">cx</span><span class="o">,</span> <span class="n">cy</span><span class="o">));</span>
+
+                    <span class="n">Mat</span> <span class="n">tmp</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">Mat</span><span class="o">();</span>
+                    <span class="n">q0</span><span class="o">.</span><span class="na">copyTo</span><span class="o">(</span><span class="n">tmp</span><span class="o">);</span>
+                    <span class="n">q3</span><span class="o">.</span><span class="na">copyTo</span><span class="o">(</span><span class="n">q0</span><span class="o">);</span>
+                    <span class="n">tmp</span><span class="o">.</span><span class="na">copyTo</span><span class="o">(</span><span class="n">q3</span><span class="o">);</span>
+
+                    <span class="n">q1</span><span class="o">.</span><span class="na">copyTo</span><span class="o">(</span><span class="n">tmp</span><span class="o">);</span>
+                    <span class="n">q2</span><span class="o">.</span><span class="na">copyTo</span><span class="o">(</span><span class="n">q1</span><span class="o">);</span>
+                    <span class="n">tmp</span><span class="o">.</span><span class="na">copyTo</span><span class="o">(</span><span class="n">q2</span><span class="o">);</span>
+            <span class="o">}</span>
+
+            <span class="cm">/**</span>
+<span class="cm">             * The action triggered by pushing the button for apply the inverse dft to</span>
+<span class="cm">             * the loaded image</span>
+<span class="cm">             */</span>
+            <span class="nd">@FXML</span>
+            <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">antitransformImage</span><span class="o">()</span>
+            <span class="o">{</span>
+                    <span class="n">Core</span><span class="o">.</span><span class="na">idft</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">complexImage</span><span class="o">,</span> <span class="k">this</span><span class="o">.</span><span class="na">complexImage</span><span class="o">);</span>
+
+                    <span class="n">Mat</span> <span class="n">restoredImage</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">Mat</span><span class="o">();</span>
+                    <span class="n">Core</span><span class="o">.</span><span class="na">split</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">complexImage</span><span class="o">,</span> <span class="k">this</span><span class="o">.</span><span class="na">planes</span><span class="o">);</span>
+                    <span class="n">Core</span><span class="o">.</span><span class="na">normalize</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">planes</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="mi">0</span><span class="o">),</span> <span class="n">restoredImage</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">255</span><span class="o">,</span> <span class="n">Core</span><span class="o">.</span><span class="na">NORM_MINMAX</span><span class="o">);</span>
+
+                    <span class="k">this</span><span class="o">.</span><span class="na">antitransformedImage</span><span class="o">.</span><span class="na">setImage</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">mat2Image</span><span class="o">(</span><span class="n">restoredImage</span><span class="o">));</span>
+                    <span class="c1">// set a fixed width</span>
+                    <span class="k">this</span><span class="o">.</span><span class="na">antitransformedImage</span><span class="o">.</span><span class="na">setFitWidth</span><span class="o">(</span><span class="mi">250</span><span class="o">);</span>
+                    <span class="c1">// preserve image ratio</span>
+                    <span class="k">this</span><span class="o">.</span><span class="na">antitransformedImage</span><span class="o">.</span><span class="na">setPreserveRatio</span><span class="o">(</span><span class="kc">true</span><span class="o">);</span>
+            <span class="o">}</span>
+
+            <span class="cm">/**</span>
+<span class="cm">             * Set the main app (needed for the FileChooser modal window)</span>
+<span class="cm">             *</span>
+<span class="cm">             * @param mainApp</span>
+<span class="cm">             *            the main app</span>
+<span class="cm">             */</span>
+            <span class="kd">public</span> <span class="kt">void</span> <span class="nf">setMainApp</span><span class="o">(</span><span class="n">FourierTransform</span> <span class="n">mainApp</span><span class="o">)</span>
+            <span class="o">{</span>
+                    <span class="k">this</span><span class="o">.</span><span class="na">main</span> <span class="o">=</span> <span class="n">mainApp</span><span class="o">;</span>
+            <span class="o">}</span>
+
+            <span class="cm">/**</span>
+<span class="cm">             * Convert a Mat object (OpenCV) in the corresponding Image for JavaFX</span>
+<span class="cm">             *</span>
+<span class="cm">             * @param frame</span>
+<span class="cm">             *            the {@link Mat} representing the current frame</span>
+<span class="cm">             * @return the {@link Image} to show</span>
+<span class="cm">             */</span>
+            <span class="kd">private</span> <span class="n">Image</span> <span class="nf">mat2Image</span><span class="o">(</span><span class="n">Mat</span> <span class="n">frame</span><span class="o">)</span>
+            <span class="o">{</span>
+                    <span class="c1">// create a temporary buffer</span>
+                    <span class="n">MatOfByte</span> <span class="n">buffer</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">MatOfByte</span><span class="o">();</span>
+                    <span class="c1">// encode the frame in the buffer, according to the PNG format</span>
+                    <span class="n">Highgui</span><span class="o">.</span><span class="na">imencode</span><span class="o">(</span><span class="s">&quot;.png&quot;</span><span class="o">,</span> <span class="n">frame</span><span class="o">,</span> <span class="n">buffer</span><span class="o">);</span>
+                    <span class="c1">// build and return an Image created from the image encoded in the</span>
+                    <span class="c1">// buffer</span>
+                    <span class="k">return</span> <span class="k">new</span> <span class="nf">Image</span><span class="o">(</span><span class="k">new</span> <span class="nf">ByteArrayInputStream</span><span class="o">(</span><span class="n">buffer</span><span class="o">.</span><span class="na">toArray</span><span class="o">()));</span>
+            <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li>FT_FX.fxml</li>
+</ul>
+<div class="highlight-xml"><div class="highlight"><pre><span class="nt">&lt;BorderPane</span> <span class="na">xmlns:fx=</span><span class="s">&quot;http://javafx.com/fxml/1&quot;</span> <span class="na">fx:controller=</span><span class="s">&quot;application.FT_Controller&quot;</span><span class="nt">&gt;</span>
+    <span class="nt">&lt;left&gt;</span>
+            <span class="nt">&lt;VBox</span> <span class="na">alignment=</span><span class="s">&quot;CENTER&quot;</span><span class="nt">&gt;</span>
+                    <span class="nt">&lt;padding&gt;</span>
+                            <span class="nt">&lt;Insets</span> <span class="na">right=</span><span class="s">&quot;10&quot;</span> <span class="na">left=</span><span class="s">&quot;10&quot;</span> <span class="nt">/&gt;</span>
+                    <span class="nt">&lt;/padding&gt;</span>
+                    <span class="nt">&lt;ImageView</span> <span class="na">fx:id=</span><span class="s">&quot;originalImage&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;/VBox&gt;</span>
+    <span class="nt">&lt;/left&gt;</span>
+    <span class="nt">&lt;right&gt;</span>
+            <span class="nt">&lt;VBox</span> <span class="na">alignment=</span><span class="s">&quot;CENTER&quot;</span> <span class="na">spacing=</span><span class="s">&quot;10&quot;</span><span class="nt">&gt;</span>
+                    <span class="nt">&lt;padding&gt;</span>
+                            <span class="nt">&lt;Insets</span> <span class="na">right=</span><span class="s">&quot;10&quot;</span> <span class="na">left=</span><span class="s">&quot;10&quot;</span> <span class="nt">/&gt;</span>
+                    <span class="nt">&lt;/padding&gt;</span>
+                    <span class="nt">&lt;ImageView</span> <span class="na">fx:id=</span><span class="s">&quot;transformedImage&quot;</span> <span class="nt">/&gt;</span>
+                    <span class="nt">&lt;ImageView</span> <span class="na">fx:id=</span><span class="s">&quot;antitransformedImage&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;/VBox&gt;</span>
+    <span class="nt">&lt;/right&gt;</span>
+    <span class="nt">&lt;bottom&gt;</span>
+            <span class="nt">&lt;HBox</span> <span class="na">alignment=</span><span class="s">&quot;CENTER&quot;</span> <span class="na">spacing=</span><span class="s">&quot;10&quot;</span><span class="nt">&gt;</span>
+                    <span class="nt">&lt;padding&gt;</span>
+                            <span class="nt">&lt;Insets</span> <span class="na">top=</span><span class="s">&quot;25&quot;</span> <span class="na">right=</span><span class="s">&quot;25&quot;</span> <span class="na">bottom=</span><span class="s">&quot;25&quot;</span> <span class="na">left=</span><span class="s">&quot;25&quot;</span> <span class="nt">/&gt;</span>
+                    <span class="nt">&lt;/padding&gt;</span>
+                    <span class="nt">&lt;Button</span> <span class="na">alignment=</span><span class="s">&quot;center&quot;</span> <span class="na">text=</span><span class="s">&quot;Load Image&quot;</span> <span class="na">onAction=</span><span class="s">&quot;#loadImage&quot;</span><span class="nt">/&gt;</span>
+                    <span class="nt">&lt;Button</span> <span class="na">fx:id=</span><span class="s">&quot;transformButton&quot;</span> <span class="na">alignment=</span><span class="s">&quot;center&quot;</span> <span class="na">text=</span><span class="s">&quot;Apply transformation&quot;</span> <span class="na">onAction=</span><span class="s">&quot;#transformImage&quot;</span> <span class="na">disable=</span><span class="s">&quot;true&quot;</span> <span class="nt">/&gt;</span>
+                    <span class="nt">&lt;Button</span> <span class="na">fx:id=</span><span class="s">&quot;antitransformButton&quot;</span> <span class="na">alignment=</span><span class="s">&quot;center&quot;</span> <span class="na">text=</span><span class="s">&quot;Apply anti transformation&quot;</span> <span class="na">onAction=</span><span class="s">&quot;#antitransformImage&quot;</span> <span class="na">disable=</span><span class="s">&quot;true&quot;</span> <span class="nt">/&gt;</span>
+            <span class="nt">&lt;/HBox&gt;</span>
+    <span class="nt">&lt;/bottom&gt;</span>
+<span class="nt">&lt;/BorderPane&gt;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="getting-started">
+<h2>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h2>
+<p>Let&#8217;s create a new JavaFX project. In Scene Builder set the windows element so that we have a Border Pane with:
+- on the <strong>LEFT</strong> an ImageView to show the loaded picture:</p>
+<div class="highlight-xml"><div class="highlight"><pre><span class="nt">&lt;ImageView</span> <span class="na">fx:id=</span><span class="s">&quot;originalImage&quot;</span> <span class="nt">/&gt;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li>on the <strong>RIGHT</strong> two ImageViews one over the other to display the DFT and the iDFT;</li>
+</ul>
+<div class="highlight-xml"><div class="highlight"><pre><span class="nt">&lt;ImageView</span> <span class="na">fx:id=</span><span class="s">&quot;transformedImage&quot;</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;ImageView</span> <span class="na">fx:id=</span><span class="s">&quot;antitransformedImage&quot;</span> <span class="nt">/&gt;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li>on the <strong>BOTTOM</strong> three buttons, the first one to load the picture, the second one to apply the DFT and show it, and the last one to apply the anti-transform and show it.</li>
+</ul>
+<div class="highlight-xml"><div class="highlight"><pre><span class="nt">&lt;Button</span> <span class="na">alignment=</span><span class="s">&quot;center&quot;</span> <span class="na">text=</span><span class="s">&quot;Load Image&quot;</span> <span class="na">onAction=</span><span class="s">&quot;#loadImage&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;Button</span> <span class="na">fx:id=</span><span class="s">&quot;transformButton&quot;</span> <span class="na">alignment=</span><span class="s">&quot;center&quot;</span> <span class="na">text=</span><span class="s">&quot;Apply transformation&quot;</span> <span class="na">onAction=</span><span class="s">&quot;#transformImage&quot;</span> <span class="na">disable=</span><span class="s">&quot;true&quot;</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;Button</span> <span class="na">fx:id=</span><span class="s">&quot;antitransformButton&quot;</span> <span class="na">alignment=</span><span class="s">&quot;center&quot;</span> <span class="na">text=</span><span class="s">&quot;Apply anti transformation&quot;</span> <span class="na">onAction=</span><span class="s">&quot;#antitransformImage&quot;</span> <span class="na">disable=</span><span class="s">&quot;true&quot;</span> <span class="nt">/&gt;</span>
+</pre></div>
+</div>
+<p>The gui will look something like this one:</p>
+<img alt="res/06-00.png" src="res/06-00.png" />
+</div>
+<div class="section" id="load-the-file">
+<h2>Load the file<a class="headerlink" href="#load-the-file" title="Permalink to this headline">¶</a></h2>
+<p>First of all you need to add to your project a folder <code class="docutils literal"><span class="pre">resources</span></code> with two files in it. One of them is a sine function and the other one is a circular aperture; you can find these two files in the <strong>REPOSITORY</strong>.
+In the Controller file, in order to load the image to our program, we are going to use a <em>filechooser</em>:</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="kd">private</span> <span class="n">FileChooser</span> <span class="n">fileChooser</span><span class="o">;</span>
+</pre></div>
+</div>
+<p>When we click the load button we have to set the initial directory of the FC and open the dialog. The FC will return the selected file:</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="n">File</span> <span class="n">file</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">File</span><span class="o">(</span><span class="s">&quot;./resources/&quot;</span><span class="o">);</span>
+<span class="k">this</span><span class="o">.</span><span class="na">fileChooser</span><span class="o">.</span><span class="na">setInitialDirectory</span><span class="o">(</span><span class="n">file</span><span class="o">);</span>
+<span class="n">file</span> <span class="o">=</span> <span class="k">this</span><span class="o">.</span><span class="na">fileChooser</span><span class="o">.</span><span class="na">showOpenDialog</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">main</span><span class="o">.</span><span class="na">getStage</span><span class="o">());</span>
+</pre></div>
+</div>
+<p>Once we&#8217;ve loaded the file we have to make sure that it&#8217;s going to be in grayscale and display the image into the image view:</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="k">this</span><span class="o">.</span><span class="na">image</span> <span class="o">=</span> <span class="n">Highgui</span><span class="o">.</span><span class="na">imread</span><span class="o">(</span><span class="n">file</span><span class="o">.</span><span class="na">getAbsolutePath</span><span class="o">(),</span> <span class="n">Highgui</span><span class="o">.</span><span class="na">CV_LOAD_IMAGE_GRAYSCALE</span><span class="o">);</span>
+<span class="k">this</span><span class="o">.</span><span class="na">originalImage</span><span class="o">.</span><span class="na">setImage</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">mat2Image</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">image</span><span class="o">));</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="applying-the-dft">
+<h2>Applying the DFT<a class="headerlink" href="#applying-the-dft" title="Permalink to this headline">¶</a></h2>
+<p>First of all expand the image to an optimal size. The performance of a DFT is dependent of the image size. It tends to be the fastest for image sizes that are multiple of the numbers two, three and five. Therefore, to achieve maximal performance it is generally a good idea to pad border values to the image to get a size with such traits. The <code class="docutils literal"><span class="pre">getOptimalDFTSize()</span></code> returns this optimal size and we can use the <code class="docutils literal"><span class="pre">copyMakeBorder()</span></code> function to expand the borders of an image:</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="kt">int</span> <span class="n">addPixelRows</span> <span class="o">=</span> <span class="n">Core</span><span class="o">.</span><span class="na">getOptimalDFTSize</span><span class="o">(</span><span class="n">image</span><span class="o">.</span><span class="na">rows</span><span class="o">());</span>
+<span class="kt">int</span> <span class="n">addPixelCols</span> <span class="o">=</span> <span class="n">Core</span><span class="o">.</span><span class="na">getOptimalDFTSize</span><span class="o">(</span><span class="n">image</span><span class="o">.</span><span class="na">cols</span><span class="o">());</span>
+<span class="n">Imgproc</span><span class="o">.</span><span class="na">copyMakeBorder</span><span class="o">(</span><span class="n">image</span><span class="o">,</span> <span class="n">padded</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">addPixelRows</span> <span class="o">-</span> <span class="n">image</span><span class="o">.</span><span class="na">rows</span><span class="o">(),</span> <span class="mi">0</span><span class="o">,</span> <span class="n">addPixelCols</span> <span class="o">-</span> <span class="n">image</span><span class="o">.</span><span class="na">cols</span><span class="o">(),</span><span class="n">Imgproc</span><span class="o">.</span><span class="na">BORDER_CONSTANT</span><span class="o">,</span> <span class="n">Scalar</span><span class="o">.</span><span class="na">all</span><span class="o">(</span><span class="mi">0</span><span class="o">));</span>
+</pre></div>
+</div>
+<p>The appended pixels are initialized with zero.</p>
+<p>The result of the DFT is complex so  we have to make place for both the complex and the real values. We store these usually at least in a float format. Therefore we?ll convert our input image to this type and expand it with another channel to hold the complex values:</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="n">padded</span><span class="o">.</span><span class="na">convertTo</span><span class="o">(</span><span class="n">padded</span><span class="o">,</span> <span class="n">CvType</span><span class="o">.</span><span class="na">CV_32F</span><span class="o">);</span>
+<span class="k">this</span><span class="o">.</span><span class="na">planes</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">padded</span><span class="o">);</span>
+<span class="k">this</span><span class="o">.</span><span class="na">planes</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">Mat</span><span class="o">.</span><span class="na">zeros</span><span class="o">(</span><span class="n">padded</span><span class="o">.</span><span class="na">size</span><span class="o">(),</span> <span class="n">CvType</span><span class="o">.</span><span class="na">CV_32F</span><span class="o">));</span>
+<span class="n">Core</span><span class="o">.</span><span class="na">merge</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">planes</span><span class="o">,</span> <span class="k">this</span><span class="o">.</span><span class="na">complexImage</span><span class="o">);</span>
+</pre></div>
+</div>
+<p>Now we can apply the DFT and then get the real and the imaginary part from the complex image:</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="n">Core</span><span class="o">.</span><span class="na">dft</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">complexImage</span><span class="o">,</span> <span class="k">this</span><span class="o">.</span><span class="na">complexImage</span><span class="o">);</span>
+<span class="n">Core</span><span class="o">.</span><span class="na">split</span><span class="o">(</span><span class="n">complexImage</span><span class="o">,</span> <span class="n">newPlanes</span><span class="o">);</span>
+<span class="n">Core</span><span class="o">.</span><span class="na">magnitude</span><span class="o">(</span><span class="n">newPlanes</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="mi">0</span><span class="o">),</span> <span class="n">newPlanes</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="mi">1</span><span class="o">),</span> <span class="n">mag</span><span class="o">);</span>
+</pre></div>
+</div>
+<p>Unfortunately the dynamic range of the Fourier coefficients is too large to be displayed on the screen. To use the gray scale values to for visualization we can transform our linear scale to a logarithmic one:</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="n">Core</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">mag</span><span class="o">,</span> <span class="n">Scalar</span><span class="o">.</span><span class="na">all</span><span class="o">(</span><span class="mi">1</span><span class="o">),</span> <span class="n">mag</span><span class="o">);</span>
+<span class="n">Core</span><span class="o">.</span><span class="na">log</span><span class="o">(</span><span class="n">mag</span><span class="o">,</span> <span class="n">mag</span><span class="o">);</span>
+</pre></div>
+</div>
+<p>Remember, that at the first step, we expanded the image? Well, it?s time to throw away the newly introduced values. For visualization purposes we may also rearrange the quadrants of the result, so that the origin (zero, zero) corresponds with the image center:</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="n">image</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="na">submat</span><span class="o">(</span><span class="k">new</span> <span class="nf">Rect</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">image</span><span class="o">.</span><span class="na">cols</span><span class="o">()</span> <span class="o">&amp;</span> <span class="o">-</span><span class="mi">2</span><span class="o">,</span> <span class="n">image</span><span class="o">.</span><span class="na">rows</span><span class="o">()</span> <span class="o">&amp;</span> <span class="o">-</span><span class="mi">2</span><span class="o">));</span>
+<span class="kt">int</span> <span class="n">cx</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="na">cols</span><span class="o">()</span> <span class="o">/</span> <span class="mi">2</span><span class="o">;</span>
+<span class="kt">int</span> <span class="n">cy</span> <span class="o">=</span> <span class="n">image</span><span class="o">.</span><span class="na">rows</span><span class="o">()</span> <span class="o">/</span> <span class="mi">2</span><span class="o">;</span>
+
+<span class="n">Mat</span> <span class="n">q0</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">Mat</span><span class="o">(</span><span class="n">image</span><span class="o">,</span> <span class="k">new</span> <span class="nf">Rect</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">cx</span><span class="o">,</span> <span class="n">cy</span><span class="o">));</span>
+<span class="n">Mat</span> <span class="n">q1</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">Mat</span><span class="o">(</span><span class="n">image</span><span class="o">,</span> <span class="k">new</span> <span class="nf">Rect</span><span class="o">(</span><span class="n">cx</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">cx</span><span class="o">,</span> <span class="n">cy</span><span class="o">));</span>
+<span class="n">Mat</span> <span class="n">q2</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">Mat</span><span class="o">(</span><span class="n">image</span><span class="o">,</span> <span class="k">new</span> <span class="nf">Rect</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="n">cy</span><span class="o">,</span> <span class="n">cx</span><span class="o">,</span> <span class="n">cy</span><span class="o">));</span>
+<span class="n">Mat</span> <span class="n">q3</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">Mat</span><span class="o">(</span><span class="n">image</span><span class="o">,</span> <span class="k">new</span> <span class="nf">Rect</span><span class="o">(</span><span class="n">cx</span><span class="o">,</span> <span class="n">cy</span><span class="o">,</span> <span class="n">cx</span><span class="o">,</span> <span class="n">cy</span><span class="o">));</span>
+
+<span class="n">Mat</span> <span class="n">tmp</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">Mat</span><span class="o">();</span>
+<span class="n">q0</span><span class="o">.</span><span class="na">copyTo</span><span class="o">(</span><span class="n">tmp</span><span class="o">);</span>
+<span class="n">q3</span><span class="o">.</span><span class="na">copyTo</span><span class="o">(</span><span class="n">q0</span><span class="o">);</span>
+<span class="n">tmp</span><span class="o">.</span><span class="na">copyTo</span><span class="o">(</span><span class="n">q3</span><span class="o">);</span>
+
+<span class="n">q1</span><span class="o">.</span><span class="na">copyTo</span><span class="o">(</span><span class="n">tmp</span><span class="o">);</span>
+<span class="n">q2</span><span class="o">.</span><span class="na">copyTo</span><span class="o">(</span><span class="n">q1</span><span class="o">);</span>
+<span class="n">tmp</span><span class="o">.</span><span class="na">copyTo</span><span class="o">(</span><span class="n">q2</span><span class="o">);</span>
+</pre></div>
+</div>
+<p>Now we have to normalize our values by using the <code class="docutils literal"><span class="pre">normalize()</span></code> function in order to transform the matrix with float values into a viewable image form:</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="n">Core</span><span class="o">.</span><span class="na">normalize</span><span class="o">(</span><span class="n">mag</span><span class="o">,</span> <span class="n">mag</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">255</span><span class="o">,</span> <span class="n">Core</span><span class="o">.</span><span class="na">NORM_MINMAX</span><span class="o">);</span>
+</pre></div>
+</div>
+<p>The last step is to show the magnitude image in the ImageView:</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="k">this</span><span class="o">.</span><span class="na">transformedImage</span><span class="o">.</span><span class="na">setImage</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">mat2Image</span><span class="o">(</span><span class="n">magnitude</span><span class="o">));</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="applying-the-idft">
+<h2>Applying the iDFT<a class="headerlink" href="#applying-the-idft" title="Permalink to this headline">¶</a></h2>
+<p>To apply the inverse DFT we simply use the <code class="docutils literal"><span class="pre">idft()</span></code> function, extract the real values from the complex image with the <code class="docutils literal"><span class="pre">split()</span></code> function, and normalize the result with <code class="docutils literal"><span class="pre">normalize()</span></code>:</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="n">Core</span><span class="o">.</span><span class="na">idft</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">complexImage</span><span class="o">,</span> <span class="k">this</span><span class="o">.</span><span class="na">complexImage</span><span class="o">);</span>
+<span class="n">Mat</span> <span class="n">restoredImage</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">Mat</span><span class="o">();</span>
+<span class="n">Core</span><span class="o">.</span><span class="na">split</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">complexImage</span><span class="o">,</span> <span class="k">this</span><span class="o">.</span><span class="na">planes</span><span class="o">);</span>
+<span class="n">Core</span><span class="o">.</span><span class="na">normalize</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">planes</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="mi">0</span><span class="o">),</span> <span class="n">restoredImage</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">255</span><span class="o">,</span> <span class="n">Core</span><span class="o">.</span><span class="na">NORM_MINMAX</span><span class="o">);</span>
+</pre></div>
+</div>
+<p>Finally we can show the result on the proper ImageView:</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="k">this</span><span class="o">.</span><span class="na">antitransformedImage</span><span class="o">.</span><span class="na">setImage</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">mat2Image</span><span class="o">(</span><span class="n">restoredImage</span><span class="o">));</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="analyzing-the-results">
+<h2>Analyzing the results<a class="headerlink" href="#analyzing-the-results" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><em>sinfunction.png</em></li>
+</ul>
+<img alt="res/06-01.png" src="res/06-01.png" />
+<p>The image is a horizontal sine of 4 cycles. Notice that the DFT just has a single component, represented by 2 bright spots symmetrically placed about the center of the DFT image. The center of the image is the origin of the frequency coordinate system. The x-axis runs left to right through the center and represents the horizontal component of frequency. The y-axis runs bottom to top through the center and represents the vertical component of frequency. There is a dot at the center that represents the (0,0) frequency term or average value of the image. Images usually have a large average value (like 128) and lots of low frequency information so FT images usually have a bright blob of components near the center. High frequencies in the horizontal direction will cause bright dots away from the center in the horizontal direction.</p>
+<ul class="simple">
+<li><em>circle.png</em></li>
+</ul>
+<img alt="res/06-02.png" src="res/06-02.png" />
+<p>In this case we have a circular aperture, and what is the Fourier transform of a circular aperture? The diffraction disk and rings. A large aperture produces a compact transform, instead a small one produces a larger Airy pattern; thus the disk is greater if aperture is smaller; according to Fourier properties, from the center to the middle of the first dark ring the distance is <em>(1.22xN)/d</em>; in this case N is the size of the image, and d is the diameter of the circle.
+An <em>Airy disk</em> is the bright center of the diffraction pattern created from a circular aperture ideal
+optical system; nearly half of the light is contained in a diameter of <em>1.02xlambaxf_number</em>.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Fourier Transform</a><ul>
+<li><a class="reference internal" href="#goal">Goal</a></li>
+<li><a class="reference internal" href="#what-is-the-fourier-transform">What is the Fourier Transform?</a></li>
+<li><a class="reference internal" href="#what-we-will-do-in-this-tutorial">What we will do in this tutorial</a></li>
+<li><a class="reference internal" href="#source-code">Source Code</a></li>
+<li><a class="reference internal" href="#getting-started">Getting Started</a></li>
+<li><a class="reference internal" href="#load-the-file">Load the file</a></li>
+<li><a class="reference internal" href="#applying-the-dft">Applying the DFT</a></li>
+<li><a class="reference internal" href="#applying-the-idft">Applying the iDFT</a></li>
+<li><a class="reference internal" href="#analyzing-the-results">Analyzing the results</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="04 - OpenCV Basics.html"
+                        title="previous chapter">OpenCV Basics</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="07 - Image Segmentation.html"
+                        title="next chapter">Image Segmentation</a></p>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/06 - Fourier Transform.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="07 - Image Segmentation.html" title="Image Segmentation"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="04 - OpenCV Basics.html" title="OpenCV Basics"
+             >previous</a> |</li>
+        <li><a href="index.html">Polito-Java-OpenCV-Tutorials 0.1 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer" role="contentinfo">
+        &copy; Copyright 2014, Alberto Sacco.
+      Created using <a href="http://sphinx-doc.org/">Sphinx</a> 1.3b1.
+    </div>
+  </body>
+</html>
