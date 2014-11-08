@@ -47,9 +47,13 @@
             
   <div class="section" id="face-recognition-and-tracking">
 <h1>Face Recognition and Tracking<a class="headerlink" href="#face-recognition-and-tracking" title="Permalink to this headline">¶</a></h1>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">We assume that by now you have already read the previous tutorials. If not, please check previous tutorials at <a class="reference external" href="http://polito-java-opencv-tutorials.readthedocs.org/en/latest/index.html">http://polito-java-opencv-tutorials.readthedocs.org/en/latest/index.html</a>. You can also find the source code and resources at <a class="reference external" href="https://github.com/java-opencv/Polito-Java-OpenCV-Tutorials-Source-Code">https://github.com/java-opencv/Polito-Java-OpenCV-Tutorials-Source-Code</a></p>
+</div>
 <div class="section" id="goal">
 <h2>Goal<a class="headerlink" href="#goal" title="Permalink to this headline">¶</a></h2>
-<p>In this tutorial we are going to use well-known classifiers that have been already trained and distributed by OpenCV (you can find them <strong>HERE</strong>) in order to detect and track a moving face into a video stream.</p>
+<p>In this tutorial we are going to use well-known classifiers that have been already trained and distributed by OpenCV in order to detect and track a moving face into a video stream.</p>
 </div>
 <div class="section" id="cascade-classifiers">
 <h2>Cascade Classifiers<a class="headerlink" href="#cascade-classifiers" title="Permalink to this headline">¶</a></h2>
@@ -440,7 +444,7 @@ Usually these features are extracted using a <em>Cascade Classifier</em> which h
 </li>
 </ul>
 <p>The gui will look something like this one:</p>
-<img alt="res/08-00.png" src="res/08-00.png" />
+<img alt="_images/08-00.png" src="_images/08-00.png" />
 </div>
 <div class="section" id="load-the-classifiers">
 <h2>Load the Classifiers<a class="headerlink" href="#load-the-classifiers" title="Permalink to this headline">¶</a></h2>
@@ -527,8 +531,8 @@ The parameters are:</p>
 <code class="docutils literal"><span class="pre">.tl()</span></code> and <code class="docutils literal"><span class="pre">.br()</span></code> stand for <em>top-left</em> and <em>bottom-right</em> and they represents the two opposite vertexes.
 The last parameter just set the thickness of the rectangle&#8217;s border.</p>
 <p>The tracking part can be implemented by calling the <code class="docutils literal"><span class="pre">detectAndDisplay</span></code> method for each frame.</p>
-<img alt="res/08-01.png" src="res/08-01.png" />
-<img alt="res/08-02.png" src="res/08-02.png" />
+<img alt="_images/08-01.png" src="_images/08-01.png" />
+<img alt="_images/08-02.png" src="_images/08-02.png" />
 </div>
 </div>
 

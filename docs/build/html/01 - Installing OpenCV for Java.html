@@ -77,7 +77,7 @@ If not present create a <code class="docutils literal"><span class="pre">data</s
 As first step, if you don&#8217;t have these already, download and install <a class="reference external" href="http://www.cmake.org/download/">CMake</a> and <a class="reference external" href="http://ant.apache.org/">Apache Ant</a>.
 Extract the downloaded OpenCV file in a location of your choice and open CMake ( cmake-gui ).
 Put the location of the extracted OpenCV library in the <code class="docutils literal"><span class="pre">Where</span> <span class="pre">is</span> <span class="pre">the</span> <span class="pre">source</span> <span class="pre">code</span> <span class="pre">field</span></code> (e.g., /opencv2.4.6.1/) and put the destination directory of your build in the <code class="docutils literal"><span class="pre">Where</span> <span class="pre">to</span> <span class="pre">build</span> <span class="pre">the</span> <span class="pre">binaries</span></code> field (e.g., /opencv2.4.6.1/build), at last, check the <code class="docutils literal"><span class="pre">Grouped</span></code> and <code class="docutils literal"><span class="pre">Advanced</span></code> checkboxes.</p>
-<a class="reference internal image-reference" href="./res/01-00.png"><img alt="./res/01-00.png" src="./res/01-00.png" style="height: 200pt;" /></a>
+<img alt="_images/01-00.png" src="_images/01-00.png" />
 <p>Now press <code class="docutils literal"><span class="pre">Configure</span></code> and use the default compilers for <code class="docutils literal"><span class="pre">Unix</span> <span class="pre">Makefiles</span></code>.
 In the <code class="docutils literal"><span class="pre">Ungrouped</span> <span class="pre">Entries</span></code> group, insert the path to the Apache Ant executable (e.g., <code class="docutils literal"><span class="pre">/apacheant1.9.2/bin/ant</span></code>).
 In the <code class="docutils literal"><span class="pre">BUILD</span></code> group, unselect:
@@ -91,19 +91,19 @@ insert the Java AWT include path (e.g., <code class="docutils literal"><span cla
 insert the Java include path (e.g., <code class="docutils literal"><span class="pre">/usr/lib/jvm/java7oracle/include/</span></code>)
 insert the alternative Java include path (e.g., <code class="docutils literal"><span class="pre">/usr/lib/jvm/java7oracle/include/linux</span></code>)
 Once we have pressed <code class="docutils literal"><span class="pre">Generate</span></code> twice the CMake window should appear with a white background. Now close CMake.</p>
-<img alt="res/01-01.png" src="res/01-01.png" />
+<img alt="_images/01-01.png" src="_images/01-01.png" />
 <p>Now open the terminal , go to the <code class="docutils literal"><span class="pre">build</span></code> folder of OpenCV and build everything with the command: <code class="docutils literal"><span class="pre">make</span> <span class="pre">-j8</span></code> (wait for the process to be completed...).
 If everything went well you should have <code class="docutils literal"><span class="pre">opencv-246.jar</span></code> and <code class="docutils literal"><span class="pre">libopencv_java246.so</span></code> files in the <code class="docutils literal"><span class="pre">/opencv-2.4.6.1/build/bin</span></code> directory and the <code class="docutils literal"><span class="pre">data</span></code> folder in the <code class="docutils literal"><span class="pre">/opencv-2.4.6.1/</span></code> directory.</p>
 </div>
 <div class="section" id="set-up-opencv-for-java-in-eclipse">
 <h2>Set up OpenCV for Java in Eclipse<a class="headerlink" href="#set-up-opencv-for-java-in-eclipse" title="Permalink to this headline">¶</a></h2>
 <p>Open Eclipse and select a workspace of your choice. Create a User Library, ready to be used on all the next projects: go to  <code class="docutils literal"><span class="pre">Window</span> <span class="pre">&gt;</span> <span class="pre">Preferences...</span></code>.</p>
-<img alt="res/01-02.png" src="res/01-02.png" />
+<img alt="_images/01-02.png" src="_images/01-02.png" />
 <p>From the menu navigate under <code class="docutils literal"><span class="pre">Java</span> <span class="pre">&gt;</span> <span class="pre">Build</span> <span class="pre">Path</span> <span class="pre">&gt;</span> <span class="pre">User</span> <span class="pre">Libraries</span></code> and choose <code class="docutils literal"><span class="pre">New...</span></code>.
 Enter a name for the library (e.g., opencv246) and select the newly created user library.
 Choose <code class="docutils literal"><span class="pre">Add</span> <span class="pre">External</span> <span class="pre">JARs...</span></code>, browse to select <code class="docutils literal"><span class="pre">opencv246.jar</span></code>.
 After adding the jar, extend it and select <code class="docutils literal"><span class="pre">Native</span> <span class="pre">library</span> <span class="pre">location</span></code> and press <code class="docutils literal"><span class="pre">Edit...</span></code>.</p>
-<img alt="res/01-03.png" src="res/01-03.png" />
+<img alt="_images/01-03.png" src="_images/01-03.png" />
 <p>Select <code class="docutils literal"><span class="pre">External</span> <span class="pre">Folder...</span></code> and browse to select the folder containing the OpenCV libraries (e.g., <code class="docutils literal"><span class="pre">C:\opencv\build\java\x64</span></code> under Windows).</p>
 </div>
 </div>

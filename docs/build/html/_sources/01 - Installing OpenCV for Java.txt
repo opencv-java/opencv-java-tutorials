@@ -29,8 +29,7 @@ As first step, if you don't have these already, download and install `CMake <htt
 Extract the downloaded OpenCV file in a location of your choice and open CMake ( cmake-gui ).
 Put the location of the extracted OpenCV library in the ``Where is the source code field`` (e.g., /opencv2.4.6.1/) and put the destination directory of your build in the ``Where to build the binaries`` field (e.g., /opencv2.4.6.1/build), at last, check the ``Grouped`` and ``Advanced`` checkboxes.
 
-.. image:: ./res/01-00.png
-    :height: 200pt
+.. image:: res/01-00.png
 
 Now press ``Configure`` and use the default compilers for ``Unix Makefiles``.
 In the ``Ungrouped Entries`` group, insert the path to the Apache Ant executable (e.g., ``/apacheant1.9.2/bin/ant``).

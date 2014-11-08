@@ -2,9 +2,11 @@
 Face Recognition and Tracking
 =============================
 
+.. note:: We assume that by now you have already read the previous tutorials. If not, please check previous tutorials at `<http://polito-java-opencv-tutorials.readthedocs.org/en/latest/index.html>`_. You can also find the source code and resources at `<https://github.com/java-opencv/Polito-Java-OpenCV-Tutorials-Source-Code>`_
+
 Goal
 ----
-In this tutorial we are going to use well-known classifiers that have been already trained and distributed by OpenCV (you can find them **HERE**) in order to detect and track a moving face into a video stream.
+In this tutorial we are going to use well-known classifiers that have been already trained and distributed by OpenCV in order to detect and track a moving face into a video stream.
 
 Cascade Classifiers
 -------------------

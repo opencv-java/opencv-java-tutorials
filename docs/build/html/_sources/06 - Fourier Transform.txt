@@ -2,7 +2,7 @@
 Fourier Transform
 =================
 
-.. note:: We assume that by now you have already read the previous tutorials.
+.. note:: We assume that by now you have already read the previous tutorials. If not, please check previous tutorials at `<http://polito-java-opencv-tutorials.readthedocs.org/en/latest/index.html>`_. You can also find the source code and resources at `<https://github.com/java-opencv/Polito-Java-OpenCV-Tutorials-Source-Code>`_
 
 Goal
 ----
@@ -345,6 +345,7 @@ Source Code
 Getting Started
 ---------------
 Let's create a new JavaFX project. In Scene Builder set the windows element so that we have a Border Pane with:
+
 - on the **LEFT** an ImageView to show the loaded picture:
 
 .. code-block:: xml
@@ -372,7 +373,7 @@ The gui will look something like this one:
 
 Load the file
 -------------
-First of all you need to add to your project a folder ``resources`` with two files in it. One of them is a sine function and the other one is a circular aperture; you can find these two files in the **REPOSITORY**.
+First of all you need to add to your project a folder ``resources`` with two files in it. One of them is a sine function and the other one is a circular aperture.
 In the Controller file, in order to load the image to our program, we are going to use a *filechooser*:
 
 .. code-block:: java
