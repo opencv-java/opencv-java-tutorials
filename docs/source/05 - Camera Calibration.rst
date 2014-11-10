@@ -16,7 +16,7 @@ Calibration Pattern
 -------------------
 As we said earlier we are going to need some sort of pattern that the program can recognize in order to make the calibration work. The pattern that we are going to use is a chessboard image.
 
-.. image:: res/05-00.png;
+.. image:: res/05-00.png
 
 The reason why we use this image is because there are some OpenCV functions that can recognize this pattern and draw a scheme which highlights the intersections between each block.
 To make the calibration work you need to print the chessboard image and show it to the cam; it is important to maintain the sheet still, better if stick to a surface.
@@ -112,6 +112,7 @@ Its parameters are:
 	- ``CALIB_CB_FAST_CHECK`` Run a fast check on the image that looks for chessboard corners, and shortcut the call if none is found. This can drastically speed up the call in the degenerate condition when no chessboard is observed. 
 
 .. warning:: Before doing the ``findChessboardCorners`` convert the image to gayscale and save the board size into a Size variable:
+	
 	.. code-block:: java
 
 	    Imgproc.cvtColor(frame, grayImage, Imgproc.COLOR_BGR2GRAY);

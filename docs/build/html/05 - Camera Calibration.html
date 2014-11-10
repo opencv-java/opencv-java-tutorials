@@ -66,7 +66,7 @@
 <div class="section" id="calibration-pattern">
 <h2>Calibration Pattern<a class="headerlink" href="#calibration-pattern" title="Permalink to this headline">¶</a></h2>
 <p>As we said earlier we are going to need some sort of pattern that the program can recognize in order to make the calibration work. The pattern that we are going to use is a chessboard image.</p>
-<img alt="res/05-00.png;" src="res/05-00.png;" />
+<img alt="_images/05-00.png" src="_images/05-00.png" />
 <p>The reason why we use this image is because there are some OpenCV functions that can recognize this pattern and draw a scheme which highlights the intersections between each block.
 To make the calibration work you need to print the chessboard image and show it to the cam; it is important to maintain the sheet still, better if stick to a surface.
 In order to make a good calibration, we need to have about 20 samples of the pattern taken from different angles and distances.</p>
@@ -177,11 +177,11 @@ Its parameters are:</p>
 </div></blockquote>
 <div class="admonition warning">
 <p class="first admonition-title">Warning</p>
-<p>Before doing the <code class="docutils literal"><span class="pre">findChessboardCorners</span></code> convert the image to gayscale and save the board size into a Size variable:
-.. code-block:: java</p>
-<blockquote class="last">
-<div>Imgproc.cvtColor(frame, grayImage, Imgproc.COLOR_BGR2GRAY);
-Size boardSize = new Size(this.numCornersHor, this.numCornersVer);</div></blockquote>
+<p>Before doing the <code class="docutils literal"><span class="pre">findChessboardCorners</span></code> convert the image to gayscale and save the board size into a Size variable:</p>
+<div class="last highlight-java"><div class="highlight"><pre><span class="n">Imgproc</span><span class="o">.</span><span class="na">cvtColor</span><span class="o">(</span><span class="n">frame</span><span class="o">,</span> <span class="n">grayImage</span><span class="o">,</span> <span class="n">Imgproc</span><span class="o">.</span><span class="na">COLOR_BGR2GRAY</span><span class="o">);</span>
+<span class="n">Size</span> <span class="n">boardSize</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">Size</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">numCornersHor</span><span class="o">,</span> <span class="k">this</span><span class="o">.</span><span class="na">numCornersVer</span><span class="o">);</span>
+</pre></div>
+</div>
 </div>
 <p>If the recognition went well <code class="docutils literal"><span class="pre">found</span></code> should be <code class="docutils literal"><span class="pre">true</span></code>.</p>
 <p>For square images the positions of the corners are only approximate. We may improve this by calling the <code class="docutils literal"><span class="pre">cornerSubPix</span></code> function. It will produce better calibration result.</p>
