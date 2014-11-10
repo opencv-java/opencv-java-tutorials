@@ -99,10 +99,163 @@
 </dd>
 </dl>
 </div>
+<div class="section" id="getting-started">
+<h2>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h2>
+<p>Let&#8217;s create a new JavaFX project. In Scene Builder set the windows element so that we have a Border Pane with:</p>
+<ul class="simple">
+<li>on <strong>TOP</strong> a VBox containing two HBox, each one followed by a separator.</li>
+</ul>
+<blockquote>
+<div><ul>
+<li><p class="first">In the first HBox we are goning to need a checkbox and a <em>slider</em>, the first one is to select the Canny e.d. mode and the second one is going to be used to control the value of the threshold to be passed to the Canny e.d. function.</p>
+<blockquote>
+<div><div class="highlight-xml"><div class="highlight"><pre><span class="nt">&lt;CheckBox</span> <span class="na">fx:id=</span><span class="s">&quot;canny&quot;</span> <span class="na">onAction=</span><span class="s">&quot;#cannySelected&quot;</span> <span class="na">text=</span><span class="s">&quot;Edge detection&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;Label</span> <span class="na">text=</span><span class="s">&quot;Canny Threshold&quot;</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;Slider</span> <span class="na">fx:id=</span><span class="s">&quot;threshold&quot;</span> <span class="na">disable=</span><span class="s">&quot;true&quot;</span> <span class="nt">/&gt;</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p class="first">In the second HBox we need two checkboxes, the first one to select the Backgrond removal mode and the second one to say if we want to invert the algorithm (a sort of &#8220;foreground removal&#8221;).</p>
+<blockquote>
+<div><div class="highlight-xml"><div class="highlight"><pre><span class="nt">&lt;CheckBox</span> <span class="na">fx:id=</span><span class="s">&quot;dilateErode&quot;</span> <span class="na">onAction=</span><span class="s">&quot;#dilateErodeSelected&quot;</span> <span class="na">text=</span><span class="s">&quot;Background removal&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;CheckBox</span> <span class="na">fx:id=</span><span class="s">&quot;inverse&quot;</span> <span class="na">text=</span><span class="s">&quot;Invert&quot;</span> <span class="na">disable=</span><span class="s">&quot;true&quot;</span><span class="nt">/&gt;</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li>in the <strong>CENTRE</strong> we are going to put an ImageView for the web cam stream.</li>
+</ul>
+<div class="highlight-xml"><div class="highlight"><pre><span class="nt">&lt;ImageView</span> <span class="na">fx:id=</span><span class="s">&quot;originalFrame&quot;</span> <span class="nt">/&gt;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li>on the <strong>BOTTOM</strong> we can add the usual button to start/stop the stream</li>
+</ul>
+<div class="highlight-xml"><div class="highlight"><pre><span class="nt">&lt;Button</span> <span class="na">fx:id=</span><span class="s">&quot;cameraButton&quot;</span> <span class="na">alignment=</span><span class="s">&quot;center&quot;</span> <span class="na">text=</span><span class="s">&quot;Start camera&quot;</span> <span class="na">onAction=</span><span class="s">&quot;#startCamera&quot;</span> <span class="na">disable=</span><span class="s">&quot;true&quot;</span> <span class="nt">/&gt;</span>
+</pre></div>
+</div>
+<p>The gui will look something like this one:</p>
+<img alt="_images/07-00.png" src="_images/07-00.png" />
+</div>
+<div class="section" id="using-the-canny-edge-detection">
+<h2>Using the Canny edge detection<a class="headerlink" href="#using-the-canny-edge-detection" title="Permalink to this headline">¶</a></h2>
+<p>If we selected the Canny checkbox we can perform the method <code class="docutils literal"><span class="pre">doCanny</span></code>.</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="k">if</span> <span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">canny</span><span class="o">.</span><span class="na">isSelected</span><span class="o">()){</span>
+    <span class="n">frame</span> <span class="o">=</span> <span class="k">this</span><span class="o">.</span><span class="na">doCanny</span><span class="o">(</span><span class="n">frame</span><span class="o">);</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">doCanny</span></code> is a method that we define to execute the edge detection.
+First, we convert the image into a grayscale one and blur it with a filter of kernel size 3:</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="n">Imgproc</span><span class="o">.</span><span class="na">cvtColor</span><span class="o">(</span><span class="n">frame</span><span class="o">,</span> <span class="n">grayImage</span><span class="o">,</span> <span class="n">Imgproc</span><span class="o">.</span><span class="na">COLOR_BGR2GRAY</span><span class="o">);</span>
+<span class="n">Imgproc</span><span class="o">.</span><span class="na">blur</span><span class="o">(</span><span class="n">grayImage</span><span class="o">,</span> <span class="n">detectedEdges</span><span class="o">,</span> <span class="k">new</span> <span class="nf">Size</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="mi">3</span><span class="o">));</span>
+</pre></div>
+</div>
+<p>Second, we apply the OpenCV function Canny:</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="n">Imgproc</span><span class="o">.</span><span class="na">Canny</span><span class="o">(</span><span class="n">detectedEdges</span><span class="o">,</span> <span class="n">detectedEdges</span><span class="o">,</span> <span class="k">this</span><span class="o">.</span><span class="na">threshold</span><span class="o">.</span><span class="na">getValue</span><span class="o">(),</span> <span class="k">this</span><span class="o">.</span><span class="na">threshold</span><span class="o">.</span><span class="na">getValue</span><span class="o">()</span> <span class="o">*</span> <span class="mi">3</span><span class="o">,</span> <span class="mi">3</span><span class="o">,</span> <span class="kc">false</span><span class="o">);</span>
+</pre></div>
+</div>
+<dl class="docutils">
+<dt>where the arguments are:</dt>
+<dd><ul class="first last simple">
+<li><code class="docutils literal"><span class="pre">detectedEdges</span></code>: Source image, grayscale</li>
+<li><code class="docutils literal"><span class="pre">detectedEdges</span></code>: Output of the detector (can be the same as the input)</li>
+<li><code class="docutils literal"><span class="pre">this.threshold.getValue()</span></code>: The value entered by the user moving the Slider</li>
+<li><code class="docutils literal"><span class="pre">this.threshold.getValue()</span> <span class="pre">*</span> <span class="pre">3</span></code>: Set in the program as three times the lower threshold (following Canny?s recommendation)</li>
+<li><code class="docutils literal"><span class="pre">3</span></code>: The size of the Sobel kernel to be used internally</li>
+<li><code class="docutils literal"><span class="pre">false</span></code>: a flag, indicating whether to use a more accurate calculation of the magnitude gradient.</li>
+</ul>
+</dd>
+</dl>
+<p>Then we fill a dest image with zeros (meaning the image is completely black).</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="n">Mat</span> <span class="n">dest</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">Mat</span><span class="o">();</span>
+<span class="n">Core</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">dest</span><span class="o">,</span> <span class="n">Scalar</span><span class="o">.</span><span class="na">all</span><span class="o">(</span><span class="mi">0</span><span class="o">),</span> <span class="n">dest</span><span class="o">);</span>
+</pre></div>
+</div>
+<p>Finally, we will use the function copyTo to map only the areas of the image that are identified as edges (on a black background).</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="n">frame</span><span class="o">.</span><span class="na">copyTo</span><span class="o">(</span><span class="n">dest</span><span class="o">,</span> <span class="n">detectedEdges</span><span class="o">);</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">copyTo</span></code> copies the src image onto <code class="docutils literal"><span class="pre">dest</span></code>. However, it will only copy the pixels in the locations where they have non-zero values.</p>
+</div>
+<div class="section" id="canny-result">
+<h2>Canny Result<a class="headerlink" href="#canny-result" title="Permalink to this headline">¶</a></h2>
+<img alt="_images/07-01.png" src="_images/07-01.png" />
+</div>
+<div class="section" id="using-the-background-removal">
+<h2>Using the Background Removal<a class="headerlink" href="#using-the-background-removal" title="Permalink to this headline">¶</a></h2>
+<p>If we seletced the background removal checkbox we can perform the method <code class="docutils literal"><span class="pre">doBackgroundRemoval</span></code></p>
+<div class="highlight-java"><div class="highlight"><pre><span class="k">else</span> <span class="nf">if</span> <span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">dilateErode</span><span class="o">.</span><span class="na">isSelected</span><span class="o">())</span>
+<span class="o">{</span>
+    <span class="n">frame</span> <span class="o">=</span> <span class="k">this</span><span class="o">.</span><span class="na">doBackgroundRemoval</span><span class="o">(</span><span class="n">frame</span><span class="o">);</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">doBackgroundRemoval</span></code> is a method that we define to execute the background removal.</p>
+<p>Fisrt we need to convert the current frame in HVS:</p>
+<div class="highlight-java"><div class="highlight"><pre>hsvImg.create(frame.size(), CvType.CV_8U);
+Imgproc.cvtColor(frame, hsvImg, Imgproc.COLOR_BGR2HSV);
+Now let&#39;s split the three channels of the image:
+Core.split(hsvImg, hsvPlanes);
+</pre></div>
+</div>
+<p>Calculate the Hue component mean value:</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="n">Imgproc</span><span class="o">.</span><span class="na">calcHist</span><span class="o">(</span><span class="n">hue</span><span class="o">,</span> <span class="k">new</span> <span class="nf">MatOfInt</span><span class="o">(</span><span class="mi">0</span><span class="o">),</span> <span class="k">new</span> <span class="nf">Mat</span><span class="o">(),</span> <span class="n">hist_hue</span><span class="o">,</span> <span class="n">histSize</span><span class="o">,</span> <span class="k">new</span> <span class="nf">MatOfFloat</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="mi">179</span><span class="o">));</span>
+<span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">h</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">h</span> <span class="o">&lt;</span> <span class="mi">180</span><span class="o">;</span> <span class="n">h</span><span class="o">++)</span>
+    <span class="n">average</span> <span class="o">+=</span> <span class="o">(</span><span class="n">hist_hue</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">h</span><span class="o">,</span> <span class="mi">0</span><span class="o">)[</span><span class="mi">0</span><span class="o">]</span> <span class="o">*</span> <span class="n">h</span><span class="o">);</span>
+<span class="n">average</span> <span class="o">=</span> <span class="n">average</span> <span class="o">/</span> <span class="n">hsvImg</span><span class="o">.</span><span class="na">size</span><span class="o">().</span><span class="na">height</span> <span class="o">/</span> <span class="n">hsvImg</span><span class="o">.</span><span class="na">size</span><span class="o">().</span><span class="na">width</span><span class="o">;</span>
+</pre></div>
+</div>
+<p>If the background is uniform and fills most of the frame, its value should be close to mean just calculated.
+Then we can use the mean as the threshold to separate the background from the foreground, depending on the invert chackbox we need to perform a back(fore)ground removal:</p>
+<div class="highlight-java"><div class="highlight"><pre> <span class="k">if</span> <span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">inverse</span><span class="o">.</span><span class="na">isSelected</span><span class="o">())</span>
+     <span class="n">Imgproc</span><span class="o">.</span><span class="na">threshold</span><span class="o">(</span><span class="n">hsvPlanes</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="mi">0</span><span class="o">),</span> <span class="n">thresholdImg</span><span class="o">,</span> <span class="n">threshValue</span><span class="o">,</span> <span class="mf">179.0</span><span class="o">,</span> <span class="n">Imgproc</span><span class="o">.</span><span class="na">THRESH_BINARY_INV</span><span class="o">);</span>
+<span class="k">else</span>
+     <span class="n">Imgproc</span><span class="o">.</span><span class="na">threshold</span><span class="o">(</span><span class="n">hsvPlanes</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="mi">0</span><span class="o">),</span> <span class="n">thresholdImg</span><span class="o">,</span> <span class="n">threshValue</span><span class="o">,</span> <span class="mf">179.0</span><span class="o">,</span> <span class="n">Imgproc</span><span class="o">.</span><span class="na">THRESH_BINARY</span><span class="o">);</span>
+</pre></div>
+</div>
+<p>Now we apply a low pass filter (blur) with a 5x5 kernel mask to enhance the result:</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="n">Imgproc</span><span class="o">.</span><span class="na">blur</span><span class="o">(</span><span class="n">thresholdImg</span><span class="o">,</span> <span class="n">thresholdImg</span><span class="o">,</span> <span class="k">new</span> <span class="nf">Size</span><span class="o">(</span><span class="mi">5</span><span class="o">,</span> <span class="mi">5</span><span class="o">));</span>
+</pre></div>
+</div>
+<p>Finally apply the <em>dilatation</em> then the <em>erosion</em> (<strong>closing</strong>) to the image:</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="n">Imgproc</span><span class="o">.</span><span class="na">dilate</span><span class="o">(</span><span class="n">thresholdImg</span><span class="o">,</span> <span class="n">thresholdImg</span><span class="o">,</span> <span class="k">new</span> <span class="nf">Mat</span><span class="o">(),</span> <span class="k">new</span> <span class="nf">Point</span><span class="o">(-</span><span class="mi">1</span><span class="o">,</span> <span class="mi">1</span><span class="o">),</span> <span class="mi">6</span><span class="o">);</span>
+<span class="n">Imgproc</span><span class="o">.</span><span class="na">erode</span><span class="o">(</span><span class="n">thresholdImg</span><span class="o">,</span> <span class="n">thresholdImg</span><span class="o">,</span> <span class="k">new</span> <span class="nf">Mat</span><span class="o">(),</span> <span class="k">new</span> <span class="nf">Point</span><span class="o">(-</span><span class="mi">1</span><span class="o">,</span> <span class="mi">1</span><span class="o">),</span> <span class="mi">6</span><span class="o">);</span>
+</pre></div>
+</div>
+<dl class="docutils">
+<dt>The functions take these parameters:</dt>
+<dd><ul class="first last simple">
+<li><code class="docutils literal"><span class="pre">thresholdImg</span></code> input image;</li>
+<li><code class="docutils literal"><span class="pre">thresholdImg</span></code> output image of the same size and type as thresholdImg;</li>
+<li><code class="docutils literal"><span class="pre">new</span> <span class="pre">Mat()</span></code> a kernel;</li>
+<li><code class="docutils literal"><span class="pre">new</span> <span class="pre">Point(-1,</span> <span class="pre">1)</span></code> position of the anchor within the element; default value ( -1, 1 ) means that the anchor is at the element center.</li>
+<li><code class="docutils literal"><span class="pre">6</span></code> number of times the operation is applied.</li>
+</ul>
+</dd>
+</dl>
+<p>After the closing we need to do a new binary threshold:</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="n">Imgproc</span><span class="o">.</span><span class="na">threshold</span><span class="o">(</span><span class="n">thresholdImg</span><span class="o">,</span> <span class="n">thresholdImg</span><span class="o">,</span> <span class="n">threshValue</span><span class="o">,</span> <span class="mf">179.0</span><span class="o">,</span> <span class="n">Imgproc</span><span class="o">.</span><span class="na">THRESH_BINARY</span><span class="o">);</span>
+</pre></div>
+</div>
+<p>At last, we can apply the image we&#8217;ve just obtained as a mask to the original frame:</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="n">Mat</span> <span class="n">foreground</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">Mat</span><span class="o">(</span><span class="n">frame</span><span class="o">.</span><span class="na">size</span><span class="o">(),</span> <span class="n">CvType</span><span class="o">.</span><span class="na">CV_8UC3</span><span class="o">,</span> <span class="k">new</span> <span class="nf">Scalar</span><span class="o">(</span><span class="mi">255</span><span class="o">,</span> <span class="mi">255</span><span class="o">,</span> <span class="mi">255</span><span class="o">));</span>
+<span class="n">frame</span><span class="o">.</span><span class="na">copyTo</span><span class="o">(</span><span class="n">foreground</span><span class="o">,</span> <span class="n">thresholdImg</span><span class="o">);</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="background-removal-result">
+<h2>Background Removal Result<a class="headerlink" href="#background-removal-result" title="Permalink to this headline">¶</a></h2>
+<img alt="_images/07-02.png" src="_images/07-02.png" />
+</div>
 <div class="section" id="source-code">
 <h2>Source Code<a class="headerlink" href="#source-code" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li><em>ImageSegmentation.java</em></li>
+<li><a class="reference external" href="https://github.com/java-opencv/Polito-Java-OpenCV-Tutorials-Source-Code/blob/master/Image%20Segmentation/src/application/ImageSegmentation.java">ImageSegmentation.java</a></li>
 </ul>
 <div class="highlight-java"><div class="highlight"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">ImageSegmentation</span> <span class="kd">extends</span> <span class="n">Application</span> <span class="o">{</span>
     <span class="nd">@Override</span>
@@ -141,7 +294,7 @@
 </pre></div>
 </div>
 <ul class="simple">
-<li><em>IS_Controller.java</em></li>
+<li><a class="reference external" href="https://github.com/java-opencv/Polito-Java-OpenCV-Tutorials-Source-Code/blob/master/Image%20Segmentation/src/application/IS_Controller.java">IS_Controller.java</a></li>
 </ul>
 <div class="highlight-java"><div class="highlight"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">IS_Controller</span> <span class="o">{</span>
 
@@ -468,7 +621,7 @@
 </pre></div>
 </div>
 <ul class="simple">
-<li><em>IS_FX.fxml</em></li>
+<li><a class="reference external" href="https://github.com/java-opencv/Polito-Java-OpenCV-Tutorials-Source-Code/blob/master/Image%20Segmentation/src/application/IS_FX.fxml">IS_FX.fxml</a></li>
 </ul>
 <div class="highlight-xml"><div class="highlight"><pre><span class="nt">&lt;BorderPane</span> <span class="na">xmlns:fx=</span><span class="s">&quot;http://javafx.com/fxml/1&quot;</span> <span class="na">fx:controller=</span><span class="s">&quot;application.IS_Controller&quot;</span><span class="nt">&gt;</span>
     <span class="nt">&lt;top&gt;</span>
@@ -512,157 +665,6 @@
 </pre></div>
 </div>
 </div>
-<div class="section" id="getting-started">
-<h2>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h2>
-<p>Let&#8217;s create a new JavaFX project. In Scene Builder set the windows element so that we have a Border Pane with:</p>
-<ul class="simple">
-<li>on <strong>TOP</strong> a VBox containing two HBox, each one followed by a separator.</li>
-</ul>
-<blockquote>
-<div><ul>
-<li><p class="first">In the first HBox we are goning to need a checkbox and a <em>slider</em>, the first one is to select the Canny e.d. mode and the second one is going to be used to control the value of the threshold to be passed to the Canny e.d. function.</p>
-<blockquote>
-<div><div class="highlight-xml"><div class="highlight"><pre><span class="nt">&lt;CheckBox</span> <span class="na">fx:id=</span><span class="s">&quot;canny&quot;</span> <span class="na">onAction=</span><span class="s">&quot;#cannySelected&quot;</span> <span class="na">text=</span><span class="s">&quot;Edge detection&quot;</span><span class="nt">/&gt;</span>
-<span class="nt">&lt;Label</span> <span class="na">text=</span><span class="s">&quot;Canny Threshold&quot;</span> <span class="nt">/&gt;</span>
-<span class="nt">&lt;Slider</span> <span class="na">fx:id=</span><span class="s">&quot;threshold&quot;</span> <span class="na">disable=</span><span class="s">&quot;true&quot;</span> <span class="nt">/&gt;</span>
-</pre></div>
-</div>
-</div></blockquote>
-</li>
-<li><p class="first">In the second HBox we need two checkboxes, the first one to select the Backgrond removal mode and the second one to say if we want to invert the algorithm (a sort of &#8220;foreground removal&#8221;).</p>
-<blockquote>
-<div><div class="highlight-xml"><div class="highlight"><pre><span class="nt">&lt;CheckBox</span> <span class="na">fx:id=</span><span class="s">&quot;dilateErode&quot;</span> <span class="na">onAction=</span><span class="s">&quot;#dilateErodeSelected&quot;</span> <span class="na">text=</span><span class="s">&quot;Background removal&quot;</span><span class="nt">/&gt;</span>
-<span class="nt">&lt;CheckBox</span> <span class="na">fx:id=</span><span class="s">&quot;inverse&quot;</span> <span class="na">text=</span><span class="s">&quot;Invert&quot;</span> <span class="na">disable=</span><span class="s">&quot;true&quot;</span><span class="nt">/&gt;</span>
-</pre></div>
-</div>
-</div></blockquote>
-</li>
-</ul>
-</div></blockquote>
-<ul class="simple">
-<li>in the <strong>CENTRE</strong> we are going to put an ImageView for the web cam stream.</li>
-</ul>
-<div class="highlight-xml"><div class="highlight"><pre><span class="nt">&lt;ImageView</span> <span class="na">fx:id=</span><span class="s">&quot;originalFrame&quot;</span> <span class="nt">/&gt;</span>
-</pre></div>
-</div>
-<ul class="simple">
-<li>on the <strong>BOTTOM</strong> we can add the usual button to start/stop the stream</li>
-</ul>
-<div class="highlight-xml"><div class="highlight"><pre><span class="nt">&lt;Button</span> <span class="na">fx:id=</span><span class="s">&quot;cameraButton&quot;</span> <span class="na">alignment=</span><span class="s">&quot;center&quot;</span> <span class="na">text=</span><span class="s">&quot;Start camera&quot;</span> <span class="na">onAction=</span><span class="s">&quot;#startCamera&quot;</span> <span class="na">disable=</span><span class="s">&quot;true&quot;</span> <span class="nt">/&gt;</span>
-</pre></div>
-</div>
-<p>The gui will look something like this one:</p>
-<img alt="_images/07-00.png" src="_images/07-00.png" />
-</div>
-<div class="section" id="using-the-canny-edge-detection">
-<h2>Using the Canny edge detection<a class="headerlink" href="#using-the-canny-edge-detection" title="Permalink to this headline">¶</a></h2>
-<p>If we selected the Canny checkbox we can perform the method <code class="docutils literal"><span class="pre">doCanny</span></code>.</p>
-<div class="highlight-java"><div class="highlight"><pre><span class="k">if</span> <span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">canny</span><span class="o">.</span><span class="na">isSelected</span><span class="o">()){</span>
-    <span class="n">frame</span> <span class="o">=</span> <span class="k">this</span><span class="o">.</span><span class="na">doCanny</span><span class="o">(</span><span class="n">frame</span><span class="o">);</span>
-<span class="o">}</span>
-</pre></div>
-</div>
-<p><code class="docutils literal"><span class="pre">doCanny</span></code> is a method that we define to execute the edge detection.
-First, we convert the image into a grayscale one and blur it with a filter of kernel size 3:</p>
-<div class="highlight-java"><div class="highlight"><pre><span class="n">Imgproc</span><span class="o">.</span><span class="na">cvtColor</span><span class="o">(</span><span class="n">frame</span><span class="o">,</span> <span class="n">grayImage</span><span class="o">,</span> <span class="n">Imgproc</span><span class="o">.</span><span class="na">COLOR_BGR2GRAY</span><span class="o">);</span>
-<span class="n">Imgproc</span><span class="o">.</span><span class="na">blur</span><span class="o">(</span><span class="n">grayImage</span><span class="o">,</span> <span class="n">detectedEdges</span><span class="o">,</span> <span class="k">new</span> <span class="nf">Size</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="mi">3</span><span class="o">));</span>
-</pre></div>
-</div>
-<p>Second, we apply the OpenCV function Canny:</p>
-<div class="highlight-java"><div class="highlight"><pre><span class="n">Imgproc</span><span class="o">.</span><span class="na">Canny</span><span class="o">(</span><span class="n">detectedEdges</span><span class="o">,</span> <span class="n">detectedEdges</span><span class="o">,</span> <span class="k">this</span><span class="o">.</span><span class="na">threshold</span><span class="o">.</span><span class="na">getValue</span><span class="o">(),</span> <span class="k">this</span><span class="o">.</span><span class="na">threshold</span><span class="o">.</span><span class="na">getValue</span><span class="o">()</span> <span class="o">*</span> <span class="mi">3</span><span class="o">,</span> <span class="mi">3</span><span class="o">,</span> <span class="kc">false</span><span class="o">);</span>
-</pre></div>
-</div>
-<dl class="docutils">
-<dt>where the arguments are:</dt>
-<dd><ul class="first last simple">
-<li><code class="docutils literal"><span class="pre">detectedEdges</span></code>: Source image, grayscale</li>
-<li><code class="docutils literal"><span class="pre">detectedEdges</span></code>: Output of the detector (can be the same as the input)</li>
-<li><code class="docutils literal"><span class="pre">this.threshold.getValue()</span></code>: The value entered by the user moving the Slider</li>
-<li><code class="docutils literal"><span class="pre">this.threshold.getValue()</span> <span class="pre">*</span> <span class="pre">3</span></code>: Set in the program as three times the lower threshold (following Canny?s recommendation)</li>
-<li><code class="docutils literal"><span class="pre">3</span></code>: The size of the Sobel kernel to be used internally</li>
-<li><code class="docutils literal"><span class="pre">false</span></code>: a flag, indicating whether to use a more accurate calculation of the magnitude gradient.</li>
-</ul>
-</dd>
-</dl>
-<p>Then we fill a dest image with zeros (meaning the image is completely black).</p>
-<div class="highlight-java"><div class="highlight"><pre><span class="n">Mat</span> <span class="n">dest</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">Mat</span><span class="o">();</span>
-<span class="n">Core</span><span class="o">.</span><span class="na">add</span><span class="o">(</span><span class="n">dest</span><span class="o">,</span> <span class="n">Scalar</span><span class="o">.</span><span class="na">all</span><span class="o">(</span><span class="mi">0</span><span class="o">),</span> <span class="n">dest</span><span class="o">);</span>
-</pre></div>
-</div>
-<p>Finally, we will use the function copyTo to map only the areas of the image that are identified as edges (on a black background).</p>
-<div class="highlight-java"><div class="highlight"><pre><span class="n">frame</span><span class="o">.</span><span class="na">copyTo</span><span class="o">(</span><span class="n">dest</span><span class="o">,</span> <span class="n">detectedEdges</span><span class="o">);</span>
-</pre></div>
-</div>
-<p><code class="docutils literal"><span class="pre">copyTo</span></code> copies the src image onto <code class="docutils literal"><span class="pre">dest</span></code>. However, it will only copy the pixels in the locations where they have non-zero values.</p>
-</div>
-<div class="section" id="canny-result">
-<h2>Canny Result<a class="headerlink" href="#canny-result" title="Permalink to this headline">¶</a></h2>
-<img alt="_images/07-01.png" src="_images/07-01.png" />
-</div>
-<div class="section" id="using-the-background-removal">
-<h2>Using the Background Removal<a class="headerlink" href="#using-the-background-removal" title="Permalink to this headline">¶</a></h2>
-<p>If we seletced the background removal checkbox we can perform the method <code class="docutils literal"><span class="pre">doBackgroundRemoval</span></code></p>
-<div class="highlight-java"><div class="highlight"><pre><span class="k">else</span> <span class="nf">if</span> <span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">dilateErode</span><span class="o">.</span><span class="na">isSelected</span><span class="o">())</span>
-<span class="o">{</span>
-    <span class="n">frame</span> <span class="o">=</span> <span class="k">this</span><span class="o">.</span><span class="na">doBackgroundRemoval</span><span class="o">(</span><span class="n">frame</span><span class="o">);</span>
-<span class="o">}</span>
-</pre></div>
-</div>
-<p><code class="docutils literal"><span class="pre">doBackgroundRemoval</span></code> is a method that we define to execute the background removal.</p>
-<p>Fisrt we need to convert the current frame in HVS:</p>
-<div class="highlight-java"><div class="highlight"><pre>hsvImg.create(frame.size(), CvType.CV_8U);
-Imgproc.cvtColor(frame, hsvImg, Imgproc.COLOR_BGR2HSV);
-Now let&#39;s split the three channels of the image:
-Core.split(hsvImg, hsvPlanes);
-Calculate the Hue component mean value:
-Imgproc.calcHist(hue, new MatOfInt(0), new Mat(), hist_hue, histSize, new MatOfFloat(0, 179));
-for (int h = 0; h &lt; 180; h++)
-    average += (hist_hue.get(h, 0)[0] * h);
-average = average / hsvImg.size().height / hsvImg.size().width;
-</pre></div>
-</div>
-<p>If the background is uniform and fills most of the frame, its value should be close to mean just calculated.
-Then we can use the mean as the threshold to separate the background from the foreground, depending on the invert chackbox we need to perform a back(fore)ground removal:</p>
-<div class="highlight-java"><div class="highlight"><pre> <span class="k">if</span> <span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">inverse</span><span class="o">.</span><span class="na">isSelected</span><span class="o">())</span>
-     <span class="n">Imgproc</span><span class="o">.</span><span class="na">threshold</span><span class="o">(</span><span class="n">hsvPlanes</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="mi">0</span><span class="o">),</span> <span class="n">thresholdImg</span><span class="o">,</span> <span class="n">threshValue</span><span class="o">,</span> <span class="mf">179.0</span><span class="o">,</span> <span class="n">Imgproc</span><span class="o">.</span><span class="na">THRESH_BINARY_INV</span><span class="o">);</span>
-<span class="k">else</span>
-     <span class="n">Imgproc</span><span class="o">.</span><span class="na">threshold</span><span class="o">(</span><span class="n">hsvPlanes</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="mi">0</span><span class="o">),</span> <span class="n">thresholdImg</span><span class="o">,</span> <span class="n">threshValue</span><span class="o">,</span> <span class="mf">179.0</span><span class="o">,</span> <span class="n">Imgproc</span><span class="o">.</span><span class="na">THRESH_BINARY</span><span class="o">);</span>
-</pre></div>
-</div>
-<p>Now we apply a low pass filter (blur) with a 5x5 kernel mask to enhance the result:</p>
-<div class="highlight-java"><div class="highlight"><pre><span class="n">Imgproc</span><span class="o">.</span><span class="na">blur</span><span class="o">(</span><span class="n">thresholdImg</span><span class="o">,</span> <span class="n">thresholdImg</span><span class="o">,</span> <span class="k">new</span> <span class="nf">Size</span><span class="o">(</span><span class="mi">5</span><span class="o">,</span> <span class="mi">5</span><span class="o">));</span>
-</pre></div>
-</div>
-<p>Finally apply the <em>dilatation</em> then the <em>erosion</em> (<strong>closing</strong>) to the image:</p>
-<div class="highlight-java"><div class="highlight"><pre><span class="n">Imgproc</span><span class="o">.</span><span class="na">dilate</span><span class="o">(</span><span class="n">thresholdImg</span><span class="o">,</span> <span class="n">thresholdImg</span><span class="o">,</span> <span class="k">new</span> <span class="nf">Mat</span><span class="o">(),</span> <span class="k">new</span> <span class="nf">Point</span><span class="o">(-</span><span class="mi">1</span><span class="o">,</span> <span class="mi">1</span><span class="o">),</span> <span class="mi">6</span><span class="o">);</span>
-<span class="n">Imgproc</span><span class="o">.</span><span class="na">erode</span><span class="o">(</span><span class="n">thresholdImg</span><span class="o">,</span> <span class="n">thresholdImg</span><span class="o">,</span> <span class="k">new</span> <span class="nf">Mat</span><span class="o">(),</span> <span class="k">new</span> <span class="nf">Point</span><span class="o">(-</span><span class="mi">1</span><span class="o">,</span> <span class="mi">1</span><span class="o">),</span> <span class="mi">6</span><span class="o">);</span>
-</pre></div>
-</div>
-<dl class="docutils">
-<dt>The functions take these parameters:</dt>
-<dd><ul class="first last simple">
-<li><code class="docutils literal"><span class="pre">thresholdImg</span></code> input image;</li>
-<li><code class="docutils literal"><span class="pre">thresholdImg</span></code> output image of the same size and type as thresholdImg;</li>
-<li><code class="docutils literal"><span class="pre">new</span> <span class="pre">Mat()</span></code> a kernel;</li>
-<li><code class="docutils literal"><span class="pre">new</span> <span class="pre">Point(-1,</span> <span class="pre">1)</span></code> position of the anchor within the element; default value ( -1, 1 ) means that the anchor is at the element center.</li>
-<li><code class="docutils literal"><span class="pre">6</span></code> number of times the operation is applied.</li>
-</ul>
-</dd>
-</dl>
-<p>After the closing we need to do a new binary threshold:</p>
-<div class="highlight-java"><div class="highlight"><pre><span class="n">Imgproc</span><span class="o">.</span><span class="na">threshold</span><span class="o">(</span><span class="n">thresholdImg</span><span class="o">,</span> <span class="n">thresholdImg</span><span class="o">,</span> <span class="n">threshValue</span><span class="o">,</span> <span class="mf">179.0</span><span class="o">,</span> <span class="n">Imgproc</span><span class="o">.</span><span class="na">THRESH_BINARY</span><span class="o">);</span>
-</pre></div>
-</div>
-<p>At last, we can apply the image we&#8217;ve just obtained as a mask to the original frame:</p>
-<div class="highlight-java"><div class="highlight"><pre><span class="n">Mat</span> <span class="n">foreground</span> <span class="o">=</span> <span class="k">new</span> <span class="nf">Mat</span><span class="o">(</span><span class="n">frame</span><span class="o">.</span><span class="na">size</span><span class="o">(),</span> <span class="n">CvType</span><span class="o">.</span><span class="na">CV_8UC3</span><span class="o">,</span> <span class="k">new</span> <span class="nf">Scalar</span><span class="o">(</span><span class="mi">255</span><span class="o">,</span> <span class="mi">255</span><span class="o">,</span> <span class="mi">255</span><span class="o">));</span>
-<span class="n">frame</span><span class="o">.</span><span class="na">copyTo</span><span class="o">(</span><span class="n">foreground</span><span class="o">,</span> <span class="n">thresholdImg</span><span class="o">);</span>
-</pre></div>
-</div>
-</div>
-<div class="section" id="background-removal-result">
-<h2>Background Removal Result<a class="headerlink" href="#background-removal-result" title="Permalink to this headline">¶</a></h2>
-<img alt="_images/07-02.png" src="_images/07-02.png" />
-</div>
 </div>
 
 
@@ -678,12 +680,12 @@ Then we can use the mean as the threshold to separate the background from the fo
 <li><a class="reference internal" href="#canny-edge-detector">Canny edge detector</a></li>
 <li><a class="reference internal" href="#dilatation-and-erosion">Dilatation and Erosion</a></li>
 <li><a class="reference internal" href="#what-we-will-do-in-this-tutorial">What we will do in this tutorial</a></li>
-<li><a class="reference internal" href="#source-code">Source Code</a></li>
 <li><a class="reference internal" href="#getting-started">Getting Started</a></li>
 <li><a class="reference internal" href="#using-the-canny-edge-detection">Using the Canny edge detection</a></li>
 <li><a class="reference internal" href="#canny-result">Canny Result</a></li>
 <li><a class="reference internal" href="#using-the-background-removal">Using the Background Removal</a></li>
 <li><a class="reference internal" href="#background-removal-result">Background Removal Result</a></li>
+<li><a class="reference internal" href="#source-code">Source Code</a></li>
 </ul>
 </li>
 </ul>

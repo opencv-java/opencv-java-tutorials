@@ -17,7 +17,7 @@ In this guide, we will:
 
 Our First Application in JavaFX
 -------------------------------
-Our application is going to capture a video stream from our webcam and it will display it on our gui. We will create the gui with Scene Builder and it is going to have a button, witch will allow us to stat and stop the stream and a simple image view container where we will put the stream frames.
+Our application is going to capture a video stream from our webcam and it will display it on our gui. We will create the gui with Scene Builder and it is going to have a button, which will allow us to stat and stop the stream and a simple image view container where we will put the stream frames.
 
 Installing e(fx)clipse plugin and Scene Builder
 -----------------------------------------------
@@ -77,9 +77,149 @@ Finally we have to tell which Controller class will mange the GUI, we can do so 
 
 We just created our first GUI by using Scene Builder, if you save the file and return to Eclipse you will notice that some FXML code has been generated automatically.
 
+Key concepts in JavaFX
+----------------------
+The **Stage** is where the application will be displayed (e.g., a Windows' window).
+A **Scene** is one container of Nodes that compose one "page" of your application.
+A **Node** is an element in the Scene, with a visual appearance and an interactive behavior. Nodes may be hierarchically nested .
+In  the *Main class* we have to pass to the *start* function our *primary stage*:
+
+.. code-block:: java
+
+    public void start(Stage primaryStage)
+
+and load the fxml file that will populate our stage, the *root element* of the scene and the controller class:
+
+.. code-block:: java
+
+    FXMLLoader loader = new FXMLLoader(getClass().getResource("MyFirstJFX.fxml"));
+    BorderPane root = (BorderPane) loader.load();
+    FXController controller = loader.getController();
+
+Managing GUI interactions with the Controller class
+---------------------------------------------------
+For our application we need to do basically two thing: control the button push and the refreshment of the image view.
+To do so we have to create a reference between the gui components and a variable used in our controller class:
+
+.. code-block:: java
+
+    @FXML
+    private Button start_btn;
+    @FXML
+    private ImageView currentFrame;
+
+The ``@FXML`` tag means that we are linking our variable to an element of the fxml file and the value used to declare the variable has to equal to the id set for that specific element.
+
+The ``@FXML`` tag is used with the same meaning for the Actions set under the Code menu in a specific element.
+
+for:
+
+.. code-block:: xml
+
+    <Button fx:id="start_btn" mnemonicParsing="false" onAction="#startCamera" text="Start Camera" BorderPane.alignment="CENTER">
+
+we set:
+
+.. code-block:: java
+
+    @FXML
+    protected void startCamera(ActionEvent event){ ...
+
+Video Capturing
+---------------
+Essentially, all the functionalities required for video manipulation is integrated in the VideoCapture class.
+
+.. code-block:: java
+
+    private VideoCapture capture = new VideoCapture();
+
+This on itself builds on the FFmpeg open source library. A video is composed of a succession of images, we refer to these in the literature as frames. In case of a video file there is a frame rate specifying just how long is between two frames. While for the video cameras usually there is a limit of just how many frames they can digitalize per second. 
+In our case we set as frame rate 30 frames per sec. To do so we initialize a timer that will open a background task every *33 milliseconds*.
+
+.. code-block:: java
+
+    TimerTask frameGrabber = new TimerTask() { ... }
+    this.timer = new Timer();
+    this.timer.schedule(frameGrabber, 0, 33);
+
+To check if the binding of the class to a video source was successful or not use the ``isOpened`` function:
+
+.. code-block:: java
+
+    if (this.capture.isOpened()){ ... }
+
+Closing the video is automatic when the objects destructor is called. However, if you want to close it before this you need to call its release function.
+
+.. code-block:: java
+
+    this.capture.release();
+
+The frames of the video are just simple images. Therefore, we just need to extract them from the VideoCapture object and put them inside a Mat one.
+
+.. code-block:: java
+
+    Mat frame = new Mat();
+
+The video streams are sequential. You may get the frames one after another by the read or the overloaded >> operator.
+
+.. code-block:: java
+
+    this.capture.read(frame);
+
+Now we are going to convert our image from *BGR* to *Grayscale* format. OpenCV has a really nice function to do this kind of transformations:
+
+.. code-block:: java
+
+    Imgproc.cvtColor(frame, frame, Imgproc.COLOR_BGR2GRAY);
+
+As you can see, cvtColor takes as arguments:
+ - a source image (frame)
+ - a destination image (frame), in which we will save the converted image.
+ - an additional parameter that indicates what kind of transformation will be performed. In this case we usev ``CV_BGR2GRAY`` (because of ``imread`` has BGR default channel order in case of color images).
+
+Now in order to put the captured frame into the ImageView we need to convert the Mat in a Image.
+We first create a buffer to store the Mat.
+
+.. code-block:: java
+
+    MatOfByte buffer = new MatOfByte();
+
+Then we can put the frame into the buffer by using the ``imencode`` function:
+
+.. code-block:: java
+
+    Highgui.imencode(".png", frame, buffer);
+
+This encodes an image into a memory buffer. The function compresses the image and stores it in the memory buffer that is resized to fit the result.
+
+.. note:: ``cvEncodeImage`` returns single-row matrix of type ``CV_8UC1`` that contains encoded image as array of bytes.
+
+It takes three parameters: 
+ - (".png") File extension that defines the output format. 
+ - (frame) Image to be written. 
+ - (buffer) Output buffer resized to fit the compressed image.
+
+Once we filled the buffer we have to stream it into an Image by using ``ByteArrayInputStream``:
+
+.. code-block:: java
+
+    new Image(new ByteArrayInputStream(buffer.toArray()));
+
+Now we can put the new image in the ImageView.
+With *Java 1.8* we cannot perform an update of a gui element in a thread that differs from the main thread; so we need to get the new frame in a second thread and refresh our ImageView in the main thread:
+
+.. code-block:: java
+
+    Image tmp = grabFrame();
+    Platform.runLater(new Runnable() {
+	    @Override public void run(){frameView.setImage(tmp);}
+    });
+
+.. image:: res/03-09.png
+
 Source Code
 -----------
-- *Main.java*
+- `Main.java <https://github.com/java-opencv/Polito-Java-OpenCV-Tutorials-Source-Code/blob/master/MyFirstFXApp/src/application/Main.java>`_
 
 .. code-block:: java
 
@@ -115,7 +255,7 @@ Source Code
 	    }
     }
 
-- *FXController.java*
+- `FXController.java <https://github.com/java-opencv/Polito-Java-OpenCV-Tutorials-Source-Code/blob/master/MyFirstFXApp/src/application/FXController.java>`_
 
 .. code-block:: java
 
@@ -228,7 +368,7 @@ Source Code
 	
     }
 
-- *MyFirstJFX.fxml*
+- `MyFirstJFX.fxml <https://github.com/java-opencv/Polito-Java-OpenCV-Tutorials-Source-Code/blob/master/MyFirstFXApp/src/application/MyFirstJFX.fxml>`_
 
 .. code-block:: xml
 
@@ -259,143 +399,3 @@ Source Code
              </BorderPane.margin></ImageView>
        </center>
     </BorderPane>
-
-Key concepts in JavaFX
-----------------------
-The **Stage** is where the application will be displayed (e.g., a Windows' window).
-A **Scene** is one container of Nodes that compose one "page" of your application.
-A **Node** is an element in the Scene, with a visual appearance and an interactive behavior. Nodes may be hierarchically nested .
-In  the *Main class* we have to pass to the *start* function our *primary stage*:
-
-.. code-block:: java
-
-    public void start(Stage primaryStage)
-
-and load the fxml file that will populate our stage, the *root element* of the scene and the controller class:
-
-.. code-block:: java
-
-    FXMLLoader loader = new FXMLLoader(getClass().getResource("MyFirstJFX.fxml"));
-    BorderPane root = (BorderPane) loader.load();
-    FXController controller = loader.getController();
-
-Managing GUI interactions with the Controller class
----------------------------------------------------
-For our application we need to do basically two thing: control the button push and the refreshment of the image view.
-To do so we have to create a reference between the gui components and a variable used in our controller class:
-
-.. code-block:: java
-
-    @FXML
-    private Button start_btn;
-    @FXML
-    private ImageView currentFrame;
-
-The ``@FXML`` tag means that we are linking our variable to an element of the fxml file and the value used to declare the variable has to equal to the id set for that specific element.
-
-The ``@FXML`` tag is used with the same meaning for the Actions set under the Code menu in a specific element.
-
-for:
-
-.. code-block:: xml
-
-    <Button fx:id="start_btn" mnemonicParsing="false" onAction="#startCamera" text="Start Camera" BorderPane.alignment="CENTER">
-
-we set:
-
-.. code-block:: java
-
-    @FXML
-    protected void startCamera(ActionEvent event){ ...
-
-Video Capturing
----------------
-Essentially, all the functionalities required for video manipulation is integrated in the VideoCapture class.
-
-.. code-block:: java
-
-    private VideoCapture capture = new VideoCapture();
-
-This on itself builds on the FFmpeg open source library. A video is composed of a succession of images, we refer to these in the literature as frames. In case of a video file there is a frame rate specifying just how long is between two frames. While for the video cameras usually there is a limit of just how many frames they can digitalize per second. 
-In our case we set as frame rate 30 frames per sec. To do so we initialize a timer that will open a background task every *33 milliseconds*.
-
-.. code-block:: java
-
-    TimerTask frameGrabber = new TimerTask() { ... }
-    this.timer = new Timer();
-    this.timer.schedule(frameGrabber, 0, 33);
-
-To check if the binding of the class to a video source was successful or not use the isOpened function:
-
-.. code-block:: java
-
-    if (this.capture.isOpened()){ ... }
-
-Closing the video is automatic when the objects destructor is called. However, if you want to close it before this you need to call its release function.
-
-.. code-block:: java
-
-    this.capture.release();
-
-The frames of the video are just simple images. Therefore, we just need to extract them from the VideoCapture object and put them inside a Mat one.
-
-.. code-block:: java
-
-    Mat frame = new Mat();
-
-The video streams are sequential. You may get the frames one after another by the read or the overloaded >> operator.
-
-.. code-block:: java
-
-    this.capture.read(frame);
-
-Now we are going to convert our image from *BGR* to *Grayscale* format. OpenCV has a really nice function to do this kind of transformations:
-
-.. code-block:: java
-
-    Imgproc.cvtColor(frame, frame, Imgproc.COLOR_BGR2GRAY);
-
-As you can see, cvtColor takes as arguments:
- - a source image (frame)
- - a destination image (frame), in which we will save the converted image.
- - an additional parameter that indicates what kind of transformation will be performed. In this case we usev ``CV_BGR2GRAY`` (because of ``imread`` has BGR default channel order in case of color images).
-
-Now in order to put the captured frame into the ImageView we need to convert the Mat in a Image.
-We first create a buffer to store the Mat.
-
-.. code-block:: java
-
-    MatOfByte buffer = new MatOfByte();
-
-Then we can put the frame into the buffer by using the ``imencode`` function:
-
-.. code-block:: java
-
-    Highgui.imencode(".png", frame, buffer);
-
-This encodes an image into a memory buffer. The function compresses the image and stores it in the memory buffer that is resized to fit the result.
-
-.. note:: ``cvEncodeImage`` returns single-row matrix of type ``CV_8UC1`` that contains encoded image as array of bytes.
-
-It takes three parameters: 
- - (".png") File extension that defines the output format. 
- - (frame) Image to be written. 
- - (buffer) Output buffer resized to fit the compressed image.
-
-Once we filled the buffer we have to stream it into an Image by using ``ByteArrayInputStream``:
-
-.. code-block:: java
-
-    new Image(new ByteArrayInputStream(buffer.toArray()));
-
-Now we can put the new image in the ImageView.
-With *Java 1.8* we cannot perform an update of a gui element in a thread that differs from the main thread; so we need to get the new frame in a second thread and refresh our ImageView in the main thread:
-
-.. code-block:: java
-
-    Image tmp = grabFrame();
-    Platform.runLater(new Runnable() {
-	    @Override public void run(){frameView.setImage(tmp);}
-    });
-
-.. image:: res/03-09.png

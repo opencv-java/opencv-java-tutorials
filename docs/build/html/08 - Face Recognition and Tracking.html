@@ -71,10 +71,128 @@ Usually these features are extracted using a <em>Cascade Classifier</em> which h
 </dd>
 </dl>
 </div>
+<div class="section" id="getting-started">
+<h2>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h2>
+<p>Let&#8217;s create a new JavaFX project. In Scene Builder set the windows element so that we have a Border Pane with:</p>
+<ul>
+<li><p class="first">on TOP a VBox a HBox and a separator. In the HBox we are goning to need two checkboxes, the first one is to select the Haar Classifier and the second one is to select the LBP Classifier.</p>
+<blockquote>
+<div><div class="highlight-xml"><div class="highlight"><pre><span class="nt">&lt;CheckBox</span> <span class="na">fx:id=</span><span class="s">&quot;haarClassifier&quot;</span> <span class="na">onAction=</span><span class="s">&quot;#haarSelected&quot;</span> <span class="na">text=</span><span class="s">&quot;Haar Classifier&quot;</span><span class="nt">/&gt;</span>
+<span class="nt">&lt;CheckBox</span> <span class="na">fx:id=</span><span class="s">&quot;lbpClassifier&quot;</span> <span class="na">onAction=</span><span class="s">&quot;#lbpSelected&quot;</span> <span class="na">text=</span><span class="s">&quot;LBP Classifier&quot;</span><span class="nt">/&gt;</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p class="first">in the CENTRE we are going to put an ImageView for the web cam stream.</p>
+<blockquote>
+<div><div class="highlight-xml"><div class="highlight"><pre><span class="nt">&lt;ImageView</span> <span class="na">fx:id=</span><span class="s">&quot;originalFrame&quot;</span> <span class="nt">/&gt;</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+<li><p class="first">on the BOTTOM we can add the usual button to start/stop the stream</p>
+<blockquote>
+<div><div class="highlight-xml"><div class="highlight"><pre><span class="nt">&lt;Button</span> <span class="na">fx:id=</span><span class="s">&quot;cameraButton&quot;</span> <span class="na">alignment=</span><span class="s">&quot;center&quot;</span> <span class="na">text=</span><span class="s">&quot;Start camera&quot;</span> <span class="na">onAction=</span><span class="s">&quot;#startCamera&quot;</span> <span class="na">disable=</span><span class="s">&quot;true&quot;</span> <span class="nt">/&gt;</span>
+</pre></div>
+</div>
+</div></blockquote>
+</li>
+</ul>
+<p>The gui will look something like this one:</p>
+<img alt="_images/08-00.png" src="_images/08-00.png" />
+</div>
+<div class="section" id="loading-the-classifiers">
+<h2>Loading the Classifiers<a class="headerlink" href="#loading-the-classifiers" title="Permalink to this headline">¶</a></h2>
+<p>First of all we need to add a folder <code class="docutils literal"><span class="pre">resource</span></code> to our project and put the classifiers in it.
+In order to use the classifiers we need to load them from the resource folder, so every time that we check one of the two checkboxes we will load the correct classifier.
+To do so, let&#8217;s implement the <code class="docutils literal"><span class="pre">OnAction</span></code> methods we already declared before:</p>
+<ul>
+<li><dl class="first docutils">
+<dt><code class="docutils literal"><span class="pre">haarSelected</span></code></dt>
+<dd><p class="first">inside this method we are going to load the disired Haar Classifier (e.g. <code class="docutils literal"><span class="pre">haarcascade_frontalface.xml</span></code>) as follows:</p>
+<div class="last highlight-java"><div class="highlight"><pre><span class="k">this</span><span class="o">.</span><span class="na">checkboxSelection</span><span class="o">(</span><span class="s">&quot;resources/lbpcascades/lbpcascade_frontalface_alt.xml&quot;</span><span class="o">);</span>
+<span class="o">...</span>
+<span class="kd">private</span> <span class="kt">void</span> <span class="nf">checkboxSelection</span><span class="o">(</span><span class="n">String</span><span class="o">...</span> <span class="n">classifierPath</span><span class="o">)</span>
+<span class="o">{</span>
+        <span class="c1">// load the classifier(s)</span>
+        <span class="k">for</span> <span class="o">(</span><span class="n">String</span> <span class="n">xmlClassifier</span> <span class="o">:</span> <span class="n">classifierPath</span><span class="o">)</span>
+        <span class="o">{</span>
+                <span class="k">this</span><span class="o">.</span><span class="na">faceCascade</span><span class="o">.</span><span class="na">load</span><span class="o">(</span><span class="n">xmlClassifier</span><span class="o">);</span>
+        <span class="o">}</span>
+
+        <span class="c1">// now the capture can start</span>
+        <span class="k">this</span><span class="o">.</span><span class="na">cameraButton</span><span class="o">.</span><span class="na">setDisable</span><span class="o">(</span><span class="kc">false</span><span class="o">);</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt><code class="docutils literal"><span class="pre">lbpSelected</span></code></dt>
+<dd><p class="first">for the LPB we can use the same method and change the path of the classifier to be loaded:</p>
+<div class="last highlight-java"><div class="highlight"><pre><span class="k">this</span><span class="o">.</span><span class="na">checkboxSelection</span><span class="o">(</span><span class="s">&quot;resources/lbpcascades/lbpcascade_frontalface.xml&quot;</span><span class="o">);</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</li>
+</ul>
+</div>
+<div class="section" id="detection-and-tracking">
+<h2>Detection and Tracking<a class="headerlink" href="#detection-and-tracking" title="Permalink to this headline">¶</a></h2>
+<p>Once we&#8217;ve loaded the classifiers we are ready to start the detection; we are going to implement the detection in the <code class="docutils literal"><span class="pre">detectAndDisplay</span></code> method.
+First of all we need to convert the frame in grayscale and equalize the histogram to improve the results:</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="n">Imgproc</span><span class="o">.</span><span class="na">cvtColor</span><span class="o">(</span><span class="n">frame</span><span class="o">,</span> <span class="n">grayFrame</span><span class="o">,</span> <span class="n">Imgproc</span><span class="o">.</span><span class="na">COLOR_BGR2GRAY</span><span class="o">);</span>
+<span class="n">Imgproc</span><span class="o">.</span><span class="na">equalizeHist</span><span class="o">(</span><span class="n">grayFrame</span><span class="o">,</span> <span class="n">grayFrame</span><span class="o">);</span>
+</pre></div>
+</div>
+<p>Then we have to set the minimum size of the face to be detected (this required is need in the actual detection function). Let&#8217;s set the minimum size as the 20% of the frame hieght:</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="k">if</span> <span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">absoluteFaceSize</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span>
+<span class="o">{</span>
+    <span class="kt">int</span> <span class="n">height</span> <span class="o">=</span> <span class="n">grayFrame</span><span class="o">.</span><span class="na">rows</span><span class="o">();</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">Math</span><span class="o">.</span><span class="na">round</span><span class="o">(</span><span class="n">height</span> <span class="o">*</span> <span class="mf">0.2f</span><span class="o">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">)?</span>
+    <span class="o">{</span>
+            <span class="k">this</span><span class="o">.</span><span class="na">absoluteFaceSize</span> <span class="o">=</span> <span class="n">Math</span><span class="o">.</span><span class="na">round</span><span class="o">(</span><span class="n">height</span> <span class="o">*</span> <span class="mf">0.2f</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>Now we can start the detection:</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="k">this</span><span class="o">.</span><span class="na">faceCascade</span><span class="o">.</span><span class="na">detectMultiScale</span><span class="o">(</span><span class="n">grayFrame</span><span class="o">,</span> <span class="n">faces</span><span class="o">,</span> <span class="mf">1.1</span><span class="o">,</span> <span class="mi">2</span><span class="o">,</span> <span class="mi">0</span> <span class="o">|</span> <span class="n">Objdetect</span><span class="o">.</span><span class="na">CASCADE_SCALE_IMAGE</span><span class="o">,</span> <span class="k">new</span> <span class="nf">Size</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">absoluteFaceSize</span><span class="o">,</span> <span class="k">this</span><span class="o">.</span><span class="na">absoluteFaceSize</span><span class="o">),</span> <span class="k">new</span> <span class="nf">Size</span><span class="o">());</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal"><span class="pre">detectMultiScale</span></code> function detects objects of different sizes in the input image. The detected objects are returned as a list of rectangles.
+The parameters are:</p>
+<blockquote>
+<div><ul class="simple">
+<li><strong>image</strong> Matrix of the type CV_8U containing an image where objects are detected.</li>
+<li><strong>objects</strong> Vector of rectangles where each rectangle contains the detected object.</li>
+<li><strong>scaleFactor</strong> Parameter specifying how much the image size is reduced at each image scale.</li>
+<li><strong>minNeighbors</strong> Parameter specifying how many neighbors each candidate rectangle should have to retain it.</li>
+<li><strong>flags</strong> Parameter with the same meaning for an old cascade as in the function cvHaarDetectObjects. It is not used for a new cascade.</li>
+<li><strong>minSize</strong> Minimum possible object size. Objects smaller than that are ignored.</li>
+<li><strong>maxSize</strong> Maximum possible object size. Objects larger than that are ignored.</li>
+</ul>
+</div></blockquote>
+<p>So the result of the detection is going to be in the <strong>objects</strong> parameter or in our case <code class="docutils literal"><span class="pre">faces</span></code>.</p>
+<p>Let&#8217;s put this result in an array of Rects and draw them on the frame, by doing so we can display the detected face are:</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="n">Rect</span><span class="o">[]</span> <span class="n">facesArray</span> <span class="o">=</span> <span class="n">faces</span><span class="o">.</span><span class="na">toArray</span><span class="o">();</span>
+<span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">facesArray</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
+    <span class="n">Core</span><span class="o">.</span><span class="na">rectangle</span><span class="o">(</span><span class="n">frame</span><span class="o">,</span> <span class="n">facesArray</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="na">tl</span><span class="o">(),</span> <span class="n">facesArray</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="na">br</span><span class="o">(),</span> <span class="k">new</span> <span class="nf">Scalar</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="mi">255</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">255</span><span class="o">),</span> <span class="mi">3</span><span class="o">);</span>
+</pre></div>
+</div>
+<p>As you can see we selected the color green with a trasparent background: <code class="docutils literal"><span class="pre">Scalar(0,</span> <span class="pre">255,</span> <span class="pre">0,</span> <span class="pre">255)</span></code>.
+<code class="docutils literal"><span class="pre">.tl()</span></code> and <code class="docutils literal"><span class="pre">.br()</span></code> stand for <em>top-left</em> and <em>bottom-right</em> and they represents the two opposite vertexes.
+The last parameter just set the thickness of the rectangle&#8217;s border.</p>
+<p>The tracking part can be implemented by calling the <code class="docutils literal"><span class="pre">detectAndDisplay</span></code> method for each frame.</p>
+<img alt="_images/08-01.png" src="_images/08-01.png" />
+<img alt="_images/08-02.png" src="_images/08-02.png" />
+</div>
 <div class="section" id="source-code">
 <h2>Source Code<a class="headerlink" href="#source-code" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li><em>FaceDetection.java</em></li>
+<li><a class="reference external" href="https://github.com/java-opencv/Polito-Java-OpenCV-Tutorials-Source-Code/blob/master/Face%20Detection/src/application/FaceDetection.java">FaceDetection.java</a></li>
 </ul>
 <div class="highlight-java"><div class="highlight"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">FaceDetection</span> <span class="kd">extends</span> <span class="n">Application</span> <span class="o">{</span>
     <span class="nd">@Override</span>
@@ -118,7 +236,7 @@ Usually these features are extracted using a <em>Cascade Classifier</em> which h
 </pre></div>
 </div>
 <ul class="simple">
-<li><em>FD_Controller.java</em></li>
+<li><cite>FD_Controller.java &lt;https://github.com/java-opencv/Polito-Java-OpenCV-Tutorials-Source-Code/blob/master/Face%20Detection/src/application/FD_Controller.java&gt;</cite></li>
 </ul>
 <div class="highlight-java"><div class="highlight"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">FD_Controller</span> <span class="o">{</span>
     <span class="c1">// FXML buttons</span>
@@ -381,7 +499,7 @@ Usually these features are extracted using a <em>Cascade Classifier</em> which h
 </pre></div>
 </div>
 <ul class="simple">
-<li><em>FD_FX.fxml</em></li>
+<li><a class="reference external" href="https://github.com/java-opencv/Polito-Java-OpenCV-Tutorials-Source-Code/blob/master/Face%20Detection/src/application/FD_FX.fxml">FD_FX.fxml</a></li>
 </ul>
 <div class="highlight-xml"><div class="highlight"><pre><span class="nt">&lt;BorderPane</span> <span class="na">xmlns:fx=</span><span class="s">&quot;http://javafx.com/fxml/1&quot;</span> <span class="na">fx:controller=</span><span class="s">&quot;application.FD_Controller&quot;</span><span class="nt">&gt;</span>
     <span class="nt">&lt;top&gt;</span>
@@ -416,124 +534,6 @@ Usually these features are extracted using a <em>Cascade Classifier</em> which h
 </pre></div>
 </div>
 </div>
-<div class="section" id="getting-started">
-<h2>Getting Started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h2>
-<p>Let&#8217;s create a new JavaFX project. In Scene Builder set the windows element so that we have a Border Pane with:</p>
-<ul>
-<li><p class="first">on TOP a VBox a HBox and a separator. In the HBox we are goning to need two checkboxes, the first one is to select the Haar Classifier and the second one is to select the LBP Classifier.</p>
-<blockquote>
-<div><div class="highlight-xml"><div class="highlight"><pre><span class="nt">&lt;CheckBox</span> <span class="na">fx:id=</span><span class="s">&quot;haarClassifier&quot;</span> <span class="na">onAction=</span><span class="s">&quot;#haarSelected&quot;</span> <span class="na">text=</span><span class="s">&quot;Haar Classifier&quot;</span><span class="nt">/&gt;</span>
-<span class="nt">&lt;CheckBox</span> <span class="na">fx:id=</span><span class="s">&quot;lbpClassifier&quot;</span> <span class="na">onAction=</span><span class="s">&quot;#lbpSelected&quot;</span> <span class="na">text=</span><span class="s">&quot;LBP Classifier&quot;</span><span class="nt">/&gt;</span>
-</pre></div>
-</div>
-</div></blockquote>
-</li>
-<li><p class="first">in the CENTRE we are going to put an ImageView for the web cam stream.</p>
-<blockquote>
-<div><div class="highlight-xml"><div class="highlight"><pre><span class="nt">&lt;ImageView</span> <span class="na">fx:id=</span><span class="s">&quot;originalFrame&quot;</span> <span class="nt">/&gt;</span>
-</pre></div>
-</div>
-</div></blockquote>
-</li>
-<li><p class="first">on the BOTTOM we can add the usual button to start/stop the stream</p>
-<blockquote>
-<div><div class="highlight-xml"><div class="highlight"><pre><span class="nt">&lt;Button</span> <span class="na">fx:id=</span><span class="s">&quot;cameraButton&quot;</span> <span class="na">alignment=</span><span class="s">&quot;center&quot;</span> <span class="na">text=</span><span class="s">&quot;Start camera&quot;</span> <span class="na">onAction=</span><span class="s">&quot;#startCamera&quot;</span> <span class="na">disable=</span><span class="s">&quot;true&quot;</span> <span class="nt">/&gt;</span>
-</pre></div>
-</div>
-</div></blockquote>
-</li>
-</ul>
-<p>The gui will look something like this one:</p>
-<img alt="_images/08-00.png" src="_images/08-00.png" />
-</div>
-<div class="section" id="load-the-classifiers">
-<h2>Load the Classifiers<a class="headerlink" href="#load-the-classifiers" title="Permalink to this headline">¶</a></h2>
-<p>First of all we need to add a folder <code class="docutils literal"><span class="pre">resource</span></code> to our project and put the classifiers in it.
-In order to use the classifiers we need to load them from the resource folder, so every time that we check one of the two checkboxes we will load the correct classifier.
-To do so, let&#8217;s implement the <code class="docutils literal"><span class="pre">OnAction</span></code> methods we already declared before:</p>
-<ul>
-<li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">haarSelected</span></code></dt>
-<dd><p class="first">inside this method we are going to load the disired Haar Classifier (e.g. <code class="docutils literal"><span class="pre">haarcascade_frontalface.xml</span></code>) as follows:</p>
-<div class="last highlight-java"><div class="highlight"><pre><span class="k">this</span><span class="o">.</span><span class="na">checkboxSelection</span><span class="o">(</span><span class="s">&quot;resources/lbpcascades/lbpcascade_frontalface_alt.xml&quot;</span><span class="o">);</span>
-<span class="o">...</span>
-<span class="kd">private</span> <span class="kt">void</span> <span class="nf">checkboxSelection</span><span class="o">(</span><span class="n">String</span><span class="o">...</span> <span class="n">classifierPath</span><span class="o">)</span>
-<span class="o">{</span>
-        <span class="c1">// load the classifier(s)</span>
-        <span class="k">for</span> <span class="o">(</span><span class="n">String</span> <span class="n">xmlClassifier</span> <span class="o">:</span> <span class="n">classifierPath</span><span class="o">)</span>
-        <span class="o">{</span>
-                <span class="k">this</span><span class="o">.</span><span class="na">faceCascade</span><span class="o">.</span><span class="na">load</span><span class="o">(</span><span class="n">xmlClassifier</span><span class="o">);</span>
-        <span class="o">}</span>
-
-        <span class="c1">// now the capture can start</span>
-        <span class="k">this</span><span class="o">.</span><span class="na">cameraButton</span><span class="o">.</span><span class="na">setDisable</span><span class="o">(</span><span class="kc">false</span><span class="o">);</span>
-<span class="o">}</span>
-</pre></div>
-</div>
-</dd>
-</dl>
-</li>
-<li><dl class="first docutils">
-<dt><code class="docutils literal"><span class="pre">lbpSelected</span></code></dt>
-<dd><p class="first">for the LPB we can use the same method and change the path of the classifier to be loaded:</p>
-<div class="last highlight-java"><div class="highlight"><pre><span class="k">this</span><span class="o">.</span><span class="na">checkboxSelection</span><span class="o">(</span><span class="s">&quot;resources/lbpcascades/lbpcascade_frontalface.xml&quot;</span><span class="o">);</span>
-</pre></div>
-</div>
-</dd>
-</dl>
-</li>
-</ul>
-</div>
-<div class="section" id="detection-and-tracking">
-<h2>Detection and Tracking<a class="headerlink" href="#detection-and-tracking" title="Permalink to this headline">¶</a></h2>
-<p>Once we&#8217;ve loaded the classifiers we are ready to start the detection; we are going to implement the detection in the <code class="docutils literal"><span class="pre">detectAndDisplay</span></code> method.
-First of all we need to convert the frame in grayscale and equalize the histogram to improve the results:</p>
-<div class="highlight-java"><div class="highlight"><pre><span class="n">Imgproc</span><span class="o">.</span><span class="na">cvtColor</span><span class="o">(</span><span class="n">frame</span><span class="o">,</span> <span class="n">grayFrame</span><span class="o">,</span> <span class="n">Imgproc</span><span class="o">.</span><span class="na">COLOR_BGR2GRAY</span><span class="o">);</span>
-<span class="n">Imgproc</span><span class="o">.</span><span class="na">equalizeHist</span><span class="o">(</span><span class="n">grayFrame</span><span class="o">,</span> <span class="n">grayFrame</span><span class="o">);</span>
-</pre></div>
-</div>
-<p>Then we have to set the minimum size of the face to be detected (this required is need in the actual detection function). Let&#8217;s set the minimum size as the 20% of the frame hieght:</p>
-<div class="highlight-java"><div class="highlight"><pre><span class="k">if</span> <span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">absoluteFaceSize</span> <span class="o">==</span> <span class="mi">0</span><span class="o">)</span>
-<span class="o">{</span>
-    <span class="kt">int</span> <span class="n">height</span> <span class="o">=</span> <span class="n">grayFrame</span><span class="o">.</span><span class="na">rows</span><span class="o">();</span>
-    <span class="k">if</span> <span class="o">(</span><span class="n">Math</span><span class="o">.</span><span class="na">round</span><span class="o">(</span><span class="n">height</span> <span class="o">*</span> <span class="mf">0.2f</span><span class="o">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="o">)?</span>
-    <span class="o">{</span>
-            <span class="k">this</span><span class="o">.</span><span class="na">absoluteFaceSize</span> <span class="o">=</span> <span class="n">Math</span><span class="o">.</span><span class="na">round</span><span class="o">(</span><span class="n">height</span> <span class="o">*</span> <span class="mf">0.2f</span><span class="o">);</span>
-    <span class="o">}</span>
-<span class="o">}</span>
-</pre></div>
-</div>
-<p>Now we can start the detection:</p>
-<div class="highlight-java"><div class="highlight"><pre><span class="k">this</span><span class="o">.</span><span class="na">faceCascade</span><span class="o">.</span><span class="na">detectMultiScale</span><span class="o">(</span><span class="n">grayFrame</span><span class="o">,</span> <span class="n">faces</span><span class="o">,</span> <span class="mf">1.1</span><span class="o">,</span> <span class="mi">2</span><span class="o">,</span> <span class="mi">0</span> <span class="o">|</span> <span class="n">Objdetect</span><span class="o">.</span><span class="na">CASCADE_SCALE_IMAGE</span><span class="o">,</span> <span class="k">new</span> <span class="nf">Size</span><span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">absoluteFaceSize</span><span class="o">,</span> <span class="k">this</span><span class="o">.</span><span class="na">absoluteFaceSize</span><span class="o">),</span> <span class="k">new</span> <span class="nf">Size</span><span class="o">());</span>
-</pre></div>
-</div>
-<p>The <code class="docutils literal"><span class="pre">detectMultiScale</span></code> function detects objects of different sizes in the input image. The detected objects are returned as a list of rectangles.
-The parameters are:</p>
-<blockquote>
-<div><ul class="simple">
-<li><strong>image</strong> Matrix of the type CV_8U containing an image where objects are detected.</li>
-<li><strong>objects</strong> Vector of rectangles where each rectangle contains the detected object.</li>
-<li><strong>scaleFactor</strong> Parameter specifying how much the image size is reduced at each image scale.</li>
-<li><strong>minNeighbors</strong> Parameter specifying how many neighbors each candidate rectangle should have to retain it.</li>
-<li><strong>flags</strong> Parameter with the same meaning for an old cascade as in the function cvHaarDetectObjects. It is not used for a new cascade.</li>
-<li><strong>minSize</strong> Minimum possible object size. Objects smaller than that are ignored.</li>
-<li><strong>maxSize</strong> Maximum possible object size. Objects larger than that are ignored.</li>
-</ul>
-</div></blockquote>
-<p>So the result of the detection is going to be in the <strong>objects</strong> parameter or in our case <code class="docutils literal"><span class="pre">faces</span></code>.</p>
-<p>Let&#8217;s put this result in an array of Rects and draw them on the frame, by doing so we can display the detected face are:</p>
-<div class="highlight-java"><div class="highlight"><pre><span class="n">Rect</span><span class="o">[]</span> <span class="n">facesArray</span> <span class="o">=</span> <span class="n">faces</span><span class="o">.</span><span class="na">toArray</span><span class="o">();</span>
-<span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">facesArray</span><span class="o">.</span><span class="na">length</span><span class="o">;</span> <span class="n">i</span><span class="o">++)</span>
-    <span class="n">Core</span><span class="o">.</span><span class="na">rectangle</span><span class="o">(</span><span class="n">frame</span><span class="o">,</span> <span class="n">facesArray</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="na">tl</span><span class="o">(),</span> <span class="n">facesArray</span><span class="o">[</span><span class="n">i</span><span class="o">].</span><span class="na">br</span><span class="o">(),</span> <span class="k">new</span> <span class="nf">Scalar</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="mi">255</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">255</span><span class="o">),</span> <span class="mi">3</span><span class="o">);</span>
-</pre></div>
-</div>
-<p>As you can see we selected the color green with a trasparent background: <code class="docutils literal"><span class="pre">Scalar(0,</span> <span class="pre">255,</span> <span class="pre">0,</span> <span class="pre">255)</span></code>.
-<code class="docutils literal"><span class="pre">.tl()</span></code> and <code class="docutils literal"><span class="pre">.br()</span></code> stand for <em>top-left</em> and <em>bottom-right</em> and they represents the two opposite vertexes.
-The last parameter just set the thickness of the rectangle&#8217;s border.</p>
-<p>The tracking part can be implemented by calling the <code class="docutils literal"><span class="pre">detectAndDisplay</span></code> method for each frame.</p>
-<img alt="_images/08-01.png" src="_images/08-01.png" />
-<img alt="_images/08-02.png" src="_images/08-02.png" />
-</div>
 </div>
 
 
@@ -548,10 +548,10 @@ The last parameter just set the thickness of the rectangle&#8217;s border.</p>
 <li><a class="reference internal" href="#goal">Goal</a></li>
 <li><a class="reference internal" href="#cascade-classifiers">Cascade Classifiers</a></li>
 <li><a class="reference internal" href="#what-we-will-do-in-this-tutorial">What we will do in this tutorial</a></li>
-<li><a class="reference internal" href="#source-code">Source Code</a></li>
 <li><a class="reference internal" href="#getting-started">Getting Started</a></li>
-<li><a class="reference internal" href="#load-the-classifiers">Load the Classifiers</a></li>
+<li><a class="reference internal" href="#loading-the-classifiers">Loading the Classifiers</a></li>
 <li><a class="reference internal" href="#detection-and-tracking">Detection and Tracking</a></li>
+<li><a class="reference internal" href="#source-code">Source Code</a></li>
 </ul>
 </li>
 </ul>
