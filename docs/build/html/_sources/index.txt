@@ -10,6 +10,7 @@ Contents:
    02 - First Java Application with OpenCV
    03 - First JavaFX Application with OpenCV
    04 - OpenCV Basics
+   05 - Camera Calibration
    06 - Fourier Transform
    07 - Image Segmentation
    08 - Face Recognition and Tracking
