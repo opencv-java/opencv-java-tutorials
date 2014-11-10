@@ -82,7 +82,7 @@ You should have the following output:
 
 .. image:: res/02-03.png
 
-Here I put the whole source code:
+Here I put the whole source `code <https://github.com/java-opencv/Polito-Java-OpenCV-Tutorials-Source-Code/blob/master/MyFirstProject/src/mypackage/MyFirstApp.java>`_:
 
 .. code-block:: java
 
