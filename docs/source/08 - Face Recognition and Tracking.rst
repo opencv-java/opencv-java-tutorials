@@ -2,7 +2,7 @@
 Face Recognition and Tracking
 =============================
 
-.. note:: We assume that by now you have already read the previous tutorials. If not, please check previous tutorials at `<http://polito-java-opencv-tutorials.readthedocs.org/en/latest/index.html>`_. You can also find the source code and resources at `<https://github.com/java-opencv/Polito-Java-OpenCV-Tutorials-Source-Code>`_
+.. note:: We assume that by now you have already read the previous tutorials. If not, please check previous tutorials at `<http://opencv-java-tutorials.readthedocs.org/en/latest/index.html>`_. You can also find the source code and resources at `<https://github.com/opencv-java/>`_
 
 Goal
 ----
@@ -33,7 +33,7 @@ Let's create a new JavaFX project. In Scene Builder set the windows element so t
 - in the CENTRE we are going to put an ImageView for the web cam stream.
 
 	.. code-block:: xml
-		
+
 		<ImageView fx:id="originalFrame" />
 
 - on the BOTTOM we can add the usual button to start/stop the stream
@@ -66,7 +66,7 @@ To do so, let's implement the ``OnAction`` methods we already declared before:
 			{
 				this.faceCascade.load(xmlClassifier);
 			}
-		
+
 			// now the capture can start
 			this.cameraButton.setDisable(false);
 		}
@@ -110,12 +110,12 @@ Now we can start the detection:
 The ``detectMultiScale`` function detects objects of different sizes in the input image. The detected objects are returned as a list of rectangles.
 The parameters are:
 
- - **image** Matrix of the type CV_8U containing an image where objects are detected. 
- - **objects** Vector of rectangles where each rectangle contains the detected object. 
- - **scaleFactor** Parameter specifying how much the image size is reduced at each image scale. 
- - **minNeighbors** Parameter specifying how many neighbors each candidate rectangle should have to retain it. 
- - **flags** Parameter with the same meaning for an old cascade as in the function cvHaarDetectObjects. It is not used for a new cascade. 
- - **minSize** Minimum possible object size. Objects smaller than that are ignored. 
+ - **image** Matrix of the type CV_8U containing an image where objects are detected.
+ - **objects** Vector of rectangles where each rectangle contains the detected object.
+ - **scaleFactor** Parameter specifying how much the image size is reduced at each image scale.
+ - **minNeighbors** Parameter specifying how many neighbors each candidate rectangle should have to retain it.
+ - **flags** Parameter with the same meaning for an old cascade as in the function cvHaarDetectObjects. It is not used for a new cascade.
+ - **minSize** Minimum possible object size. Objects smaller than that are ignored.
  - **maxSize** Maximum possible object size. Objects larger than that are ignored.
 
 So the result of the detection is going to be in the **objects** parameter or in our case ``faces``.
@@ -140,7 +140,7 @@ The tracking part can be implemented by calling the ``detectAndDisplay`` method 
 
 Source Code
 -----------
--  `FaceDetection.java <https://github.com/java-opencv/Polito-Java-OpenCV-Tutorials-Source-Code/blob/master/Face%20Detection/src/application/FaceDetection.java>`_
+-  `FaceDetection.java <https://github.com/opencv-java/face-detection/blob/master/src/it/polito/teaching/cv/Lab5.java>`_
 
 .. code-block:: java
 
@@ -164,7 +164,7 @@ Source Code
 			primaryStage.setScene(scene);
 			// show the GUI
 			primaryStage.show();
-			
+
 			// init the controller
 			FD_Controller controller = loader.getController();
 			controller.init();
@@ -174,17 +174,17 @@ Source Code
 			e.printStackTrace();
 		}
 	}
-	
+
 	public static void main(String[] args)
 	{
 		// load the native OpenCV library
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-		
+
 		launch(args);
 	}
     }
 
-- `FD_Controller.java <https://github.com/java-opencv/Polito-Java-OpenCV-Tutorials-Source-Code/blob/master/Face%20Detection/src/application/FD_Controller.java>`
+- `FD_Controller.java <https://github.com/opencv-java/face-detection/blob/master/src/it/polito/teaching/cv/FaceDetectionController.java>`_
 
 .. code-block:: java
 
@@ -201,7 +201,7 @@ Source Code
 	// checkbox for selecting the LBP Classifier
 	@FXML
 	private CheckBox lbpClassifier;
-	
+
 	// a timer for acquiring the video stream
 	private Timer timer;
 	// the OpenCV object that performs the video capture
@@ -213,7 +213,7 @@ Source Code
 	// minimum face size
 	private int absoluteFaceSize;
 	private Image CamStream;
-	
+
 	/**
 	 * Init the controller variables
 	 */
@@ -223,7 +223,7 @@ Source Code
 		this.faceCascade = new CascadeClassifier();
 		this.absoluteFaceSize = 0;
 	}
-	
+
 	/**
 	 * The action triggered by pushing the button on the GUI
 	 */
@@ -235,15 +235,15 @@ Source Code
 			// disable setting checkboxes
 			this.haarClassifier.setDisable(true);
 			this.lbpClassifier.setDisable(true);
-			
+
 			// start the video capture
 			this.capture.open(0);
-			
+
 			// is the video stream available?
 			if (this.capture.isOpened())
 			{
 				this.cameraActive = true;
-				
+
 				// grab a frame every 33 ms (30 frames/sec)
 				TimerTask frameGrabber = new TimerTask() {
 					@Override
@@ -253,21 +253,21 @@ Source Code
 						Platform.runLater(new Runnable() {
 							@Override
 				            public void run() {
-								
+
 								// show the original frames
 								originalFrame.setImage(CamStream);
 								// set fixed width
 								originalFrame.setFitWidth(600);
 								// preserve image ratio
 								originalFrame.setPreserveRatio(true);
-								
+
 				            	}
 							});
 					}
 				};
 				this.timer = new Timer();
 				this.timer.schedule(frameGrabber, 0, 33);
-				
+
 				// update the button content
 				this.cameraButton.setText("Stop Camera");
 			}
@@ -286,7 +286,7 @@ Source Code
 			// enable setting checkboxes
 			this.haarClassifier.setDisable(false);
 			this.lbpClassifier.setDisable(false);
-			
+
 			// stop the timer
 			if (this.timer != null)
 			{
@@ -299,10 +299,10 @@ Source Code
 			originalFrame.setImage(null);
 		}
 	}
-	
+
 	/**
 	 * Get a frame from the opened video stream (if any)
-	 * 
+	 *
 	 * @return the {@link Image} to show
 	 */
 	private Image grabFrame()
@@ -310,7 +310,7 @@ Source Code
 		// init everything
 		Image imageToShow = null;
 		Mat frame = new Mat();
-		
+
 		// check if the capture is open
 		if (this.capture.isOpened())
 		{
@@ -318,17 +318,17 @@ Source Code
 			{
 				// read the current frame
 				this.capture.read(frame);
-				
+
 				// if the frame is not empty, process it
 				if (!frame.empty())
 				{
 					// face detection
 					this.detectAndDisplay(frame);
-					
+
 					// convert the Mat object (OpenCV) to Image (JavaFX)
 					imageToShow = mat2Image(frame);
 				}
-				
+
 			}
 			catch (Exception e)
 			{
@@ -337,13 +337,13 @@ Source Code
 				e.printStackTrace();
 			}
 		}
-		
+
 		return imageToShow;
 	}
-	
+
 	/**
 	 * Perform face detection and show a rectangle around the detected face.
-	 * 
+	 *
 	 * @param frame
 	 *            the current frame
 	 */
@@ -352,12 +352,12 @@ Source Code
 		// init
 		MatOfRect faces = new MatOfRect();
 		Mat grayFrame = new Mat();
-		
+
 		// convert the frame in gray scale
 		Imgproc.cvtColor(frame, grayFrame, Imgproc.COLOR_BGR2GRAY);
 		// equalize the frame histogram to improve the result
 		Imgproc.equalizeHist(grayFrame, grayFrame);
-		
+
 		// compute minimum face size (20% of the frame height)
 		if (this.absoluteFaceSize == 0)
 		{
@@ -367,22 +367,22 @@ Source Code
 				this.absoluteFaceSize = Math.round(height * 0.2f);
 			}
 		}
-		
+
 		// detect faces
 		this.faceCascade.detectMultiScale(grayFrame, faces, 1.1, 2, 0 | Objdetect.CASCADE_SCALE_IMAGE, new Size(
 				this.absoluteFaceSize, this.absoluteFaceSize), new Size());
-		
+
 		// each rectangle in faces is a face
 		Rect[] facesArray = faces.toArray();
 		for (int i = 0; i < facesArray.length; i++)
 			Core.rectangle(frame, facesArray[i].tl(), facesArray[i].br(), new Scalar(0, 255, 0, 255), 3);
-		
+
 	}
-	
+
 	/**
 	 * When the Haar checkbox is selected, deselect the other one and load the
 	 * proper XML classifier
-	 * 
+	 *
 	 */
 	@FXML
 	protected void haarSelected()
@@ -390,12 +390,12 @@ Source Code
 		// check whether the lpb checkbox is selected and deselect it
 		if (this.lbpClassifier.isSelected())
 			this.lbpClassifier.setSelected(false);
-		
+
 		this.checkboxSelection("resources/haarcascades/haarcascade_frontalface_alt.xml");
 	}
-	
+
 	/**
-	 * 
+	 *
 	 When the LBP checkbox is selected, deselect the other one and load the
 	 * proper XML classifier
 	 */
@@ -405,13 +405,13 @@ Source Code
 		// check whether the haar checkbox is selected and deselect it
 		if (this.haarClassifier.isSelected())
 			this.haarClassifier.setSelected(false);
-		
+
 		this.checkboxSelection("resources/lbpcascades/lbpcascade_frontalface.xml");
 	}
-	
+
 	/**
 	 * Common operation for both checkbox selections
-	 * 
+	 *
 	 * @param classifierPath
 	 *            the absolute path where the XML file representing a training
 	 *            set for a classifier is present
@@ -423,14 +423,14 @@ Source Code
 		{
 			this.faceCascade.load(xmlClassifier);
 		}
-		
+
 		// now the capture can start
 		this.cameraButton.setDisable(false);
 	}
-	
+
 	/**
 	 * Convert a Mat object (OpenCV) in the corresponding Image for JavaFX
-	 * 
+	 *
 	 * @param frame
 	 *            the {@link Mat} representing the current frame
 	 * @return the {@link Image} to show
@@ -447,7 +447,7 @@ Source Code
 	}
     }
 
-- `FD_FX.fxml <https://github.com/java-opencv/Polito-Java-OpenCV-Tutorials-Source-Code/blob/master/Face%20Detection/src/application/FD_FX.fxml>`_
+- `FD_FX.fxml <https://github.com/opencv-java/face-detection/blob/master/src/it/polito/teaching/cv/FaceDetection.fxml>`_
 
 .. code-block:: xml
 

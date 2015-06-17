@@ -2,7 +2,7 @@
 Image Segmentation
 ==================
 
-.. note:: We assume that by now you have already read the previous tutorials. If not, please check previous tutorials at `<http://polito-java-opencv-tutorials.readthedocs.org/en/latest/index.html>`_. You can also find the source code and resources at `<https://github.com/java-opencv/Polito-Java-OpenCV-Tutorials-Source-Code>`_
+.. note:: We assume that by now you have already read the previous tutorials. If not, please check previous tutorials at `<http://opencv-java-tutorials.readthedocs.org/en/latest/index.html>`_. You can also find the source code and resources at `<https://github.com/opencv-java/>`_
 
 Goal
 ----
@@ -28,7 +28,7 @@ Dilatation and Erosion
 ----------------------
 Dilation and erosion are the most basic morphological operations. Dilation adds pixels to the boundaries of objects in an image, while erosion removes pixels on object boundaries. The number of pixels added or removed from the objects in an image depends on the size and shape of the structuring element used to process the image. In the morphological dilation and erosion operations, the state of any given pixel in the output image is determined by applying a rule to the corresponding pixel and its neighbors in the input image. The rule used to process the pixels defines the operation as a dilation or an erosion.
 
-**Dilatation**: the value of the output pixel is the maximum value of all the pixels in the input pixel's neighborhood. In a binary image, if any of the pixels is set to the value 1, the output pixel is set to 1. 
+**Dilatation**: the value of the output pixel is the maximum value of all the pixels in the input pixel's neighborhood. In a binary image, if any of the pixels is set to the value 1, the output pixel is set to 1.
 
 **Erosion**: the value of the output pixel is the minimum value of all the pixels in the input pixel's neighborhood. In a binary image, if any of the pixels is set to 0, the output pixel is set to 0.
 
@@ -211,7 +211,7 @@ Background Removal Result
 
 Source Code
 -----------
--  `ImageSegmentation.java <https://github.com/java-opencv/Polito-Java-OpenCV-Tutorials-Source-Code/blob/master/Image%20Segmentation/src/application/ImageSegmentation.java>`_
+-  `ImageSegmentation.java <https://github.com/opencv-java/image-segmentation/blob/master/src/it/polito/teaching/cv/Lab6.java>`_
 
 .. code-block:: java
 
@@ -240,22 +240,22 @@ Source Code
 			e.printStackTrace();
 		}
 	}
-	
+
 	public static void main(String[] args)
 	{
 		// load the native OpenCV library
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-		
+
 		launch(args);
 	}
     }
 
--  `IS_Controller.java <https://github.com/java-opencv/Polito-Java-OpenCV-Tutorials-Source-Code/blob/master/Image%20Segmentation/src/application/IS_Controller.java>`_
+-  `IS_Controller.java <https://github.com/opencv-java/image-segmentation/blob/master/src/it/polito/teaching/cv/ImageSegController.java>`_
 
 .. code-block:: java
 
     public class IS_Controller {
-	
+
 	// FXML buttons
 	@FXML
 	private Button cameraButton;
@@ -274,7 +274,7 @@ Source Code
 	// inverse the threshold value for background removal
 	@FXML
 	private CheckBox inverse;
-	
+
 	// a timer for acquiring the video stream
 	private Timer timer;
 	// the OpenCV object that performs the video capture
@@ -282,7 +282,7 @@ Source Code
 	// a flag to change the button behavior
 	private boolean cameraActive;
 	private Image CamStream;
-	
+
 	/**
 	 * The action triggered by pushing the button on the GUI
 	 */
@@ -294,15 +294,15 @@ Source Code
 			// disable setting checkboxes
 			this.canny.setDisable(true);
 			this.dilateErode.setDisable(true);
-			
+
 			// start the video capture
 			this.capture.open(0);
-			
+
 			// is the video stream available?
 			if (this.capture.isOpened())
 			{
 				this.cameraActive = true;
-				
+
 				// grab a frame every 33 ms (30 frames/sec)
 				TimerTask frameGrabber = new TimerTask() {
 					@Override
@@ -312,21 +312,21 @@ Source Code
 						Platform.runLater(new Runnable() {
 							@Override
 				            		public void run() {
-								
+
 								// show the original frames
 								originalFrame.setImage(CamStream);
 								// set fixed width
 								originalFrame.setFitWidth(600);
 								// preserve image ratio
 								originalFrame.setPreserveRatio(true);
-								
+
 				            		}
 						});
 					}
 				};
 				this.timer = new Timer();
 				this.timer.schedule(frameGrabber, 0, 33);
-				
+
 				// update the button content
 				this.cameraButton.setText("Stop Camera");
 			}
@@ -345,7 +345,7 @@ Source Code
 			// enable setting checkboxes
 			this.canny.setDisable(false);
 			this.dilateErode.setDisable(false);
-			
+
 			// stop the timer
 			if (this.timer != null)
 			{
@@ -358,10 +358,10 @@ Source Code
 			originalFrame.setImage(null);
 		}
 	}
-	
+
 	/**
 	 * Get a frame from the opened video stream (if any)
-	 * 
+	 *
 	 * @return the {@link Image} to show
 	 */
 	private Image grabFrame()
@@ -369,7 +369,7 @@ Source Code
 		// init everything
 		Image imageToShow = null;
 		Mat frame = new Mat();
-		
+
 		// check if the capture is open
 		if (this.capture.isOpened())
 		{
@@ -377,7 +377,7 @@ Source Code
 			{
 				// read the current frame
 				this.capture.read(frame);
-				
+
 				// if the frame is not empty, process it
 				if (!frame.empty())
 				{
@@ -391,11 +391,11 @@ Source Code
 					{
 						frame = this.doBackgroundRemoval(frame);
 					}
-					
+
 					// convert the Mat object (OpenCV) to Image (JavaFX)
 					imageToShow = mat2Image(frame);
 				}
-				
+
 			}
 			catch (Exception e)
 			{
@@ -404,13 +404,13 @@ Source Code
 				e.printStackTrace();
 			}
 		}
-		
+
 		return imageToShow;
 	}
-	
+
 	/**
 	 * Perform the operations needed for removing a uniform background
-	 * 
+	 *
 	 * @param frame
 	 *            the current frame
 	 * @return an image with only foreground objects
@@ -421,38 +421,38 @@ Source Code
 		Mat hsvImg = new Mat();
 		List<Mat> hsvPlanes = new ArrayList<>();
 		Mat thresholdImg = new Mat();
-		
+
 		// threshold the image with the histogram average value
 		hsvImg.create(frame.size(), CvType.CV_8U);
 		Imgproc.cvtColor(frame, hsvImg, Imgproc.COLOR_BGR2HSV);
 		Core.split(hsvImg, hsvPlanes);
-		
+
 		double threshValue = this.getHistAverage(hsvImg, hsvPlanes.get(0));
-		
+
 		if (this.inverse.isSelected())
 			Imgproc.threshold(hsvPlanes.get(0), thresholdImg, threshValue, 179.0, Imgproc.THRESH_BINARY_INV);
 		else
 			Imgproc.threshold(hsvPlanes.get(0), thresholdImg, threshValue, 179.0, Imgproc.THRESH_BINARY);
-		
+
 		Imgproc.blur(thresholdImg, thresholdImg, new Size(5, 5));
-		
+
 		// dilate to fill gaps, erode to smooth edges
 		Imgproc.dilate(thresholdImg, thresholdImg, new Mat(), new Point(-1, 1), 6);
 		Imgproc.erode(thresholdImg, thresholdImg, new Mat(), new Point(-1, 1), 6);
-		
+
 		Imgproc.threshold(thresholdImg, thresholdImg, threshValue, 179.0, Imgproc.THRESH_BINARY);
-		
+
 		// create the new image
 		Mat foreground = new Mat(frame.size(), CvType.CV_8UC3, new Scalar(255, 255, 255));
 		frame.copyTo(foreground, thresholdImg);
-		
+
 		return foreground;
 	}
-	
+
 	/**
 	 * Get the average value of the histogram representing the image Hue
 	 * component
-	 * 
+	 *
 	 * @param hsvImg
 	 *            the current frame in HSV
 	 * @param hueValues
@@ -467,22 +467,22 @@ Source Code
 		MatOfInt histSize = new MatOfInt(180);
 		List<Mat> hue = new ArrayList<>();
 		hue.add(hueValues);
-		
+
 		// compute the histogram
 		Imgproc.calcHist(hue, new MatOfInt(0), new Mat(), hist_hue, histSize, new MatOfFloat(0, 179));
-		
+
 		// get the average for each bin
 		for (int h = 0; h < 180; h++)
 		{
 			average += (hist_hue.get(h, 0)[0] * h);
 		}
-		
+
 		return average = average / hsvImg.size().height / hsvImg.size().width;
 	}
-	
+
 	/**
 	 * Apply Canny
-	 * 
+	 *
 	 * @param frame
 	 *            the current frame
 	 * @return an image elaborated with Canny
@@ -492,27 +492,27 @@ Source Code
 		// init
 		Mat grayImage = new Mat();
 		Mat detectedEdges = new Mat();
-		
+
 		// convert to grayscale
 		Imgproc.cvtColor(frame, grayImage, Imgproc.COLOR_BGR2GRAY);
-		
+
 		// reduce noise with a 3x3 kernel
 		Imgproc.blur(grayImage, detectedEdges, new Size(3, 3));
-		
+
 		// canny detector, with ratio of lower:upper threshold of 3:1
 		Imgproc.Canny(detectedEdges, detectedEdges, this.threshold.getValue(), this.threshold.getValue() * 3, 3, false);
-		
+
 		// using Canny's output as a mask, display the result
 		Mat dest = new Mat();
 		Core.add(dest, Scalar.all(0), dest);
 		frame.copyTo(dest, detectedEdges);
-		
+
 		return dest;
 	}
-	
+
 	/**
 	 * Action triggered when the Canny checkbox is selected
-	 * 
+	 *
 	 */
 	@FXML
 	protected void cannySelected()
@@ -523,17 +523,17 @@ Source Code
 			this.dilateErode.setSelected(false);
 			this.inverse.setDisable(true);
 		}
-		
+
 		// enable the threshold slider
 		if (this.canny.isSelected())
 			this.threshold.setDisable(false);
 		else
 			this.threshold.setDisable(true);
-		
+
 		// now the capture can start
 		this.cameraButton.setDisable(false);
 	}
-	
+
 	/**
 	 * Action triggered when the "background removal" checkbox is selected
 	 */
@@ -547,19 +547,19 @@ Source Code
 			this.canny.setSelected(false);
 			this.threshold.setDisable(true);
 		}
-		
+
 		if(this.dilateErode.isSelected())
 			this.inverse.setDisable(false);
 		else
 			this.inverse.setDisable(true);
-		
+
 		// now the capture can start
 		this.cameraButton.setDisable(false);
 	}
-	
+
 	/**
 	 * Convert a Mat object (OpenCV) in the corresponding Image for JavaFX
-	 * 
+	 *
 	 * @param frame
 	 *            the {@link Mat} representing the current frame
 	 * @return the {@link Image} to show
@@ -574,10 +574,10 @@ Source Code
 		// buffer
 		return new Image(new ByteArrayInputStream(buffer.toArray()));
 	}
-	
+
     }
 
-- `IS_FX.fxml <https://github.com/java-opencv/Polito-Java-OpenCV-Tutorials-Source-Code/blob/master/Image%20Segmentation/src/application/IS_FX.fxml>`_
+- `IS_FX.fxml <https://github.com/opencv-java/image-segmentation/blob/master/src/it/polito/teaching/cv/ImageSeg.fxml>`_
 
 
 .. code-block:: xml

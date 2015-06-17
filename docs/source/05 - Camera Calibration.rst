@@ -2,7 +2,7 @@
 Camera Calibration
 ==================
 
-.. note:: We assume that by now you have already read the previous tutorials. If not, please check previous tutorials at `<http://polito-java-opencv-tutorials.readthedocs.org/en/latest/index.html>`_. You can also find the source code and resources at `<https://github.com/java-opencv/Polito-Java-OpenCV-Tutorials-Source-Code>`_
+.. note:: We assume that by now you have already read the previous tutorials. If not, please check previous tutorials at `<http://opencv-java-tutorials.readthedocs.org/en/latest/index.html>`_. You can also find the source code and resources at `<https://github.com/opencv-java/>`_
 
 Goal
 ----
@@ -99,19 +99,19 @@ The calibration process consists on showing to the cam the chessboard pattern fr
 		boolean found = Calib3d.findChessboardCorners(grayImage, boardSize, imageCorners, Calib3d.CALIB_CB_ADAPTIVE_THRESH + Calib3d.CALIB_CB_NORMALIZE_IMAGE + Calib3d.CALIB_CB_FAST_CHECK);
 
 The ``findChessboardCorners`` function attempts to determine whether the input image is a view of the chessboard pattern and locate the internal chessboard corners.
-Its parameters are: 
+Its parameters are:
 
- - **image** Source chessboard view. It must be an 8-bit grayscale or color image. 
+ - **image** Source chessboard view. It must be an 8-bit grayscale or color image.
  - **patternSize** Number of inner corners per a chessboard row and column
- - **corners** Output array of detected corners. 
- - **flags** Various operation flags that can be zero or a combination of the following values: 
-	- ``CV_CALIB_CB_ADAPTIVE_THRESH`` Use adaptive thresholding to convert the image to black and white, rather than a fixed threshold level (computed from the average image brightness). 
-	- ``CV_CALIB_CB_NORMALIZE_IMAGE`` Normalize the image gamma with "equalizeHist" before applying fixed or adaptive thresholding. 
-	- ``CV_CALIB_CB_FILTER_QUADS`` Use additional criteria (like contour area, perimeter, square-like shape) to filter out false quads extracted at the contour retrieval stage. 
-	- ``CALIB_CB_FAST_CHECK`` Run a fast check on the image that looks for chessboard corners, and shortcut the call if none is found. This can drastically speed up the call in the degenerate condition when no chessboard is observed. 
+ - **corners** Output array of detected corners.
+ - **flags** Various operation flags that can be zero or a combination of the following values:
+	- ``CV_CALIB_CB_ADAPTIVE_THRESH`` Use adaptive thresholding to convert the image to black and white, rather than a fixed threshold level (computed from the average image brightness).
+	- ``CV_CALIB_CB_NORMALIZE_IMAGE`` Normalize the image gamma with "equalizeHist" before applying fixed or adaptive thresholding.
+	- ``CV_CALIB_CB_FILTER_QUADS`` Use additional criteria (like contour area, perimeter, square-like shape) to filter out false quads extracted at the contour retrieval stage.
+	- ``CALIB_CB_FAST_CHECK`` Run a fast check on the image that looks for chessboard corners, and shortcut the call if none is found. This can drastically speed up the call in the degenerate condition when no chessboard is observed.
 
 .. warning:: Before doing the ``findChessboardCorners`` convert the image to gayscale and save the board size into a Size variable:
-	
+
 	.. code-block:: java
 
 	    Imgproc.cvtColor(frame, grayImage, Imgproc.COLOR_BGR2GRAY);
@@ -187,8 +187,8 @@ Its parameters are:
  - **imagePoints** It is a vector of vectors of the projections of calibration pattern points.
  - **imageSize** Size of the image used only to initialize the intrinsic camera matrix.
  - **cameraMatrix** Output 3x3 floating-point camera matrix *A = |fx 0 cx| |0 fy cy| |0 0 1|*. If ``CV_CALIB_USE_INTRINSIC_GUESS`` and/or ``CV_CALIB_FIX_ASPECT_RATIO`` are specified, some or all of *fx*, *fy*, *cx*, *cy* must be initialized before calling the function.
- - **distCoeffs** Output vector of distortion coefficients of 4, 5, or 8 elements. 
- - **rvecs** Output vector of rotation vectors estimated for each pattern view. That is, each k-th rotation vector together with the corresponding k-th translation vector. 
+ - **distCoeffs** Output vector of distortion coefficients of 4, 5, or 8 elements.
+ - **rvecs** Output vector of rotation vectors estimated for each pattern view. That is, each k-th rotation vector together with the corresponding k-th translation vector.
  - **tvecs** Output vector of translation vectors estimated for each pattern view.
 
 We ran calibration and got camera's matrix with the distortion coefficients we may want to correct the image using ``undistort`` function:
@@ -207,7 +207,7 @@ The ``undistort`` function transforms an image to compensate radial and tangenti
 
 Source Code
 -----------
-- `CameraCalibration.java <https://github.com/java-opencv/Polito-Java-OpenCV-Tutorials-Source-Code/blob/master/CameraCalibration/src/application/CameraCalibration.java>`_
+- `CameraCalibration.java <https://github.com/opencv-java/camera-calibration/blob/master/src/application/CameraCalibration.java>`_
 
 .. code-block:: java
 
@@ -237,16 +237,16 @@ Source Code
 			e.printStackTrace();
 		}
 	}
-	
+
 	public static void main(String[] args) {
 		// load the native OpenCV library
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-		
+
 		launch(args);
 	}
     }
 
-- `CC_Controller.java <https://github.com/java-opencv/Polito-Java-OpenCV-Tutorials-Source-Code/blob/master/CameraCalibration/src/application/CC_Controller.java>`_
+- `CC_Controller.java <https://github.com/opencv-java/camera-calibration/blob/master/src/application/CC_Controller.java>`_
 
 .. code-block:: java
 
@@ -271,7 +271,7 @@ Source Code
 		private TextField numHorCorners;
 		@FXML
 		private TextField numVertCorners;
-		
+
 		// a timer for acquiring the video stream
 		private Timer timer;
 		// the OpenCV object that performs the video capture
@@ -294,7 +294,7 @@ Source Code
 		private Mat intrinsic;
 		private Mat distCoeffs;
 		private boolean isCalibrated;
-		
+
 		/**
 		 * Init all the (global) variables needed in the controller
 		 */
@@ -313,7 +313,7 @@ Source Code
 			this.successes = 0;
 			this.isCalibrated = false;
 		}
-		
+
 		/**
 		 * Store all the chessboard properties, update the UI and prepare other
 		 * needed variables
@@ -329,7 +329,7 @@ Source Code
 				obj.push_back(new MatOfPoint3f(new Point3(j / this.numCornersHor, j % this.numCornersVer, 0.0f)));
 			this.cameraButton.setDisable(false);
 		}
-		
+
 		/**
 		 * The action triggered by pushing the button on the GUI
 		 */
@@ -340,12 +340,12 @@ Source Code
 			{
 				// start the video capture
 				this.capture.open(0);
-				
+
 				// is the video stream available?
 				if (this.capture.isOpened())
 				{
 					this.cameraActive = true;
-					
+
 					// grab a frame every 33 ms (30 frames/sec)
 					TimerTask frameGrabber = new TimerTask() {
 						@Override
@@ -369,12 +369,12 @@ Source Code
 									calibratedFrame.setPreserveRatio(true);
 					            	}
 								});
-							
+
 						}
 					};
 					this.timer = new Timer();
 					this.timer.schedule(frameGrabber, 0, 33);
-					
+
 					// update the button content
 					this.cameraButton.setText("Stop Camera");
 				}
@@ -403,10 +403,10 @@ Source Code
 				calibratedFrame.setImage(null);
 			}
 		}
-		
+
 		/**
 		 * Get a frame from the opened video stream (if any)
-		 * 
+		 *
 		 * @return the {@link Image} to show
 		 */
 		private Image grabFrame()
@@ -414,7 +414,7 @@ Source Code
 			// init everything
 			Image imageToShow = null;
 			Mat frame = new Mat();
-			
+
 			// check if the capture is open
 			if (this.capture.isOpened())
 			{
@@ -422,13 +422,13 @@ Source Code
 				{
 					// read the current frame
 					this.capture.read(frame);
-					
+
 					// if the frame is not empty, process it
 					if (!frame.empty())
 					{
 						// show the chessboard pattern
 						this.findAndDrawPoints(frame);
-						
+
 						if (this.isCalibrated)
 						{
 							// prepare the undistored image
@@ -436,11 +436,11 @@ Source Code
 							Imgproc.undistort(frame, undistored, intrinsic, distCoeffs);
 							undistoredImage = mat2Image(undistored);
 						}
-						
+
 						// convert the Mat object (OpenCV) to Image (JavaFX)
 						imageToShow = mat2Image(frame);
 					}
-					
+
 				}
 				catch (Exception e)
 				{
@@ -449,10 +449,10 @@ Source Code
 					e.printStackTrace();
 				}
 			}
-			
+
 			return imageToShow;
 		}
-		
+
 		/**
 		 * Take a snapshot to be used for the calibration process
 		 */
@@ -466,17 +466,17 @@ Source Code
 				this.objectPoints.add(obj);
 				this.successes++;
 			}
-			
+
 			// reach the correct number of images needed for the calibration
 			if (this.successes == this.boardsNumber)
 			{
 				this.calibrateCamera();
 			}
 		}
-		
+
 		/**
 		 * Find and draws the points needed for the calibration on the chessboard
-		 * 
+		 *
 		 * @param frame
 		 *            the current frame
 		 * @return the current number of successfully identified chessboards as an
@@ -486,7 +486,7 @@ Source Code
 		{
 			// init
 			Mat grayImage = new Mat();
-			
+
 			// I would perform this operation only before starting the calibration
 			// process
 			if (this.successes < this.boardsNumber)
@@ -508,7 +508,7 @@ Source Code
 					grayImage.copyTo(this.savedImage);
 					// show the chessboard inner corners on screen
 					Calib3d.drawChessboardCorners(frame, boardSize, imageCorners, found);
-					
+
 					// enable the option for taking a snapshot
 					this.snapshotButton.setDisable(false);
 				}
@@ -518,7 +518,7 @@ Source Code
 				}
 			}
 		}
-		
+
 		/**
 		 * The effective camera calibration, to be performed once in the program
 		 * execution
@@ -533,14 +533,14 @@ Source Code
 			// calibrate!
 			Calib3d.calibrateCamera(objectPoints, imagePoints, savedImage.size(), intrinsic, distCoeffs, rvecs, tvecs);
 			this.isCalibrated = true;
-			
+
 			// you cannot take other snapshot, at this point...
 			this.snapshotButton.setDisable(true);
 		}
-		
+
 		/**
 		 * Convert a Mat object (OpenCV) in the corresponding Image for JavaFX
-		 * 
+		 *
 		 * @param frame
 		 *            the {@link Mat} representing the current frame
 		 * @return the {@link Image} to show
@@ -557,7 +557,7 @@ Source Code
 		}
     }
 
-- `CC_FX.fxml <https://github.com/java-opencv/Polito-Java-OpenCV-Tutorials-Source-Code/blob/master/CameraCalibration/src/application/CC_FX.fxml>`_
+- `CC_FX.fxml <https://github.com/opencv-java/camera-calibration/blob/master/src/application/CC_FX.fxml>`_
 
 .. code-block:: xml
 

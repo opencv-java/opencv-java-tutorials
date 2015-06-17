@@ -2,7 +2,7 @@
 First JavaFX Application with OpenCV
 ====================================
 
-.. note:: We assume that by now you have already read the previous tutorials. If not, please check previous tutorials at `<http://polito-java-opencv-tutorials.readthedocs.org/en/latest/index.html>`_. You can also find the source code and resources at `<https://github.com/java-opencv/Polito-Java-OpenCV-Tutorials-Source-Code>`_
+.. note:: We assume that by now you have already read the previous tutorials. If not, please check previous tutorials at `<http://opencv-java-tutorials.readthedocs.org/en/latest/index.html>`_. You can also find the source code and resources at `<https://github.com/opencv-java/>`_
 
 Introduction to a OpenCV application with JavaFX
 ------------------------------------------------
@@ -133,7 +133,7 @@ Essentially, all the functionalities required for video manipulation is integrat
 
     private VideoCapture capture = new VideoCapture();
 
-This on itself builds on the FFmpeg open source library. A video is composed of a succession of images, we refer to these in the literature as frames. In case of a video file there is a frame rate specifying just how long is between two frames. While for the video cameras usually there is a limit of just how many frames they can digitalize per second. 
+This on itself builds on the FFmpeg open source library. A video is composed of a succession of images, we refer to these in the literature as frames. In case of a video file there is a frame rate specifying just how long is between two frames. While for the video cameras usually there is a limit of just how many frames they can digitalize per second.
 In our case we set as frame rate 30 frames per sec. To do so we initialize a timer that will open a background task every *33 milliseconds*.
 
 .. code-block:: java
@@ -194,9 +194,9 @@ This encodes an image into a memory buffer. The function compresses the image an
 
 .. note:: ``cvEncodeImage`` returns single-row matrix of type ``CV_8UC1`` that contains encoded image as array of bytes.
 
-It takes three parameters: 
- - (".png") File extension that defines the output format. 
- - (frame) Image to be written. 
+It takes three parameters:
+ - (".png") File extension that defines the output format.
+ - (frame) Image to be written.
  - (buffer) Output buffer resized to fit the compressed image.
 
 Once we filled the buffer we have to stream it into an Image by using ``ByteArrayInputStream``:
@@ -219,7 +219,7 @@ With *Java 1.8* we cannot perform an update of a gui element in a thread that di
 
 Source Code
 -----------
-- `Main.java <https://github.com/java-opencv/Polito-Java-OpenCV-Tutorials-Source-Code/blob/master/MyFirstFXApp/src/application/Main.java>`_
+- `Main.java <https://github.com/opencv-java/getting-started/blob/master/FXHelloCV/src/it/polito/elite/teaching/cv/FXHelloCV.java>`_
 
 .. code-block:: java
 
@@ -242,12 +242,12 @@ Source Code
 			    // set a reference of this class for its controller
 			    FXController controller = loader.getController();
 			    controller.setRootElement(root);
-			
+
 		    } catch(Exception e) {
 			    e.printStackTrace();
 		    }
 	    }
-	
+
 	    public static void main(String[] args) {
 		    // load the native OpenCV library
 		    System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
@@ -255,7 +255,7 @@ Source Code
 	    }
     }
 
-- `FXController.java <https://github.com/java-opencv/Polito-Java-OpenCV-Tutorials-Source-Code/blob/master/MyFirstFXApp/src/application/FXController.java>`_
+- `FXController.java <https://github.com/opencv-java/getting-started/blob/master/FXHelloCV/src/it/polito/elite/teaching/cv/FXHelloCVController.java>`_
 
 .. code-block:: java
 
@@ -265,11 +265,11 @@ Source Code
 	private Button start_btn;
 	@FXML
 	private ImageView currentFrame;
-	
+
 	private Pane rootElement;
 	private Timer timer;
 	private VideoCapture capture = new VideoCapture();
-	
+
 	@FXML
 	protected void startCamera(ActionEvent event)
 	{
@@ -295,12 +295,12 @@ Source Code
 							{
 								frameView.setImage(tmp);
 				            }
-						});	
-						
+						});
+
 					}
 				};
 				this.timer = new Timer();
-				//set the timer scheduling, this allow you to perform frameGrabber every 33ms; 
+				//set the timer scheduling, this allow you to perform frameGrabber every 33ms;
 				this.timer.schedule(frameGrabber, 0, 33);
 				this.start_btn.setText("Stop Camera");
 			}
@@ -320,7 +320,7 @@ Source Code
 			}
 		}
 	}
-	
+
 	private Image grabFrame()
 	{
 		//init
@@ -350,7 +350,7 @@ Source Code
 		}
 		return imageToShow;
 	}
-	
+
 	private Image mat2Image(Mat frame)
 	{
 		// create a temporary buffer
@@ -360,15 +360,15 @@ Source Code
 		// build and return an Image created from the image encoded in the buffer
 		return new Image(new ByteArrayInputStream(buffer.toArray()));
 	}
-	
+
 	public void setRootElement(Pane root)
 	{
 		this.rootElement = root;
 	}
-	
+
     }
 
-- `MyFirstJFX.fxml <https://github.com/java-opencv/Polito-Java-OpenCV-Tutorials-Source-Code/blob/master/MyFirstFXApp/src/application/MyFirstJFX.fxml>`_
+- `MyFirstJFX.fxml <https://github.com/opencv-java/getting-started/blob/master/FXHelloCV/src/it/polito/elite/teaching/cv/FXHelloCV.fxml>`_
 
 .. code-block:: xml
 

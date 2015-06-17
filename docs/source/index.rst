@@ -3,8 +3,10 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to OpenCV Java Tutorials's documentation!
+Welcome to OpenCV Java Tutorials documentation!
 =================================================
+
+.. note:: We are in the process to update these tutorials to OpenCV 3.0 and JavaFX 8.
 
 Contents:
 
@@ -29,4 +31,3 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
-

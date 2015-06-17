@@ -2,7 +2,7 @@
 Fourier Transform
 =================
 
-.. note:: We assume that by now you have already read the previous tutorials. If not, please check previous tutorials at `<http://polito-java-opencv-tutorials.readthedocs.org/en/latest/index.html>`_. You can also find the source code and resources at `<https://github.com/java-opencv/Polito-Java-OpenCV-Tutorials-Source-Code>`_
+.. note:: We assume that by now you have already read the previous tutorials. If not, please check previous tutorials at `<http://opencv-java-tutorials.readthedocs.org/en/latest/index.html>`_. You can also find the source code and resources at `<https://github.com/opencv-java/>`_
 
 Goal
 ----
@@ -11,7 +11,7 @@ In this tutorial we are going to create a JavaFX application where we can load a
 What is the Fourier Transform?
 ------------------------------
 The Fourier Transform will decompose an image into its sinus and cosines components. In other words, it will transform an image from its spatial domain to its frequency domain. The result of the transformation is complex numbers. Displaying this is possible either via a real image and a complex image or via a magnitude and a phase image. However, throughout the image processing algorithms only the magnitude image is interesting as this contains all the information we need about the images geometric structure.
-For this tutorial we are going to use basic gray scale image, whose values usually are between zero and 255. Therefore the Fourier Transform too needs to be of a discrete type resulting in a Discrete Fourier Transform (DFT). The DFT is the sampled Fourier Transform and therefore does not contain all frequencies forming an image, but only a set of samples which is large enough to fully describe the spatial domain image. The number of frequencies corresponds to the number of pixels in the spatial domain image, i.e. the image in the spatial and Fourier domain are of the same size. 
+For this tutorial we are going to use basic gray scale image, whose values usually are between zero and 255. Therefore the Fourier Transform too needs to be of a discrete type resulting in a Discrete Fourier Transform (DFT). The DFT is the sampled Fourier Transform and therefore does not contain all frequencies forming an image, but only a set of samples which is large enough to fully describe the spatial domain image. The number of frequencies corresponds to the number of pixels in the spatial domain image, i.e. the image in the spatial and Fourier domain are of the same size.
 
 What we will do in this tutorial
 --------------------------------
@@ -121,12 +121,12 @@ Remember, that at the first step, we expanded the image? Well, it's time to thro
     Mat q1 = new Mat(image, new Rect(cx, 0, cx, cy));
     Mat q2 = new Mat(image, new Rect(0, cy, cx, cy));
     Mat q3 = new Mat(image, new Rect(cx, cy, cx, cy));
-			
+
     Mat tmp = new Mat();
     q0.copyTo(tmp);
     q3.copyTo(q0);
     tmp.copyTo(q3);
-		
+
     q1.copyTo(tmp);
     q2.copyTo(q1);
     tmp.copyTo(q2);
@@ -178,14 +178,14 @@ optical system; nearly half of the light is contained in a diameter of *1.02 x l
 
 Source Code
 -----------
- -  `FourierTransform.java <https://github.com/java-opencv/Polito-Java-OpenCV-Tutorials-Source-Code/blob/master/Fourier%20Transform/src/application/FourierTransform.java>`_
+ -  `FourierTransform.java <https://github.com/opencv-java/fourier-transform/blob/master/src/it/polito/teaching/cv/Lab4.java>`_
 
 .. code-block:: java
 
     public class FourierTransform extends Application {
 	// the main stage
 	private Stage primaryStage;
-	
+
 	@Override
 	public void start(Stage primaryStage) {
 		try
@@ -202,7 +202,7 @@ Source Code
 			this.primaryStage.setTitle("Fourier Transform");
 			this.primaryStage.setScene(scene);
 			this.primaryStage.show();
-			
+
 			// init the controller
 			FT_Controller controller = loader.getController();
 			controller.setMainApp(this);
@@ -212,26 +212,26 @@ Source Code
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * Get the main stage
-	 * 
+	 *
 	 * @return the stage
 	 */
 	protected Stage getStage()
 	{
 		return this.primaryStage;
 	}
-	
+
 	public static void main(String[] args) {
 		// load the native OpenCV library
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-		
+
 		launch(args);
 	}
     }
 
--  `FT_Controller.java <https://github.com/java-opencv/Polito-Java-OpenCV-Tutorials-Source-Code/blob/master/Fourier%20Transform/src/application/FT_Controller.java>`_
+-  `FT_Controller.java <https://github.com/opencv-java/fourier-transform/blob/master/src/it/polito/teaching/cv/FourierController.java>`_
 
 .. code-block:: java
 
@@ -249,7 +249,7 @@ Source Code
 		// a FXML button for performing the antitransformation
 		@FXML
 		private Button antitransformButton;
-		
+
 		// the main app
 		private FourierTransform main;
 		// the JavaFX file chooser
@@ -259,7 +259,7 @@ Source Code
 		private List<Mat> planes;
 		// the final complex image
 		private Mat complexImage;
-		
+
 		/**
 		 * Init the needed variables
 		 */
@@ -270,7 +270,7 @@ Source Code
 			this.planes = new ArrayList<>();
 			this.complexImage = new Mat();
 		}
-		
+
 		/**
 		 * Load an image from disk
 		 */
@@ -298,7 +298,7 @@ Source Code
 					this.planes.clear();
 			}
 		}
-		
+
 		/**
 		 * The action triggered by pushing the button for apply the dft to the
 		 * loaded image
@@ -314,27 +314,27 @@ Source Code
 			this.planes.add(Mat.zeros(padded.size(), CvType.CV_32F));
 			// prepare a complex image for performing the dft
 			Core.merge(this.planes, this.complexImage);
-			
+
 			// dft
 			Core.dft(this.complexImage, this.complexImage);
-			
+
 			// optimize the image resulting from the dft operation
 			Mat magnitude = this.createOptimizedMagnitude(this.complexImage);
-			
+
 			// show the result of the transformation as an image
 			this.transformedImage.setImage(this.mat2Image(magnitude));
 			// set a fixed width
 			this.transformedImage.setFitWidth(250);
 			// preserve image ratio
 			this.transformedImage.setPreserveRatio(true);
-			
+
 			// enable the button for perform the antitransformation
 			this.antitransformButton.setDisable(false);
 		}
-		
+
 		/**
 		 * Optimize the image dimensions
-		 * 
+		 *
 		 * @param image
 		 *            the {@link Mat} to optimize
 		 * @return the image whose dimensions have been optimized
@@ -349,14 +349,14 @@ Source Code
 			int addPixelCols = Core.getOptimalDFTSize(image.cols());
 			// apply the optimal cols and rows size to the image
 			Imgproc.copyMakeBorder(image, padded, 0, addPixelRows - image.rows(), 0, addPixelCols - image.cols(),Imgproc.BORDER_CONSTANT, Scalar.all(0));
-			
+
 			return padded;
 		}
-		
+
 		/**
 		 * Optimize the magnitude of the complex image obtained from the DFT, to
 		 * improve its visualization
-		 * 
+		 *
 		 * @param complexImage
 		 *            the complex image obtained from the DFT
 		 * @return the optimized image
@@ -370,7 +370,7 @@ Source Code
 			Core.split(complexImage, newPlanes);
 			// compute the magnitude
 			Core.magnitude(newPlanes.get(0), newPlanes.get(1), mag);
-			
+
 			// move to a logarithmic scale
 			Core.add(mag, Scalar.all(1), mag);
 			Core.log(mag, mag);
@@ -379,17 +379,17 @@ Source Code
 			// normalize the magnitude image for the visualization since both JavaFX
 			// and OpenCV need images with value between 0 and 255
 			Core.normalize(mag, mag, 0, 255, Core.NORM_MINMAX);
-			
+
 			// you can also write on disk the resulting image...
 			// Highgui.imwrite("../magnitude.png", mag);
-			
+
 			return mag;
 		}
-		
+
 		/**
 		 * Reorder the 4 quadrants of the image representing the magnitude, after
 		 * the DFT
-		 * 
+		 *
 		 * @param image
 		 *            the {@link Mat} object whose quadrants are to reorder
 		 */
@@ -398,22 +398,22 @@ Source Code
 			image = image.submat(new Rect(0, 0, image.cols() & -2, image.rows() & -2));
 			int cx = image.cols() / 2;
 			int cy = image.rows() / 2;
-			
+
 			Mat q0 = new Mat(image, new Rect(0, 0, cx, cy));
 			Mat q1 = new Mat(image, new Rect(cx, 0, cx, cy));
 			Mat q2 = new Mat(image, new Rect(0, cy, cx, cy));
 			Mat q3 = new Mat(image, new Rect(cx, cy, cx, cy));
-			
+
 			Mat tmp = new Mat();
 			q0.copyTo(tmp);
 			q3.copyTo(q0);
 			tmp.copyTo(q3);
-			
+
 			q1.copyTo(tmp);
 			q2.copyTo(q1);
 			tmp.copyTo(q2);
 		}
-		
+
 		/**
 		 * The action triggered by pushing the button for apply the inverse dft to
 		 * the loaded image
@@ -422,21 +422,21 @@ Source Code
 		protected void antitransformImage()
 		{
 			Core.idft(this.complexImage, this.complexImage);
-			
+
 			Mat restoredImage = new Mat();
 			Core.split(this.complexImage, this.planes);
 			Core.normalize(this.planes.get(0), restoredImage, 0, 255, Core.NORM_MINMAX);
-			
+
 			this.antitransformedImage.setImage(this.mat2Image(restoredImage));
 			// set a fixed width
 			this.antitransformedImage.setFitWidth(250);
 			// preserve image ratio
 			this.antitransformedImage.setPreserveRatio(true);
 		}
-		
+
 		/**
 		 * Set the main app (needed for the FileChooser modal window)
-		 * 
+		 *
 		 * @param mainApp
 		 *            the main app
 		 */
@@ -444,10 +444,10 @@ Source Code
 		{
 			this.main = mainApp;
 		}
-		
+
 		/**
 		 * Convert a Mat object (OpenCV) in the corresponding Image for JavaFX
-		 * 
+		 *
 		 * @param frame
 		 *            the {@link Mat} representing the current frame
 		 * @return the {@link Image} to show
@@ -464,7 +464,7 @@ Source Code
 		}
     }
 
-- `FT_FX.fxml <https://github.com/java-opencv/Polito-Java-OpenCV-Tutorials-Source-Code/blob/master/Fourier%20Transform/src/application/FT_FX.fxml>`_
+- `FT_FX.fxml <https://github.com/opencv-java/fourier-transform/blob/master/src/it/polito/teaching/cv/Fourier.fxml>`_
 
 .. code-block:: xml
 

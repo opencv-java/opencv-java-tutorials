@@ -2,7 +2,7 @@
 OpenCV Basics
 =============
 
-.. note:: We assume that by now you have already read the previous tutorials. If not, please check previous tutorials at `<http://polito-java-opencv-tutorials.readthedocs.org/en/latest/index.html>`_. You can also find the source code and resources at `<https://github.com/java-opencv/Polito-Java-OpenCV-Tutorials-Source-Code>`_
+.. note:: We assume that by now you have already read the previous tutorials. If not, please check previous tutorials at `<http://opencv-java-tutorials.readthedocs.org/en/latest/index.html>`_. You can also find the source code and resources at `<https://github.com/opencv-java/>`_
 
 What we will do in this tutorial
 --------------------------------
@@ -18,7 +18,7 @@ For this tutorial we can create a new JavaFX project and build a scene as the on
 - in the **BOTTOM** we have a button inside a *HBox*:
 
 .. code-block:: xml
-	  
+
     <HBox alignment="CENTER" >
        <padding>
           <Insets top="25" right="25" bottom="25" left="25"/>
@@ -139,12 +139,12 @@ where I is a multi-dimensional index of array elements. In case of multi-channel
 
 .. note:: Saturation is not applied when the output array has the depth ``CV_32S``. You may even get result of an incorrect sign in the case of overflow.
 
-Parameters: 
- - **src1** first input array. 
- - **alpha** weight of the first array elements. 
- - **src2** second input array of the same size and channel number as src1. 
- - **beta** weight of the second array elements. 
- - **gamma** scalar added to each sum. 
+Parameters:
+ - **src1** first input array.
+ - **alpha** weight of the first array elements.
+ - **src2** second input array of the same size and channel number as src1.
+ - **beta** weight of the second array elements.
+ - **gamma** scalar added to each sum.
  - **dst** output array that has the same size and number of channels as the input arrays.
 
 So we'll have:
@@ -169,7 +169,7 @@ Everything we have done so far to add the logo to the image has to perform only 
 	Rect roi = new Rect(frame.cols() - logo.cols(), frame.rows() - logo.rows(), logo.cols(),logo.rows());
 	Mat imageROI = frame.submat(roi);
 	// add the logo: method #1
-	
+
 	Core.addWeighted(imageROI, 1.0, logo, 0.7, 0.0, imageROI);
 	// add the logo: method #2
 	// Mat mask = logo.clone();
@@ -205,12 +205,12 @@ Before we could calculate the histogram of each channel we have to prepare all t
 The functions calcHist calculate the histogram of one or more arrays. The elements of a tuple used to increment a histogram bin are taken from the corresponding input arrays at the same location.
 Parameters:
 
- - **images** Source arrays. They all should have the same depth, CV_8U or CV_32F, and the same size. Each of them can have an arbitrary number of channels. 
- - **channels** List of the dims channels used to compute the histogram. The first array channels are numerated from 0 to images[0].channels()-1, the second array channels are counted from images[0].channels() to images[0].channels() + images[1].channels()-1, and so on. 
- - **mask** Optional mask. If the matrix is not empty, it must be an 8-bit array of the same size as images[i]. The non-zero mask elements mark the array elements counted in the histogram. 
- - **hist** Output histogram, which is a dense or sparse dims -dimensional array. 
- - **histSize** Array of histogram sizes in each dimension. 
- - **ranges** Array of the dims arrays of the histogram bin boundaries in each dimension. When the histogram is uniform (uniform =true), then for each dimension i it is enough to specify the lower (inclusive) boundary L_0 of the 0-th histogram bin and the upper (exclusive) boundary U_(histSize[i]-1) for the last histogram bin histSize[i]-1. That is, in case of a uniform histogram each of ranges[i] is an array of 2 elements. When the histogram is not uniform (uniform=false), then each of ranges[i] contains histSize[i]+1 elements: L_0, U_0=L_1, U_1=L_2,..., U_(histSize[i]-2)=L_(histSize[i]-1), U_(histSize[i]-1). The array elements, that are not between L_0 and U_(histSize[i]-1), are not counted in the histogram. 
+ - **images** Source arrays. They all should have the same depth, CV_8U or CV_32F, and the same size. Each of them can have an arbitrary number of channels.
+ - **channels** List of the dims channels used to compute the histogram. The first array channels are numerated from 0 to images[0].channels()-1, the second array channels are counted from images[0].channels() to images[0].channels() + images[1].channels()-1, and so on.
+ - **mask** Optional mask. If the matrix is not empty, it must be an 8-bit array of the same size as images[i]. The non-zero mask elements mark the array elements counted in the histogram.
+ - **hist** Output histogram, which is a dense or sparse dims -dimensional array.
+ - **histSize** Array of histogram sizes in each dimension.
+ - **ranges** Array of the dims arrays of the histogram bin boundaries in each dimension. When the histogram is uniform (uniform =true), then for each dimension i it is enough to specify the lower (inclusive) boundary L_0 of the 0-th histogram bin and the upper (exclusive) boundary U_(histSize[i]-1) for the last histogram bin histSize[i]-1. That is, in case of a uniform histogram each of ranges[i] is an array of 2 elements. When the histogram is not uniform (uniform=false), then each of ranges[i] contains histSize[i]+1 elements: L_0, U_0=L_1, U_1=L_2,..., U_(histSize[i]-2)=L_(histSize[i]-1), U_(histSize[i]-1). The array elements, that are not between L_0 and U_(histSize[i]-1), are not counted in the histogram.
  - **accumulate** Accumulation flag. If it is set, the histogram is not cleared in the beginning when it is allocated. This feature enables you to compute a single histogram from several sets of arrays, or to update the histogram in time.
 
 The image will be our frame, we don't need a mask and the last flag will be false; thus we need to define the channels, the hist, the ``histSize`` and the ``ranges``:
@@ -303,7 +303,7 @@ Let's convert the obtained Mat to an Image with our method ``mat2Image`` and upd
 
 Source Code
 -----------
-- `Basics.java <https://github.com/java-opencv/Polito-Java-OpenCV-Tutorials-Source-Code/blob/master/OpenCVBasics/src/application/Basics.java>`_
+- `Basics.java <https://github.com/opencv-java/video-basics/blob/master/src/it/polito/teaching/cv/Lab3.java>`_
 
 .. code-block:: java
 
@@ -325,26 +325,26 @@ Source Code
 			primaryStage.setScene(scene);
 			// show the GUI
 			primaryStage.show();
-			
+
 		}
 		catch (Exception e)
 		{
 			e.printStackTrace();
 		}
 	}
-	
+
 	public static void main(String[] args) {
 		// load the native OpenCV library
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-		
+
 		launch(args);
 	}
     }
 
-- `BasicsController.java <https://github.com/java-opencv/Polito-Java-OpenCV-Tutorials-Source-Code/blob/master/OpenCVBasics/src/application/BasicsController.java>`_
+- `BasicsController.java <https://github.com/opencv-java/video-basics/blob/master/src/it/polito/teaching/cv/VideoController.java>`_
 
 .. code-block:: java
- 
+
     public class BasicsController {
 	// the FXML button
 		@FXML
@@ -361,7 +361,7 @@ Source Code
 		// the FXML area for showing the current frame
 		@FXML
 		private ImageView currentFrame;
-		
+
 		// a timer for acquiring the video stream
 		private Timer timer;
 		// the OpenCV object that realizes the video capture
@@ -371,7 +371,7 @@ Source Code
 		// the logo to be loaded
 		private Mat logo;
 		private Image i,histo;
-		
+
 		/**
 		 * The action triggered by pushing the button on the GUI
 		 */
@@ -382,12 +382,12 @@ Source Code
 			{
 				// start the video capture
 				this.capture.open(0);
-				
+
 				// is the video stream available?
 				if (this.capture.isOpened())
 				{
 					this.cameraActive = true;
-					
+
 					// grab a frame every 33 ms (30 frames/sec)
 					TimerTask frameGrabber = new TimerTask() {
 						@Override
@@ -399,12 +399,12 @@ Source Code
 					            		public void run() {
 									currentFrame.setImage(i);
 					            		}
-							});	
+							});
 						}
 					};
 					this.timer = new Timer();
 					this.timer.schedule(frameGrabber, 0, 33);
-					
+
 					// update the button content
 					this.button.setText("Stop Camera");
 				}
@@ -437,7 +437,7 @@ Source Code
 				});
 			}
 		}
-		
+
 		/**
 		 * The action triggered by selecting/deselecting the logo checkbox
 		 */
@@ -450,10 +450,10 @@ Source Code
 				this.logo = Highgui.imread("resources/Poli.png");
 			}
 		}
-		
+
 		/**
 		 * Get a frame from the opened video stream (if any)
-		 * 
+		 *
 		 * @return the {@link Image} to show
 		 */
 		private Image grabFrame()
@@ -461,7 +461,7 @@ Source Code
 			// init everything
 			Image imageToShow = null;
 			Mat frame = new Mat();
-			
+
 			// check if the capture is open
 			if (this.capture.isOpened())
 			{
@@ -469,7 +469,7 @@ Source Code
 				{
 					// read the current frame
 					this.capture.read(frame);
-					
+
 					// if the frame is not empty, process it
 					if (!frame.empty())
 					{
@@ -480,26 +480,26 @@ Source Code
 							Mat imageROI = frame.submat(roi);
 							// add the logo: method #1
 							Core.addWeighted(imageROI, 1.0, logo, 0.7, 0.0, imageROI);
-							
+
 							// add the logo: method #2
 							// Mat mask = logo.clone();
 							// logo.copyTo(imageROI, mask);
 						}
-						
+
 						// if the grayscale checkbox is selected, convert the image
 						// (frame + logo) accordingly
 						if (grayscale.isSelected())
 						{
 							Imgproc.cvtColor(frame, frame, Imgproc.COLOR_BGR2GRAY);
 						}
-						
+
 						// show the histogram
 						this.showHistogram(frame, grayscale.isSelected());
-						
+
 						// convert the Mat object (OpenCV) to Image (JavaFX)
 						imageToShow = mat2Image(frame);
 					}
-					
+
 				}
 				catch (Exception e)
 				{
@@ -507,13 +507,13 @@ Source Code
 					System.err.println("ERROR: " + e);
 				}
 			}
-			
+
 			return imageToShow;
 		}
-		
+
 		/**
 		 * Compute and show the histogram for the given {@link Mat} image
-		 * 
+		 *
 		 * @param frame
 		 *            the {@link Mat} image for which compute the histogram
 		 * @param gray
@@ -524,45 +524,45 @@ Source Code
 			// split the frames in multiple images
 			List<Mat> images = new ArrayList<Mat>();
 			Core.split(frame, images);
-			
+
 			// set the number of bins at 256
 			MatOfInt histSize = new MatOfInt(256);
 			// only one channel
 			MatOfInt channels = new MatOfInt(0);
 			// set the ranges
 			MatOfFloat histRange = new MatOfFloat(0, 256);
-			
+
 			// compute the histograms for the B, G and R components
 			Mat hist_b = new Mat();
 			Mat hist_g = new Mat();
 			Mat hist_r = new Mat();
-			
+
 			// B component or gray image
 			Imgproc.calcHist(images.subList(0, 1), channels, new Mat(), hist_b, histSize, histRange, false);
-			
+
 			// G and R components (if the image is not in gray scale)
 			if (!gray)
 			{
 				Imgproc.calcHist(images.subList(1, 2), channels, new Mat(), hist_g, histSize, histRange, false);
 				Imgproc.calcHist(images.subList(2, 3), channels, new Mat(), hist_r, histSize, histRange, false);
 			}
-			
+
 			// draw the histogram
 			int hist_w = 150; // width of the histogram image
 			int hist_h = 150; // height of the histogram image
 			int bin_w = (int) Math.round(hist_w / histSize.get(0, 0)[0]);
-			
+
 			Mat histImage = new Mat(hist_h, hist_w, CvType.CV_8UC3, new Scalar(0, 0, 0));
 			// normalize the result to [0, histImage.rows()]
 			Core.normalize(hist_b, hist_b, 0, histImage.rows(), Core.NORM_MINMAX, -1, new Mat());
-			
+
 			// for G and R components
 			if (!gray)
 			{
 				Core.normalize(hist_g, hist_g, 0, histImage.rows(), Core.NORM_MINMAX, -1, new Mat());
 				Core.normalize(hist_r, hist_r, 0, histImage.rows(), Core.NORM_MINMAX, -1, new Mat());
 			}
-			
+
 			// effectively draw the histogram(s)
 			for (int i = 1; i < histSize.get(0, 0)[0]; i++)
 			{
@@ -580,9 +580,9 @@ Source Code
 							0);
 				}
 			}
-			
+
 			histo = mat2Image(histImage);
-			
+
 			// display the whole
 			Platform.runLater(new Runnable() {
 				@Override
@@ -590,12 +590,12 @@ Source Code
 					histogram.setImage(histo);
 	            	}
 				});
-			
+
 		}
-		
+
 		/**
 		 * Convert a Mat object (OpenCV) in the corresponding Image for JavaFX
-		 * 
+		 *
 		 * @param frame
 		 *            the {@link Mat} representing the current frame
 		 * @return the {@link Image} to show
@@ -612,7 +612,7 @@ Source Code
 		}
     }
 
-- `BasicsFX.fxml <https://github.com/java-opencv/Polito-Java-OpenCV-Tutorials-Source-Code/blob/master/OpenCVBasics/src/application/BasicsFX.fxml>`_
+- `BasicsFX.fxml <https://github.com/opencv-java/video-basics/blob/master/src/it/polito/teaching/cv/Video.fxml>`_
 
 .. code-block:: xml
 

@@ -2,7 +2,7 @@
 First Java Application with OpenCV
 ==================================
 
-.. note:: We assume that by now you have already read the previous tutorials. If not, please check previous tutorials at `<http://polito-java-opencv-tutorials.readthedocs.org/en/latest/index.html>`_. You can also find the source code and resources at `<https://github.com/java-opencv/Polito-Java-OpenCV-Tutorials-Source-Code>`_
+.. note:: We assume that by now you have already read the previous tutorials. If not, please check previous tutorials at `<http://opencv-java-tutorials.readthedocs.org/en/latest/index.html>`_. You can also find the source code and resources at `<https://github.com/opencv-java/>`_
 
 Introduction to a OpenCV application with Java
 ----------------------------------------------
@@ -81,7 +81,7 @@ You should have the following output:
 
 .. image:: _static/02-03.png
 
-Here I put the whole source `code <https://github.com/java-opencv/Polito-Java-OpenCV-Tutorials-Source-Code/blob/master/MyFirstProject/src/mypackage/MyFirstApp.java>`_:
+Here I put the whole source `code <https://github.com/opencv-java/getting-started/blob/master/HelloCV/src/it/polito/elite/teaching/cv/HelloCV.java>`_:
 
 .. code-block:: java
 

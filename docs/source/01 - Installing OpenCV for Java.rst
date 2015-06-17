@@ -4,7 +4,7 @@ Installing OpenCV for Java
 
 Introduction to OpenCV for Java.
 --------------------------------
-As of OpenCV 2.4.4, OpenCV supports desktop Java development. This tutorial will help you install OpenCV on your desktop SO.
+As of OpenCV 2.4.4, OpenCV supports desktop Java development. This tutorial will help you install OpenCV on your desktop operating system.
 
 Install the latest Java version.
 --------------------------------
