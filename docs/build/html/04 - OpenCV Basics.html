@@ -1,0 +1,680 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>OpenCV Basics &mdash; OpenCV Java Tutorials 1.0alpha documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0alpha',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="OpenCV Java Tutorials 1.0alpha documentation" href="index.html" />
+    <link rel="next" title="Camera Calibration" href="05 - Camera Calibration.html" />
+    <link rel="prev" title="First JavaFX Application with OpenCV" href="03 - First JavaFX Application with OpenCV.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="opencv-basics">
+<h1>OpenCV Basics<a class="headerlink" href="#opencv-basics" title="Permalink to this headline">¶</a></h1>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">We assume that by now you have already read the previous tutorials. If not, please check previous tutorials at <a class="reference external" href="http://polito-java-opencv-tutorials.readthedocs.org/en/latest/index.html">http://polito-java-opencv-tutorials.readthedocs.org/en/latest/index.html</a>. You can also find the source code and resources at <a class="reference external" href="https://github.com/java-opencv/Polito-Java-OpenCV-Tutorials-Source-Code">https://github.com/java-opencv/Polito-Java-OpenCV-Tutorials-Source-Code</a></p>
+</div>
+<div class="section" id="what-we-will-do-in-this-tutorial">
+<h2>What we will do in this tutorial<a class="headerlink" href="#what-we-will-do-in-this-tutorial" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt>In this guide, we will:</dt>
+<dd><ul class="first last simple">
+<li>Create a basic <em>checkbox</em> interaction to alter the color of the video stream.</li>
+<li>Add a basic <em>checkbox</em> interaction to &#8220;alpha over&#8221; a logo to the video stream.</li>
+<li>Display the video stream <em>histogram</em> (both one and three channels).</li>
+</ul>
+</dd>
+</dl>
+</div>
+<div class="section" id="getting-started">
+<h2>Getting started<a class="headerlink" href="#getting-started" title="Permalink to this headline">¶</a></h2>
+<p>For this tutorial we can create a new JavaFX project and build a scene as the one realized in the previous one. So we&#8217;ve got a window with a border pane in witch:</p>
+<ul class="simple">
+<li>in the <strong>BOTTOM</strong> we have a button inside a <em>HBox</em>:</li>
+</ul>
+<div class="highlight-xml"><div class="highlight"><pre><span class="nt">&lt;HBox</span> <span class="na">alignment=</span><span class="s">&quot;CENTER&quot;</span> <span class="nt">&gt;</span>
+   <span class="nt">&lt;padding&gt;</span>
+      <span class="nt">&lt;Insets</span> <span class="na">top=</span><span class="s">&quot;25&quot;</span> <span class="na">right=</span><span class="s">&quot;25&quot;</span> <span class="na">bottom=</span><span class="s">&quot;25&quot;</span> <span class="na">left=</span><span class="s">&quot;25&quot;</span><span class="nt">/&gt;</span>
+   <span class="nt">&lt;/padding&gt;</span>
+   <span class="nt">&lt;Button</span> <span class="na">fx:id=</span><span class="s">&quot;button&quot;</span> <span class="na">alignment=</span><span class="s">&quot;center&quot;</span> <span class="na">text=</span><span class="s">&quot;Start camera&quot;</span> <span class="na">onAction=</span><span class="s">&quot;#startCamera&quot;</span> <span class="nt">/&gt;</span>
+<span class="nt">&lt;/HBox&gt;</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li>in the <strong>CENTRE</strong> we have a ImageView:</li>
+</ul>
+<div class="highlight-xml"><div class="highlight"><pre><span class="nt">&lt;ImageView</span> <span class="na">fx:id=</span><span class="s">&quot;currentFrame&quot;</span> <span class="nt">/&gt;</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="color-channel-checkbox">
+<h2>Color channel checkbox<a class="headerlink" href="#color-channel-checkbox" title="Permalink to this headline">¶</a></h2>
+<p>Let&#8217;s open our fxml file with Scene Builder and add to the <strong>RIGHT</strong> field of our BP a vertical box <code class="docutils literal"><span class="pre">VBox</span></code>. A VBox lays out its children in a single vertical column. If the VBox has a border and/or padding set, then the contents will be layed out within those insets. Also it will resize children (if resizable) to their preferred heights and uses its <code class="docutils literal"><span class="pre">fillWidth</span></code> property to determine whether to resize their widths to fill its own width or keep their widths to their preferred (fillWidth defaults to true).
+A <code class="docutils literal"><span class="pre">HBox</span></code> works just like a VBox but it lays out its children horizontally instead of vertically.</p>
+<p>Now we can put inside the VBox a new checkbox, change its text to &#8220;Show in gray scale&#8221; and set a id (e.g. &#8220;grayscale&#8221;).</p>
+<div class="highlight-xml"><div class="highlight"><pre><span class="nt">&lt;CheckBox</span> <span class="na">fx:id=</span><span class="s">&quot;grayscale&quot;</span> <span class="na">text=</span><span class="s">&quot;Show in gray scale&quot;</span> <span class="nt">/&gt;</span>
+</pre></div>
+</div>
+<p>Let&#8217;s also add a title to this section by putting before our new checkbox, but still inside the VBox, a text and set its text as &#8220;Controls&#8221; (we can find the text element under the <code class="docutils literal"><span class="pre">Shapes</span></code> menu).</p>
+<div class="highlight-xml"><div class="highlight"><pre><span class="nt">&lt;Text</span> <span class="na">text=</span><span class="s">&quot;Controls&quot;</span> <span class="nt">/&gt;</span>
+</pre></div>
+</div>
+<p>In the Scene Builder we now have:</p>
+<img alt="_images/04-00.png" src="_images/04-00.png" />
+<p>The graphic interface is complete for the first task, now we need to work on the controller; in the previous tutorial we could control the number of channels displayed on screen with the line (98):</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="n">Imgproc</span><span class="o">.</span><span class="na">cvtColor</span><span class="o">(</span><span class="n">frame</span><span class="o">,</span> <span class="n">frame</span><span class="o">,</span> <span class="n">Imgproc</span><span class="o">.</span><span class="na">COLOR_BGR2GRAY</span><span class="o">);</span>
+</pre></div>
+</div>
+<p>In order to control this conversion with the check box, we have to link the check box with a FXML variable:</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="nd">@FXML</span>
+<span class="kd">private</span> <span class="n">CheckBox</span> <span class="n">grayscale</span><span class="o">;</span>
+</pre></div>
+</div>
+<p>Now we can implement the control by adding a simple if condition which will perform the conversion only if our check box is checked:</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="k">if</span> <span class="o">(</span><span class="n">grayscale</span><span class="o">.</span><span class="na">isSelected</span><span class="o">()){</span>
+   <span class="n">Imgproc</span><span class="o">.</span><span class="na">cvtColor</span><span class="o">(</span><span class="n">frame</span><span class="o">,</span> <span class="n">frame</span><span class="o">,</span> <span class="n">Imgproc</span><span class="o">.</span><span class="na">COLOR_BGR2GRAY</span><span class="o">);</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</div>
+<div class="section" id="load-an-image-and-add-it-to-the-stream">
+<h2>Load an Image and Add it to the Stream<a class="headerlink" href="#load-an-image-and-add-it-to-the-stream" title="Permalink to this headline">¶</a></h2>
+<p>The next step is to add another check box which, if checked, will trigger the display of an image over the camera stream.
+Let&#8217;s start by adding the image to the project; create a new folder in the root directory of your project and put the image in there.
+In my project I have a <code class="docutils literal"><span class="pre">resources</span></code> folder with a <code class="docutils literal"><span class="pre">Poli.png</span></code> image.
+Go back to Eclipse and refresh your project (you should have the new folder in it).
+Let&#8217;s open the fxml file with Scene Builder and add a new checkbox below the one that controls the stream colors; we have to set the text, the name of the method in the <code class="docutils literal"><span class="pre">OnAction</span></code> field and a id.
+In the code we will have for example:</p>
+<div class="highlight-xml"><div class="highlight"><pre><span class="nt">&lt;CheckBox</span> <span class="na">fx:id=</span><span class="s">&quot;logoCheckBox&quot;</span> <span class="na">text=</span><span class="s">&quot;Show logo&quot;</span> <span class="na">onAction=</span><span class="s">&quot;#loadLogo&quot;</span> <span class="nt">/&gt;</span>
+</pre></div>
+</div>
+<p>In the controller file we have to define a new variable associated with the checkbox, the method set on the <code class="docutils literal"><span class="pre">OnAction</span></code> field and adapt the code so that it will display the logo when the checkbox is checked and the stream is on.
+Variable:</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="nd">@FXML</span>
+<span class="kd">private</span> <span class="n">CheckBox</span> <span class="n">logoCheckBox</span><span class="o">;</span>
+</pre></div>
+</div>
+<p><code class="docutils literal"><span class="pre">loadLogo</span></code> metheod:
+In this method we are going to load the image whenever the logoCheckBox id selected (checked).
+In order to load the image we have to use a basic OpenCV function: imread.
+It return a Mat and takes the path of the image and a flag (&gt; 0 RGB image, =0 grayscale, &lt;0 with the alpha channel).</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="nd">@FXML</span>
+<span class="kd">protected</span> <span class="kt">void</span> <span class="nf">loadLogo</span><span class="o">(){</span>
+    <span class="k">if</span> <span class="o">(</span><span class="n">logoCheckBox</span><span class="o">.</span><span class="na">isSelected</span><span class="o">())</span>
+            <span class="k">this</span><span class="o">.</span><span class="na">logo</span> <span class="o">=</span> <span class="n">Highgui</span><span class="o">.</span><span class="na">imread</span><span class="o">(</span><span class="s">&quot;resources/Poli.png&quot;</span><span class="o">);</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>Adapt the code.</p>
+<p>We are going to add some variants to the code in order to display our logo in a specific region of the stream. This means that for each frame capture, before the image could be converted into 1 or 3 channels, we have to set a <strong>ROI</strong> (region of interest) in which we want to place the logo.
+Usually a ROI of an Image is a portion of it, we can define the roi as a Rect object.
+Rect is a template class for 2D rectangles, described by the following parameters:</p>
+<blockquote>
+<div><ul class="simple">
+<li>Coordinates of the top-left corner. This is a default interpretation of Rect.x and Rect.y in OpenCV. Though, in your algorithms you may count x and y from the bottom-left corner.</li>
+<li>Rectangle width and height.</li>
+</ul>
+</div></blockquote>
+<div class="highlight-java"><div class="highlight"><pre><span class="n">Rect</span> <span class="n">roi</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Rect</span><span class="o">(</span><span class="n">frame</span><span class="o">.</span><span class="na">cols</span><span class="o">()-</span><span class="n">logo</span><span class="o">.</span><span class="na">cols</span><span class="o">(),</span> <span class="n">frame</span><span class="o">.</span><span class="na">rows</span><span class="o">()-</span><span class="n">logo</span><span class="o">.</span><span class="na">rows</span><span class="o">(),</span> <span class="n">logo</span><span class="o">.</span><span class="na">cols</span><span class="o">(),</span> <span class="n">logo</span><span class="o">.</span><span class="na">rows</span><span class="o">());</span>
+</pre></div>
+</div>
+<p>Then we have to take control of our Mat&#8217;s ROI, by doing so we are able to &#8220;add&#8221; our logo in the disired area of the frame defined by the ROI.</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="n">Mat</span> <span class="n">imageROI</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="na">submat</span><span class="o">(</span><span class="n">roi</span><span class="o">);</span>
+</pre></div>
+</div>
+<p>We had to make this operation because we can only &#8220;add&#8221; Mats with the same sizes; but how can we &#8220;add&#8221; two Mat together? We have to keep in mind that our logo could have 4 channels (RGB + alpha). So we could use two functions: <code class="docutils literal"><span class="pre">addWeighted</span></code> or <code class="docutils literal"><span class="pre">copyTo</span></code>.
+The <code class="docutils literal"><span class="pre">addWeighted</span></code> function calculates the weighted sum of two arrays as follows:</p>
+<blockquote>
+<div><em>dst(I)= saturate(src1(I)</em> alpha + src2(I)* beta + gamma)*</div></blockquote>
+<p>where I is a multi-dimensional index of array elements. In case of multi-channel arrays, each channel is processed independently. The function can be replaced with a matrix expression:</p>
+<blockquote>
+<div><em>dst = src1*alpha + src2*beta + gamma</em></div></blockquote>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Saturation is not applied when the output array has the depth <code class="docutils literal"><span class="pre">CV_32S</span></code>. You may even get result of an incorrect sign in the case of overflow.</p>
+</div>
+<dl class="docutils">
+<dt>Parameters:</dt>
+<dd><ul class="first last simple">
+<li><strong>src1</strong> first input array.</li>
+<li><strong>alpha</strong> weight of the first array elements.</li>
+<li><strong>src2</strong> second input array of the same size and channel number as src1.</li>
+<li><strong>beta</strong> weight of the second array elements.</li>
+<li><strong>gamma</strong> scalar added to each sum.</li>
+<li><strong>dst</strong> output array that has the same size and number of channels as the input arrays.</li>
+</ul>
+</dd>
+</dl>
+<p>So we&#8217;ll have:</p>
+<p>The second method (<code class="docutils literal"><span class="pre">copyTo</span></code>) simply copies a Mat into the other. We&#8217;ll have:</p>
+<p>Everything we have done so far to add the logo to the image has to perform only IF our checkbox is check and the image loading process has ended successfully. So we have to add an if condition:</p>
+</div>
+<div class="section" id="calculate-a-histogram">
+<h2>Calculate a Histogram<a class="headerlink" href="#calculate-a-histogram" title="Permalink to this headline">¶</a></h2>
+<p>A histogram is a collected counts of data organized into a set of predefined bins.
+In our case the data represents the intensity of the pixel so it will have a range like (0, 256).</p>
+<dl class="docutils">
+<dt>Since we know that the range of information value, we can segment our range in subparts (called bins); let&#8217;s identify some parts of the histogram:</dt>
+<dd><ol class="first last arabic simple">
+<li><strong>dims</strong>: The number of parameters you want to collect data of.</li>
+<li><strong>bins</strong>: It is the number of subdivisions in each dim. In our example, bins = 256</li>
+<li><strong>range</strong>: The limits for the values to be measured. In this case: range = [0,255]</li>
+</ol>
+</dd>
+</dl>
+<p>Our last goal is to display the histogram of the video stream for either RGB or in grayscale.
+For this task we are going to define a method in our controller class that takes a Mat (our current frame) and a boolean that will flag if the frame is in RGB or in grayscale, for example:</p>
+<p>First thing we need to do is to divide the frame into other <em>n</em> frames, where <em>n</em> represents the number of channels of which our frame is composed. To do so we need to use the <code class="docutils literal"><span class="pre">Core.split</span></code> function; it need a source Mat and a List&lt;Mat&gt; where to put the different channels. Obviously if the frame is in grayscale the list will have just one element.</p>
+<p>Before we could calculate the histogram of each channel we have to prepare all the inputs that the <code class="docutils literal"><span class="pre">calcHist</span></code> function needs.
+The functions calcHist calculate the histogram of one or more arrays. The elements of a tuple used to increment a histogram bin are taken from the corresponding input arrays at the same location.
+Parameters:</p>
+<blockquote>
+<div><ul class="simple">
+<li><strong>images</strong> Source arrays. They all should have the same depth, CV_8U or CV_32F, and the same size. Each of them can have an arbitrary number of channels.</li>
+<li><strong>channels</strong> List of the dims channels used to compute the histogram. The first array channels are numerated from 0 to images[0].channels()-1, the second array channels are counted from images[0].channels() to images[0].channels() + images[1].channels()-1, and so on.</li>
+<li><strong>mask</strong> Optional mask. If the matrix is not empty, it must be an 8-bit array of the same size as images[i]. The non-zero mask elements mark the array elements counted in the histogram.</li>
+<li><strong>hist</strong> Output histogram, which is a dense or sparse dims -dimensional array.</li>
+<li><strong>histSize</strong> Array of histogram sizes in each dimension.</li>
+<li><strong>ranges</strong> Array of the dims arrays of the histogram bin boundaries in each dimension. When the histogram is uniform (uniform =true), then for each dimension i it is enough to specify the lower (inclusive) boundary L_0 of the 0-th histogram bin and the upper (exclusive) boundary U_(histSize[i]-1) for the last histogram bin histSize[i]-1. That is, in case of a uniform histogram each of ranges[i] is an array of 2 elements. When the histogram is not uniform (uniform=false), then each of ranges[i] contains histSize[i]+1 elements: L_0, U_0=L_1, U_1=L_2,..., U_(histSize[i]-2)=L_(histSize[i]-1), U_(histSize[i]-1). The array elements, that are not between L_0 and U_(histSize[i]-1), are not counted in the histogram.</li>
+<li><strong>accumulate</strong> Accumulation flag. If it is set, the histogram is not cleared in the beginning when it is allocated. This feature enables you to compute a single histogram from several sets of arrays, or to update the histogram in time.</li>
+</ul>
+</div></blockquote>
+<p>The image will be our frame, we don&#8217;t need a mask and the last flag will be false; thus we need to define the channels, the hist, the <code class="docutils literal"><span class="pre">histSize</span></code> and the <code class="docutils literal"><span class="pre">ranges</span></code>:</p>
+<p>In the RGB case we will need all of the hist defined, in the grayscale case instead we will use just the <code class="docutils literal"><span class="pre">hist_b</span></code> one.
+We are now ready to do the histogram calculation:</p>
+<p>Where <code class="docutils literal"><span class="pre">gray</span></code> is the flag we passed to the <code class="docutils literal"><span class="pre">showHistogram</span></code> method.</p>
+</div>
+<div class="section" id="draw-the-histogram">
+<h2>Draw the Histogram<a class="headerlink" href="#draw-the-histogram" title="Permalink to this headline">¶</a></h2>
+<p>Next step is to draw the calculated histogram in our gui.
+Open the fxml file with Scene Builder and add an ImageView above the &#8220;Controls&#8221; text in the right of the BP and set its id:</p>
+<div class="highlight-xml"><div class="highlight"><pre><span class="nt">&lt;ImageView</span> <span class="na">fx:id=</span><span class="s">&quot;histogram&quot;</span> <span class="nt">/&gt;</span>
+</pre></div>
+</div>
+<p>Now back to the Controller class. Let&#8217;s add a global variable to control the just added image view:</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="nd">@FXML</span>
+<span class="kd">private</span> <span class="n">ImageView</span> <span class="n">histogram</span><span class="o">;</span>
+</pre></div>
+</div>
+<p>and continue to write the <code class="docutils literal"><span class="pre">showHistogram</span></code> method.
+First thing first, let&#8217;s create an image to display the histogram:</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="kt">int</span> <span class="n">hist_w</span> <span class="o">=</span> <span class="mi">150</span><span class="o">;</span>
+<span class="kt">int</span> <span class="n">hist_h</span> <span class="o">=</span> <span class="mi">150</span><span class="o">;</span>
+<span class="kt">int</span> <span class="n">bin_w</span> <span class="o">=</span> <span class="o">(</span><span class="kt">int</span><span class="o">)</span> <span class="n">Math</span><span class="o">.</span><span class="na">round</span><span class="o">(</span><span class="n">hist_w</span> <span class="o">/</span> <span class="n">histSize</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">)[</span><span class="mi">0</span><span class="o">]);</span>
+<span class="n">Mat</span> <span class="n">histImage</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Mat</span><span class="o">(</span><span class="n">hist_h</span><span class="o">,</span> <span class="n">hist_w</span><span class="o">,</span> <span class="n">CvType</span><span class="o">.</span><span class="na">CV_8UC3</span><span class="o">,</span> <span class="k">new</span> <span class="n">Scalar</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">));</span>
+</pre></div>
+</div>
+<p>before drawing, we first normalize the histogram so its values fall in the range indicated by the parameters entered:</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="n">Core</span><span class="o">.</span><span class="na">normalize</span><span class="o">(</span><span class="n">hist_b</span><span class="o">,</span> <span class="n">hist_b</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">histImage</span><span class="o">.</span><span class="na">rows</span><span class="o">(),</span> <span class="n">Core</span><span class="o">.</span><span class="na">NORM_MINMAX</span><span class="o">,</span> <span class="o">-</span><span class="mi">1</span><span class="o">,</span> <span class="k">new</span> <span class="n">Mat</span><span class="o">());</span>
+<span class="k">if</span> <span class="o">(!</span><span class="n">gray</span><span class="o">){</span>
+   <span class="n">Core</span><span class="o">.</span><span class="na">normalize</span><span class="o">(</span><span class="n">hist_g</span><span class="o">,</span> <span class="n">hist_g</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">histImage</span><span class="o">.</span><span class="na">rows</span><span class="o">(),</span> <span class="n">Core</span><span class="o">.</span><span class="na">NORM_MINMAX</span><span class="o">,</span> <span class="o">-</span><span class="mi">1</span><span class="o">,</span> <span class="k">new</span> <span class="n">Mat</span><span class="o">());</span>
+   <span class="n">Core</span><span class="o">.</span><span class="na">normalize</span><span class="o">(</span><span class="n">hist_r</span><span class="o">,</span> <span class="n">hist_r</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">histImage</span><span class="o">.</span><span class="na">rows</span><span class="o">(),</span> <span class="n">Core</span><span class="o">.</span><span class="na">NORM_MINMAX</span><span class="o">,</span> <span class="o">-</span><span class="mi">1</span><span class="o">,</span> <span class="k">new</span> <span class="n">Mat</span><span class="o">());</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>Now we can draw the histogram in our Mat:</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">histSize</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">)[</span><span class="mi">0</span><span class="o">];</span> <span class="n">i</span><span class="o">++){</span>
+   <span class="n">Core</span><span class="o">.</span><span class="na">line</span><span class="o">(</span><span class="n">histImage</span><span class="o">,</span> <span class="k">new</span> <span class="n">Point</span><span class="o">(</span><span class="n">bin_w</span> <span class="o">*</span> <span class="o">(</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="o">),</span> <span class="n">hist_h</span> <span class="o">-</span> <span class="n">Math</span><span class="o">.</span><span class="na">round</span><span class="o">(</span><span class="n">hist_b</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="o">,</span> <span class="mi">0</span><span class="o">)[</span><span class="mi">0</span><span class="o">])),</span> <span class="k">new</span> <span class="n">Point</span><span class="o">(</span><span class="n">bin_w</span> <span class="o">*</span> <span class="o">(</span><span class="n">i</span><span class="o">),</span> <span class="n">hist_h</span> <span class="o">-</span> <span class="n">Math</span><span class="o">.</span><span class="na">round</span><span class="o">(</span><span class="n">hist_b</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">i</span><span class="o">,</span> <span class="mi">0</span><span class="o">)[</span><span class="mi">0</span><span class="o">])),</span> <span class="k">new</span> <span class="n">Scalar</span><span class="o">(</span><span class="mi">255</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">),</span> <span class="mi">2</span><span class="o">,</span> <span class="mi">8</span><span class="o">,</span> <span class="mi">0</span><span class="o">);</span>
+   <span class="k">if</span> <span class="o">(!</span><span class="n">gray</span><span class="o">){</span>
+      <span class="n">Core</span><span class="o">.</span><span class="na">line</span><span class="o">(</span><span class="n">histImage</span><span class="o">,</span> <span class="k">new</span> <span class="n">Point</span><span class="o">(</span><span class="n">bin_w</span> <span class="o">*</span> <span class="o">(</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="o">),</span> <span class="n">hist_h</span> <span class="o">-</span> <span class="n">Math</span><span class="o">.</span><span class="na">round</span><span class="o">(</span><span class="n">hist_g</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="o">,</span> <span class="mi">0</span><span class="o">)[</span><span class="mi">0</span><span class="o">])),</span><span class="k">new</span> <span class="n">Point</span><span class="o">(</span><span class="n">bin_w</span> <span class="o">*</span> <span class="o">(</span><span class="n">i</span><span class="o">),</span> <span class="n">hist_h</span> <span class="o">-</span> <span class="n">Math</span><span class="o">.</span><span class="na">round</span><span class="o">(</span><span class="n">hist_g</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">i</span><span class="o">,</span> <span class="mi">0</span><span class="o">)[</span><span class="mi">0</span><span class="o">])),</span> <span class="k">new</span> <span class="n">Scalar</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="mi">255</span><span class="o">,</span> <span class="mi">0</span><span class="o">),</span> <span class="mi">2</span><span class="o">,</span> <span class="mi">8</span><span class="o">,</span> <span class="mi">0</span><span class="o">);</span>
+      <span class="n">Core</span><span class="o">.</span><span class="na">line</span><span class="o">(</span><span class="n">histImage</span><span class="o">,</span> <span class="k">new</span> <span class="n">Point</span><span class="o">(</span><span class="n">bin_w</span> <span class="o">*</span> <span class="o">(</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="o">),</span> <span class="n">hist_h</span> <span class="o">-</span> <span class="n">Math</span><span class="o">.</span><span class="na">round</span><span class="o">(</span><span class="n">hist_r</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="o">,</span> <span class="mi">0</span><span class="o">)[</span><span class="mi">0</span><span class="o">])),</span><span class="n">Math</span><span class="o">.</span><span class="na">round</span><span class="o">(</span><span class="n">hist_r</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">i</span><span class="o">,</span> <span class="mi">0</span><span class="o">)[</span><span class="mi">0</span><span class="o">])),</span> <span class="k">new</span> <span class="n">Scalar</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">255</span><span class="o">),</span> <span class="mi">2</span><span class="o">,</span> <span class="mi">8</span><span class="o">,</span> <span class="mi">0</span><span class="o">);</span>
+   <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>Let&#8217;s convert the obtained Mat to an Image with our method <code class="docutils literal"><span class="pre">mat2Image</span></code> and update the ImageView with the returned Image:</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="n">histo</span> <span class="o">=</span> <span class="n">mat2Image</span><span class="o">(</span><span class="n">histImage</span><span class="o">);</span>
+<span class="n">Platform</span><span class="o">.</span><span class="na">runLater</span><span class="o">(</span><span class="k">new</span> <span class="n">Runnable</span><span class="o">()</span> <span class="o">{</span>
+   <span class="nd">@Override</span>
+   <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
+      <span class="n">histogram</span><span class="o">.</span><span class="na">setImage</span><span class="o">(</span><span class="n">histo</span><span class="o">);</span>
+   <span class="o">}</span>
+<span class="o">});</span>
+</pre></div>
+</div>
+<img alt="_images/04-01.png" src="_images/04-01.png" />
+<img alt="_images/04-02.png" src="_images/04-02.png" />
+</div>
+<div class="section" id="source-code">
+<h2>Source Code<a class="headerlink" href="#source-code" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><a class="reference external" href="https://github.com/java-opencv/Polito-Java-OpenCV-Tutorials-Source-Code/blob/master/OpenCVBasics/src/application/Basics.java">Basics.java</a></li>
+</ul>
+<div class="highlight-java"><div class="highlight"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">Basics</span> <span class="kd">extends</span> <span class="n">Application</span> <span class="o">{</span>
+    <span class="nd">@Override</span>
+    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">start</span><span class="o">(</span><span class="n">Stage</span> <span class="n">primaryStage</span><span class="o">)</span> <span class="o">{</span>
+            <span class="k">try</span>
+            <span class="o">{</span>
+                    <span class="c1">// load the FXML resource</span>
+                    <span class="n">FXMLLoader</span> <span class="n">loader</span> <span class="o">=</span> <span class="k">new</span> <span class="n">FXMLLoader</span><span class="o">(</span><span class="n">getClass</span><span class="o">().</span><span class="na">getResource</span><span class="o">(</span><span class="s">&quot;BasicsFX.fxml&quot;</span><span class="o">));</span>
+                    <span class="c1">// store the root element so that the controllers can use it</span>
+                    <span class="n">BorderPane</span> <span class="n">rootElement</span> <span class="o">=</span> <span class="o">(</span><span class="n">BorderPane</span><span class="o">)</span> <span class="n">loader</span><span class="o">.</span><span class="na">load</span><span class="o">();</span>
+                    <span class="c1">// create and style a scene</span>
+                    <span class="n">Scene</span> <span class="n">scene</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Scene</span><span class="o">(</span><span class="n">rootElement</span><span class="o">,</span> <span class="mi">800</span><span class="o">,</span> <span class="mi">600</span><span class="o">);</span>
+                    <span class="n">scene</span><span class="o">.</span><span class="na">getStylesheets</span><span class="o">().</span><span class="na">add</span><span class="o">(</span><span class="n">getClass</span><span class="o">().</span><span class="na">getResource</span><span class="o">(</span><span class="s">&quot;application.css&quot;</span><span class="o">).</span><span class="na">toExternalForm</span><span class="o">());</span>
+                    <span class="c1">// create the stage with the given title and the previously created</span>
+                    <span class="c1">// scene</span>
+                    <span class="n">primaryStage</span><span class="o">.</span><span class="na">setTitle</span><span class="o">(</span><span class="s">&quot;OpenCV Basics&quot;</span><span class="o">);</span>
+                    <span class="n">primaryStage</span><span class="o">.</span><span class="na">setScene</span><span class="o">(</span><span class="n">scene</span><span class="o">);</span>
+                    <span class="c1">// show the GUI</span>
+                    <span class="n">primaryStage</span><span class="o">.</span><span class="na">show</span><span class="o">();</span>
+
+            <span class="o">}</span>
+            <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span>
+            <span class="o">{</span>
+                    <span class="n">e</span><span class="o">.</span><span class="na">printStackTrace</span><span class="o">();</span>
+            <span class="o">}</span>
+    <span class="o">}</span>
+
+    <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">)</span> <span class="o">{</span>
+            <span class="c1">// load the native OpenCV library</span>
+            <span class="n">System</span><span class="o">.</span><span class="na">loadLibrary</span><span class="o">(</span><span class="n">Core</span><span class="o">.</span><span class="na">NATIVE_LIBRARY_NAME</span><span class="o">);</span>
+
+            <span class="n">launch</span><span class="o">(</span><span class="n">args</span><span class="o">);</span>
+    <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><a class="reference external" href="https://github.com/java-opencv/Polito-Java-OpenCV-Tutorials-Source-Code/blob/master/OpenCVBasics/src/application/BasicsController.java">BasicsController.java</a></li>
+</ul>
+<div class="highlight-java"><div class="highlight"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">BasicsController</span> <span class="o">{</span>
+    <span class="c1">// the FXML button</span>
+            <span class="nd">@FXML</span>
+            <span class="kd">private</span> <span class="n">Button</span> <span class="n">button</span><span class="o">;</span>
+            <span class="c1">// the FXML grayscale checkbox</span>
+            <span class="nd">@FXML</span>
+            <span class="kd">private</span> <span class="n">CheckBox</span> <span class="n">grayscale</span><span class="o">;</span>
+            <span class="c1">// the FXML logo checkbox</span>
+            <span class="nd">@FXML</span>
+            <span class="kd">private</span> <span class="n">CheckBox</span> <span class="n">logoCheckBox</span><span class="o">;</span>
+            <span class="c1">// the FXML grayscale checkbox</span>
+            <span class="nd">@FXML</span>
+            <span class="kd">private</span> <span class="n">ImageView</span> <span class="n">histogram</span><span class="o">;</span>
+            <span class="c1">// the FXML area for showing the current frame</span>
+            <span class="nd">@FXML</span>
+            <span class="kd">private</span> <span class="n">ImageView</span> <span class="n">currentFrame</span><span class="o">;</span>
+
+            <span class="c1">// a timer for acquiring the video stream</span>
+            <span class="kd">private</span> <span class="n">Timer</span> <span class="n">timer</span><span class="o">;</span>
+            <span class="c1">// the OpenCV object that realizes the video capture</span>
+            <span class="kd">private</span> <span class="n">VideoCapture</span> <span class="n">capture</span> <span class="o">=</span> <span class="k">new</span> <span class="n">VideoCapture</span><span class="o">();</span>
+            <span class="c1">// a flag to change the button behavior</span>
+            <span class="kd">private</span> <span class="kt">boolean</span> <span class="n">cameraActive</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
+            <span class="c1">// the logo to be loaded</span>
+            <span class="kd">private</span> <span class="n">Mat</span> <span class="n">logo</span><span class="o">;</span>
+            <span class="kd">private</span> <span class="n">Image</span> <span class="n">i</span><span class="o">,</span><span class="n">histo</span><span class="o">;</span>
+
+            <span class="cm">/**</span>
+<span class="cm">             * The action triggered by pushing the button on the GUI</span>
+<span class="cm">             */</span>
+            <span class="nd">@FXML</span>
+            <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">startCamera</span><span class="o">()</span>
+            <span class="o">{</span>
+                    <span class="k">if</span> <span class="o">(!</span><span class="k">this</span><span class="o">.</span><span class="na">cameraActive</span><span class="o">)</span>
+                    <span class="o">{</span>
+                            <span class="c1">// start the video capture</span>
+                            <span class="k">this</span><span class="o">.</span><span class="na">capture</span><span class="o">.</span><span class="na">open</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span>
+
+                            <span class="c1">// is the video stream available?</span>
+                            <span class="k">if</span> <span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">capture</span><span class="o">.</span><span class="na">isOpened</span><span class="o">())</span>
+                            <span class="o">{</span>
+                                    <span class="k">this</span><span class="o">.</span><span class="na">cameraActive</span> <span class="o">=</span> <span class="kc">true</span><span class="o">;</span>
+
+                                    <span class="c1">// grab a frame every 33 ms (30 frames/sec)</span>
+                                    <span class="n">TimerTask</span> <span class="n">frameGrabber</span> <span class="o">=</span> <span class="k">new</span> <span class="n">TimerTask</span><span class="o">()</span> <span class="o">{</span>
+                                            <span class="nd">@Override</span>
+                                            <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span>
+                                            <span class="o">{</span>
+                                                    <span class="n">i</span> <span class="o">=</span> <span class="n">grabFrame</span><span class="o">();</span>
+                                                    <span class="n">Platform</span><span class="o">.</span><span class="na">runLater</span><span class="o">(</span><span class="k">new</span> <span class="n">Runnable</span><span class="o">()</span> <span class="o">{</span>
+                                                            <span class="nd">@Override</span>
+                                                            <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
+                                                                    <span class="n">currentFrame</span><span class="o">.</span><span class="na">setImage</span><span class="o">(</span><span class="n">i</span><span class="o">);</span>
+                                                            <span class="o">}</span>
+                                                    <span class="o">});</span>
+                                            <span class="o">}</span>
+                                    <span class="o">};</span>
+                                    <span class="k">this</span><span class="o">.</span><span class="na">timer</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Timer</span><span class="o">();</span>
+                                    <span class="k">this</span><span class="o">.</span><span class="na">timer</span><span class="o">.</span><span class="na">schedule</span><span class="o">(</span><span class="n">frameGrabber</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">33</span><span class="o">);</span>
+
+                                    <span class="c1">// update the button content</span>
+                                    <span class="k">this</span><span class="o">.</span><span class="na">button</span><span class="o">.</span><span class="na">setText</span><span class="o">(</span><span class="s">&quot;Stop Camera&quot;</span><span class="o">);</span>
+                            <span class="o">}</span>
+                            <span class="k">else</span>
+                            <span class="o">{</span>
+                                    <span class="c1">// log the error</span>
+                                    <span class="n">System</span><span class="o">.</span><span class="na">err</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;Impossible to open the camera connection...&quot;</span><span class="o">);</span>
+                            <span class="o">}</span>
+                    <span class="o">}</span>
+                    <span class="k">else</span>
+                    <span class="o">{</span>
+                            <span class="c1">// the camera is not active at this point</span>
+                            <span class="k">this</span><span class="o">.</span><span class="na">cameraActive</span> <span class="o">=</span> <span class="kc">false</span><span class="o">;</span>
+                            <span class="c1">// update again the button content</span>
+                            <span class="k">this</span><span class="o">.</span><span class="na">button</span><span class="o">.</span><span class="na">setText</span><span class="o">(</span><span class="s">&quot;Start Camera&quot;</span><span class="o">);</span>
+                            <span class="c1">// stop the timer</span>
+                            <span class="k">if</span> <span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">timer</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span>
+                            <span class="o">{</span>
+                                    <span class="k">this</span><span class="o">.</span><span class="na">timer</span><span class="o">.</span><span class="na">cancel</span><span class="o">();</span>
+                                    <span class="k">this</span><span class="o">.</span><span class="na">timer</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+                            <span class="o">}</span>
+                            <span class="c1">// release the camera</span>
+                            <span class="k">this</span><span class="o">.</span><span class="na">capture</span><span class="o">.</span><span class="na">release</span><span class="o">();</span>
+                            <span class="c1">// clean the image area</span>
+                            <span class="n">Platform</span><span class="o">.</span><span class="na">runLater</span><span class="o">(</span><span class="k">new</span> <span class="n">Runnable</span><span class="o">()</span> <span class="o">{</span>
+                                    <span class="nd">@Override</span>
+                                    <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
+                                            <span class="n">currentFrame</span><span class="o">.</span><span class="na">setImage</span><span class="o">(</span><span class="kc">null</span><span class="o">);</span>
+                                    <span class="o">}</span>
+                            <span class="o">});</span>
+                    <span class="o">}</span>
+            <span class="o">}</span>
+
+            <span class="cm">/**</span>
+<span class="cm">             * The action triggered by selecting/deselecting the logo checkbox</span>
+<span class="cm">             */</span>
+            <span class="nd">@FXML</span>
+            <span class="kd">protected</span> <span class="kt">void</span> <span class="nf">loadLogo</span><span class="o">()</span>
+            <span class="o">{</span>
+                    <span class="k">if</span> <span class="o">(</span><span class="n">logoCheckBox</span><span class="o">.</span><span class="na">isSelected</span><span class="o">())</span>
+                    <span class="o">{</span>
+                            <span class="c1">// read the logo only when the checkbox has been selected</span>
+                            <span class="k">this</span><span class="o">.</span><span class="na">logo</span> <span class="o">=</span> <span class="n">Highgui</span><span class="o">.</span><span class="na">imread</span><span class="o">(</span><span class="s">&quot;resources/Poli.png&quot;</span><span class="o">);</span>
+                    <span class="o">}</span>
+            <span class="o">}</span>
+
+            <span class="cm">/**</span>
+<span class="cm">             * Get a frame from the opened video stream (if any)</span>
+<span class="cm">             *</span>
+<span class="cm">             * @return the {@link Image} to show</span>
+<span class="cm">             */</span>
+            <span class="kd">private</span> <span class="n">Image</span> <span class="nf">grabFrame</span><span class="o">()</span>
+            <span class="o">{</span>
+                    <span class="c1">// init everything</span>
+                    <span class="n">Image</span> <span class="n">imageToShow</span> <span class="o">=</span> <span class="kc">null</span><span class="o">;</span>
+                    <span class="n">Mat</span> <span class="n">frame</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Mat</span><span class="o">();</span>
+
+                    <span class="c1">// check if the capture is open</span>
+                    <span class="k">if</span> <span class="o">(</span><span class="k">this</span><span class="o">.</span><span class="na">capture</span><span class="o">.</span><span class="na">isOpened</span><span class="o">())</span>
+                    <span class="o">{</span>
+                            <span class="k">try</span>
+                            <span class="o">{</span>
+                                    <span class="c1">// read the current frame</span>
+                                    <span class="k">this</span><span class="o">.</span><span class="na">capture</span><span class="o">.</span><span class="na">read</span><span class="o">(</span><span class="n">frame</span><span class="o">);</span>
+
+                                    <span class="c1">// if the frame is not empty, process it</span>
+                                    <span class="k">if</span> <span class="o">(!</span><span class="n">frame</span><span class="o">.</span><span class="na">empty</span><span class="o">())</span>
+                                    <span class="o">{</span>
+                                            <span class="c1">// add a logo...</span>
+                                            <span class="k">if</span> <span class="o">(</span><span class="n">logoCheckBox</span><span class="o">.</span><span class="na">isSelected</span><span class="o">()</span> <span class="o">&amp;&amp;</span> <span class="k">this</span><span class="o">.</span><span class="na">logo</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span>
+                                            <span class="o">{</span>
+                                                    <span class="n">Rect</span> <span class="n">roi</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Rect</span><span class="o">(</span><span class="n">frame</span><span class="o">.</span><span class="na">cols</span><span class="o">()</span> <span class="o">-</span> <span class="n">logo</span><span class="o">.</span><span class="na">cols</span><span class="o">(),</span> <span class="n">frame</span><span class="o">.</span><span class="na">rows</span><span class="o">()</span> <span class="o">-</span> <span class="n">logo</span><span class="o">.</span><span class="na">rows</span><span class="o">(),</span> <span class="n">logo</span><span class="o">.</span><span class="na">cols</span><span class="o">(),</span><span class="n">logo</span><span class="o">.</span><span class="na">rows</span><span class="o">());</span>
+                                                    <span class="n">Mat</span> <span class="n">imageROI</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="na">submat</span><span class="o">(</span><span class="n">roi</span><span class="o">);</span>
+                                                    <span class="c1">// add the logo: method #1</span>
+                                                    <span class="n">Core</span><span class="o">.</span><span class="na">addWeighted</span><span class="o">(</span><span class="n">imageROI</span><span class="o">,</span> <span class="mf">1.0</span><span class="o">,</span> <span class="n">logo</span><span class="o">,</span> <span class="mf">0.7</span><span class="o">,</span> <span class="mf">0.0</span><span class="o">,</span> <span class="n">imageROI</span><span class="o">);</span>
+
+                                                    <span class="c1">// add the logo: method #2</span>
+                                                    <span class="c1">// Mat mask = logo.clone();</span>
+                                                    <span class="c1">// logo.copyTo(imageROI, mask);</span>
+                                            <span class="o">}</span>
+
+                                            <span class="c1">// if the grayscale checkbox is selected, convert the image</span>
+                                            <span class="c1">// (frame + logo) accordingly</span>
+                                            <span class="k">if</span> <span class="o">(</span><span class="n">grayscale</span><span class="o">.</span><span class="na">isSelected</span><span class="o">())</span>
+                                            <span class="o">{</span>
+                                                    <span class="n">Imgproc</span><span class="o">.</span><span class="na">cvtColor</span><span class="o">(</span><span class="n">frame</span><span class="o">,</span> <span class="n">frame</span><span class="o">,</span> <span class="n">Imgproc</span><span class="o">.</span><span class="na">COLOR_BGR2GRAY</span><span class="o">);</span>
+                                            <span class="o">}</span>
+
+                                            <span class="c1">// show the histogram</span>
+                                            <span class="k">this</span><span class="o">.</span><span class="na">showHistogram</span><span class="o">(</span><span class="n">frame</span><span class="o">,</span> <span class="n">grayscale</span><span class="o">.</span><span class="na">isSelected</span><span class="o">());</span>
+
+                                            <span class="c1">// convert the Mat object (OpenCV) to Image (JavaFX)</span>
+                                            <span class="n">imageToShow</span> <span class="o">=</span> <span class="n">mat2Image</span><span class="o">(</span><span class="n">frame</span><span class="o">);</span>
+                                    <span class="o">}</span>
+
+                            <span class="o">}</span>
+                            <span class="k">catch</span> <span class="o">(</span><span class="n">Exception</span> <span class="n">e</span><span class="o">)</span>
+                            <span class="o">{</span>
+                                    <span class="c1">// log the (full) error</span>
+                                    <span class="n">System</span><span class="o">.</span><span class="na">err</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;ERROR: &quot;</span> <span class="o">+</span> <span class="n">e</span><span class="o">);</span>
+                            <span class="o">}</span>
+                    <span class="o">}</span>
+
+                    <span class="k">return</span> <span class="n">imageToShow</span><span class="o">;</span>
+            <span class="o">}</span>
+
+            <span class="cm">/**</span>
+<span class="cm">             * Compute and show the histogram for the given {@link Mat} image</span>
+<span class="cm">             *</span>
+<span class="cm">             * @param frame</span>
+<span class="cm">             *            the {@link Mat} image for which compute the histogram</span>
+<span class="cm">             * @param gray</span>
+<span class="cm">             *            is a grayscale image?</span>
+<span class="cm">             */</span>
+            <span class="kd">private</span> <span class="kt">void</span> <span class="nf">showHistogram</span><span class="o">(</span><span class="n">Mat</span> <span class="n">frame</span><span class="o">,</span> <span class="kt">boolean</span> <span class="n">gray</span><span class="o">)</span>
+            <span class="o">{</span>
+                    <span class="c1">// split the frames in multiple images</span>
+                    <span class="n">List</span><span class="o">&lt;</span><span class="n">Mat</span><span class="o">&gt;</span> <span class="n">images</span> <span class="o">=</span> <span class="k">new</span> <span class="n">ArrayList</span><span class="o">&lt;</span><span class="n">Mat</span><span class="o">&gt;();</span>
+                    <span class="n">Core</span><span class="o">.</span><span class="na">split</span><span class="o">(</span><span class="n">frame</span><span class="o">,</span> <span class="n">images</span><span class="o">);</span>
+
+                    <span class="c1">// set the number of bins at 256</span>
+                    <span class="n">MatOfInt</span> <span class="n">histSize</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MatOfInt</span><span class="o">(</span><span class="mi">256</span><span class="o">);</span>
+                    <span class="c1">// only one channel</span>
+                    <span class="n">MatOfInt</span> <span class="n">channels</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MatOfInt</span><span class="o">(</span><span class="mi">0</span><span class="o">);</span>
+                    <span class="c1">// set the ranges</span>
+                    <span class="n">MatOfFloat</span> <span class="n">histRange</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MatOfFloat</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="mi">256</span><span class="o">);</span>
+
+                    <span class="c1">// compute the histograms for the B, G and R components</span>
+                    <span class="n">Mat</span> <span class="n">hist_b</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Mat</span><span class="o">();</span>
+                    <span class="n">Mat</span> <span class="n">hist_g</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Mat</span><span class="o">();</span>
+                    <span class="n">Mat</span> <span class="n">hist_r</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Mat</span><span class="o">();</span>
+
+                    <span class="c1">// B component or gray image</span>
+                    <span class="n">Imgproc</span><span class="o">.</span><span class="na">calcHist</span><span class="o">(</span><span class="n">images</span><span class="o">.</span><span class="na">subList</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="mi">1</span><span class="o">),</span> <span class="n">channels</span><span class="o">,</span> <span class="k">new</span> <span class="n">Mat</span><span class="o">(),</span> <span class="n">hist_b</span><span class="o">,</span> <span class="n">histSize</span><span class="o">,</span> <span class="n">histRange</span><span class="o">,</span> <span class="kc">false</span><span class="o">);</span>
+
+                    <span class="c1">// G and R components (if the image is not in gray scale)</span>
+                    <span class="k">if</span> <span class="o">(!</span><span class="n">gray</span><span class="o">)</span>
+                    <span class="o">{</span>
+                            <span class="n">Imgproc</span><span class="o">.</span><span class="na">calcHist</span><span class="o">(</span><span class="n">images</span><span class="o">.</span><span class="na">subList</span><span class="o">(</span><span class="mi">1</span><span class="o">,</span> <span class="mi">2</span><span class="o">),</span> <span class="n">channels</span><span class="o">,</span> <span class="k">new</span> <span class="n">Mat</span><span class="o">(),</span> <span class="n">hist_g</span><span class="o">,</span> <span class="n">histSize</span><span class="o">,</span> <span class="n">histRange</span><span class="o">,</span> <span class="kc">false</span><span class="o">);</span>
+                            <span class="n">Imgproc</span><span class="o">.</span><span class="na">calcHist</span><span class="o">(</span><span class="n">images</span><span class="o">.</span><span class="na">subList</span><span class="o">(</span><span class="mi">2</span><span class="o">,</span> <span class="mi">3</span><span class="o">),</span> <span class="n">channels</span><span class="o">,</span> <span class="k">new</span> <span class="n">Mat</span><span class="o">(),</span> <span class="n">hist_r</span><span class="o">,</span> <span class="n">histSize</span><span class="o">,</span> <span class="n">histRange</span><span class="o">,</span> <span class="kc">false</span><span class="o">);</span>
+                    <span class="o">}</span>
+
+                    <span class="c1">// draw the histogram</span>
+                    <span class="kt">int</span> <span class="n">hist_w</span> <span class="o">=</span> <span class="mi">150</span><span class="o">;</span> <span class="c1">// width of the histogram image</span>
+                    <span class="kt">int</span> <span class="n">hist_h</span> <span class="o">=</span> <span class="mi">150</span><span class="o">;</span> <span class="c1">// height of the histogram image</span>
+                    <span class="kt">int</span> <span class="n">bin_w</span> <span class="o">=</span> <span class="o">(</span><span class="kt">int</span><span class="o">)</span> <span class="n">Math</span><span class="o">.</span><span class="na">round</span><span class="o">(</span><span class="n">hist_w</span> <span class="o">/</span> <span class="n">histSize</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">)[</span><span class="mi">0</span><span class="o">]);</span>
+
+                    <span class="n">Mat</span> <span class="n">histImage</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Mat</span><span class="o">(</span><span class="n">hist_h</span><span class="o">,</span> <span class="n">hist_w</span><span class="o">,</span> <span class="n">CvType</span><span class="o">.</span><span class="na">CV_8UC3</span><span class="o">,</span> <span class="k">new</span> <span class="n">Scalar</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">));</span>
+                    <span class="c1">// normalize the result to [0, histImage.rows()]</span>
+                    <span class="n">Core</span><span class="o">.</span><span class="na">normalize</span><span class="o">(</span><span class="n">hist_b</span><span class="o">,</span> <span class="n">hist_b</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">histImage</span><span class="o">.</span><span class="na">rows</span><span class="o">(),</span> <span class="n">Core</span><span class="o">.</span><span class="na">NORM_MINMAX</span><span class="o">,</span> <span class="o">-</span><span class="mi">1</span><span class="o">,</span> <span class="k">new</span> <span class="n">Mat</span><span class="o">());</span>
+
+                    <span class="c1">// for G and R components</span>
+                    <span class="k">if</span> <span class="o">(!</span><span class="n">gray</span><span class="o">)</span>
+                    <span class="o">{</span>
+                            <span class="n">Core</span><span class="o">.</span><span class="na">normalize</span><span class="o">(</span><span class="n">hist_g</span><span class="o">,</span> <span class="n">hist_g</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">histImage</span><span class="o">.</span><span class="na">rows</span><span class="o">(),</span> <span class="n">Core</span><span class="o">.</span><span class="na">NORM_MINMAX</span><span class="o">,</span> <span class="o">-</span><span class="mi">1</span><span class="o">,</span> <span class="k">new</span> <span class="n">Mat</span><span class="o">());</span>
+                            <span class="n">Core</span><span class="o">.</span><span class="na">normalize</span><span class="o">(</span><span class="n">hist_r</span><span class="o">,</span> <span class="n">hist_r</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="n">histImage</span><span class="o">.</span><span class="na">rows</span><span class="o">(),</span> <span class="n">Core</span><span class="o">.</span><span class="na">NORM_MINMAX</span><span class="o">,</span> <span class="o">-</span><span class="mi">1</span><span class="o">,</span> <span class="k">new</span> <span class="n">Mat</span><span class="o">());</span>
+                    <span class="o">}</span>
+
+                    <span class="c1">// effectively draw the histogram(s)</span>
+                    <span class="k">for</span> <span class="o">(</span><span class="kt">int</span> <span class="n">i</span> <span class="o">=</span> <span class="mi">1</span><span class="o">;</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="n">histSize</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">)[</span><span class="mi">0</span><span class="o">];</span> <span class="n">i</span><span class="o">++)</span>
+                    <span class="o">{</span>
+                            <span class="c1">// B component or gray image</span>
+                            <span class="n">Core</span><span class="o">.</span><span class="na">line</span><span class="o">(</span><span class="n">histImage</span><span class="o">,</span> <span class="k">new</span> <span class="n">Point</span><span class="o">(</span><span class="n">bin_w</span> <span class="o">*</span> <span class="o">(</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="o">),</span> <span class="n">hist_h</span> <span class="o">-</span> <span class="n">Math</span><span class="o">.</span><span class="na">round</span><span class="o">(</span><span class="n">hist_b</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="o">,</span> <span class="mi">0</span><span class="o">)[</span><span class="mi">0</span><span class="o">])),</span> <span class="k">new</span> <span class="n">Point</span><span class="o">(</span>
+                                            <span class="n">bin_w</span> <span class="o">*</span> <span class="o">(</span><span class="n">i</span><span class="o">),</span> <span class="n">hist_h</span> <span class="o">-</span> <span class="n">Math</span><span class="o">.</span><span class="na">round</span><span class="o">(</span><span class="n">hist_b</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">i</span><span class="o">,</span> <span class="mi">0</span><span class="o">)[</span><span class="mi">0</span><span class="o">])),</span> <span class="k">new</span> <span class="n">Scalar</span><span class="o">(</span><span class="mi">255</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">),</span> <span class="mi">2</span><span class="o">,</span> <span class="mi">8</span><span class="o">,</span> <span class="mi">0</span><span class="o">);</span>
+                            <span class="c1">// G and R components (if the image is not in gray scale)</span>
+                            <span class="k">if</span> <span class="o">(!</span><span class="n">gray</span><span class="o">)</span>
+                            <span class="o">{</span>
+                                    <span class="n">Core</span><span class="o">.</span><span class="na">line</span><span class="o">(</span><span class="n">histImage</span><span class="o">,</span> <span class="k">new</span> <span class="n">Point</span><span class="o">(</span><span class="n">bin_w</span> <span class="o">*</span> <span class="o">(</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="o">),</span> <span class="n">hist_h</span> <span class="o">-</span> <span class="n">Math</span><span class="o">.</span><span class="na">round</span><span class="o">(</span><span class="n">hist_g</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="o">,</span> <span class="mi">0</span><span class="o">)[</span><span class="mi">0</span><span class="o">])),</span>
+                                                    <span class="k">new</span> <span class="n">Point</span><span class="o">(</span><span class="n">bin_w</span> <span class="o">*</span> <span class="o">(</span><span class="n">i</span><span class="o">),</span> <span class="n">hist_h</span> <span class="o">-</span> <span class="n">Math</span><span class="o">.</span><span class="na">round</span><span class="o">(</span><span class="n">hist_g</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">i</span><span class="o">,</span> <span class="mi">0</span><span class="o">)[</span><span class="mi">0</span><span class="o">])),</span> <span class="k">new</span> <span class="n">Scalar</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="mi">255</span><span class="o">,</span> <span class="mi">0</span><span class="o">),</span> <span class="mi">2</span><span class="o">,</span> <span class="mi">8</span><span class="o">,</span>
+                                                    <span class="mi">0</span><span class="o">);</span>
+                                    <span class="n">Core</span><span class="o">.</span><span class="na">line</span><span class="o">(</span><span class="n">histImage</span><span class="o">,</span> <span class="k">new</span> <span class="n">Point</span><span class="o">(</span><span class="n">bin_w</span> <span class="o">*</span> <span class="o">(</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="o">),</span> <span class="n">hist_h</span> <span class="o">-</span> <span class="n">Math</span><span class="o">.</span><span class="na">round</span><span class="o">(</span><span class="n">hist_r</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">i</span> <span class="o">-</span> <span class="mi">1</span><span class="o">,</span> <span class="mi">0</span><span class="o">)[</span><span class="mi">0</span><span class="o">])),</span>
+                                                    <span class="k">new</span> <span class="n">Point</span><span class="o">(</span><span class="n">bin_w</span> <span class="o">*</span> <span class="o">(</span><span class="n">i</span><span class="o">),</span> <span class="n">hist_h</span> <span class="o">-</span> <span class="n">Math</span><span class="o">.</span><span class="na">round</span><span class="o">(</span><span class="n">hist_r</span><span class="o">.</span><span class="na">get</span><span class="o">(</span><span class="n">i</span><span class="o">,</span> <span class="mi">0</span><span class="o">)[</span><span class="mi">0</span><span class="o">])),</span> <span class="k">new</span> <span class="n">Scalar</span><span class="o">(</span><span class="mi">0</span><span class="o">,</span> <span class="mi">0</span><span class="o">,</span> <span class="mi">255</span><span class="o">),</span> <span class="mi">2</span><span class="o">,</span> <span class="mi">8</span><span class="o">,</span>
+                                                    <span class="mi">0</span><span class="o">);</span>
+                            <span class="o">}</span>
+                    <span class="o">}</span>
+
+                    <span class="n">histo</span> <span class="o">=</span> <span class="n">mat2Image</span><span class="o">(</span><span class="n">histImage</span><span class="o">);</span>
+
+                    <span class="c1">// display the whole</span>
+                    <span class="n">Platform</span><span class="o">.</span><span class="na">runLater</span><span class="o">(</span><span class="k">new</span> <span class="n">Runnable</span><span class="o">()</span> <span class="o">{</span>
+                            <span class="nd">@Override</span>
+                <span class="kd">public</span> <span class="kt">void</span> <span class="nf">run</span><span class="o">()</span> <span class="o">{</span>
+                                    <span class="n">histogram</span><span class="o">.</span><span class="na">setImage</span><span class="o">(</span><span class="n">histo</span><span class="o">);</span>
+                    <span class="o">}</span>
+                            <span class="o">});</span>
+
+            <span class="o">}</span>
+
+            <span class="cm">/**</span>
+<span class="cm">             * Convert a Mat object (OpenCV) in the corresponding Image for JavaFX</span>
+<span class="cm">             *</span>
+<span class="cm">             * @param frame</span>
+<span class="cm">             *            the {@link Mat} representing the current frame</span>
+<span class="cm">             * @return the {@link Image} to show</span>
+<span class="cm">             */</span>
+            <span class="kd">private</span> <span class="n">Image</span> <span class="nf">mat2Image</span><span class="o">(</span><span class="n">Mat</span> <span class="n">frame</span><span class="o">)</span>
+            <span class="o">{</span>
+                    <span class="c1">// create a temporary buffer</span>
+                    <span class="n">MatOfByte</span> <span class="n">buffer</span> <span class="o">=</span> <span class="k">new</span> <span class="n">MatOfByte</span><span class="o">();</span>
+                    <span class="c1">// encode the frame in the buffer, according to the PNG format</span>
+                    <span class="n">Highgui</span><span class="o">.</span><span class="na">imencode</span><span class="o">(</span><span class="s">&quot;.png&quot;</span><span class="o">,</span> <span class="n">frame</span><span class="o">,</span> <span class="n">buffer</span><span class="o">);</span>
+                    <span class="c1">// build and return an Image created from the image encoded in the</span>
+                    <span class="c1">// buffer</span>
+                    <span class="k">return</span> <span class="k">new</span> <span class="n">Image</span><span class="o">(</span><span class="k">new</span> <span class="n">ByteArrayInputStream</span><span class="o">(</span><span class="n">buffer</span><span class="o">.</span><span class="na">toArray</span><span class="o">()));</span>
+            <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><a class="reference external" href="https://github.com/java-opencv/Polito-Java-OpenCV-Tutorials-Source-Code/blob/master/OpenCVBasics/src/application/BasicsFX.fxml">BasicsFX.fxml</a></li>
+</ul>
+<div class="highlight-xml"><div class="highlight"><pre><span class="nt">&lt;BorderPane</span> <span class="na">xmlns:fx=</span><span class="s">&quot;http://javafx.com/fxml/1&quot;</span> <span class="na">fx:controller=</span><span class="s">&quot;application.BasicsController&quot;</span><span class="nt">&gt;</span>
+        <span class="nt">&lt;center&gt;</span>
+           <span class="nt">&lt;ImageView</span> <span class="na">fx:id=</span><span class="s">&quot;currentFrame&quot;</span> <span class="nt">/&gt;</span>
+   <span class="nt">&lt;/center&gt;</span>
+   <span class="nt">&lt;right&gt;</span>
+      <span class="nt">&lt;VBox</span> <span class="na">alignment=</span><span class="s">&quot;CENTER_LEFT&quot;</span> <span class="na">spacing=</span><span class="s">&quot;10&quot;</span><span class="nt">&gt;</span>
+         <span class="nt">&lt;padding&gt;</span>
+            <span class="nt">&lt;Insets</span> <span class="na">left=</span><span class="s">&quot;25&quot;</span> <span class="na">right=</span><span class="s">&quot;25&quot;</span><span class="nt">/&gt;</span>
+         <span class="nt">&lt;/padding&gt;</span>
+         <span class="nt">&lt;ImageView</span> <span class="na">fx:id=</span><span class="s">&quot;histogram&quot;</span> <span class="nt">/&gt;</span>
+         <span class="nt">&lt;Text</span> <span class="na">text=</span><span class="s">&quot;Controls&quot;</span> <span class="nt">/&gt;</span>
+         <span class="nt">&lt;CheckBox</span> <span class="na">fx:id=</span><span class="s">&quot;grayscale&quot;</span> <span class="na">text=</span><span class="s">&quot;Show in gray scale&quot;</span> <span class="nt">/&gt;</span>
+         <span class="nt">&lt;CheckBox</span> <span class="na">fx:id=</span><span class="s">&quot;logoCheckBox&quot;</span> <span class="na">text=</span><span class="s">&quot;Show logo&quot;</span> <span class="na">onAction=</span><span class="s">&quot;#loadLogo&quot;</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;/VBox&gt;</span>
+   <span class="nt">&lt;/right&gt;</span>
+   <span class="nt">&lt;bottom&gt;</span>
+      <span class="nt">&lt;HBox</span> <span class="na">alignment=</span><span class="s">&quot;CENTER&quot;</span> <span class="nt">&gt;</span>
+         <span class="nt">&lt;padding&gt;</span>
+            <span class="nt">&lt;Insets</span> <span class="na">top=</span><span class="s">&quot;25&quot;</span> <span class="na">right=</span><span class="s">&quot;25&quot;</span> <span class="na">bottom=</span><span class="s">&quot;25&quot;</span> <span class="na">left=</span><span class="s">&quot;25&quot;</span><span class="nt">/&gt;</span>
+         <span class="nt">&lt;/padding&gt;</span>
+         <span class="nt">&lt;Button</span> <span class="na">fx:id=</span><span class="s">&quot;button&quot;</span> <span class="na">alignment=</span><span class="s">&quot;center&quot;</span> <span class="na">text=</span><span class="s">&quot;Start camera&quot;</span> <span class="na">onAction=</span><span class="s">&quot;#startCamera&quot;</span> <span class="nt">/&gt;</span>
+      <span class="nt">&lt;/HBox&gt;</span>
+   <span class="nt">&lt;/bottom&gt;</span>
+<span class="nt">&lt;/BorderPane&gt;</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">OpenCV Basics</a><ul>
+<li><a class="reference internal" href="#what-we-will-do-in-this-tutorial">What we will do in this tutorial</a></li>
+<li><a class="reference internal" href="#getting-started">Getting started</a></li>
+<li><a class="reference internal" href="#color-channel-checkbox">Color channel checkbox</a></li>
+<li><a class="reference internal" href="#load-an-image-and-add-it-to-the-stream">Load an Image and Add it to the Stream</a></li>
+<li><a class="reference internal" href="#calculate-a-histogram">Calculate a Histogram</a></li>
+<li><a class="reference internal" href="#draw-the-histogram">Draw the Histogram</a></li>
+<li><a class="reference internal" href="#source-code">Source Code</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="03 - First JavaFX Application with OpenCV.html" title="previous chapter">First JavaFX Application with OpenCV</a></li>
+      <li>Next: <a href="05 - Camera Calibration.html" title="next chapter">Camera Calibration</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/04 - OpenCV Basics.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2015, Luigi De Russis, Alberto Sacco.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.5</a>
+      
+      |
+      <a href="_sources/04 - OpenCV Basics.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

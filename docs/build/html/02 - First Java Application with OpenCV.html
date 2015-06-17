@@ -1,0 +1,202 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>First Java Application with OpenCV &mdash; OpenCV Java Tutorials 1.0alpha documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0alpha',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="OpenCV Java Tutorials 1.0alpha documentation" href="index.html" />
+    <link rel="next" title="First JavaFX Application with OpenCV" href="03 - First JavaFX Application with OpenCV.html" />
+    <link rel="prev" title="Installing OpenCV for Java" href="01 - Installing OpenCV for Java.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9">
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="first-java-application-with-opencv">
+<h1>First Java Application with OpenCV<a class="headerlink" href="#first-java-application-with-opencv" title="Permalink to this headline">¶</a></h1>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">We assume that by now you have already read the previous tutorials. If not, please check previous tutorials at <a class="reference external" href="http://polito-java-opencv-tutorials.readthedocs.org/en/latest/index.html">http://polito-java-opencv-tutorials.readthedocs.org/en/latest/index.html</a>. You can also find the source code and resources at <a class="reference external" href="https://github.com/java-opencv/Polito-Java-OpenCV-Tutorials-Source-Code">https://github.com/java-opencv/Polito-Java-OpenCV-Tutorials-Source-Code</a></p>
+</div>
+<div class="section" id="introduction-to-a-opencv-application-with-java">
+<h2>Introduction to a OpenCV application with Java<a class="headerlink" href="#introduction-to-a-opencv-application-with-java" title="Permalink to this headline">¶</a></h2>
+<p>This tutorial will guide you through the creation of a simple Java console application using the  OpenCV library by mean of Eclipse.</p>
+</div>
+<div class="section" id="what-we-will-do-in-this-tutorial">
+<h2>What we will do in this tutorial<a class="headerlink" href="#what-we-will-do-in-this-tutorial" title="Permalink to this headline">¶</a></h2>
+<dl class="docutils">
+<dt>In this guide, we will:</dt>
+<dd><ul class="first last simple">
+<li>Create a new Java Project</li>
+<li>Add a User Library to the project</li>
+<li>Build and Run the application</li>
+</ul>
+</dd>
+</dl>
+</div>
+<div class="section" id="create-a-new-project">
+<h2>Create a New Project<a class="headerlink" href="#create-a-new-project" title="Permalink to this headline">¶</a></h2>
+<p>Open Eclipse and create a new Java project; open the <code class="docutils literal"><span class="pre">File</span></code> menu, go to <code class="docutils literal"><span class="pre">New</span></code> and click on <code class="docutils literal"><span class="pre">Java</span> <span class="pre">Project</span></code>.</p>
+<img alt="_images/02-00.png" src="_images/02-00.png" />
+<p>In the <code class="docutils literal"><span class="pre">New</span> <span class="pre">Java</span> <span class="pre">Project</span></code> dialog write the name of your project and click on <code class="docutils literal"><span class="pre">Finish</span></code>.</p>
+</div>
+<div class="section" id="add-a-user-library">
+<h2>Add a User Library<a class="headerlink" href="#add-a-user-library" title="Permalink to this headline">¶</a></h2>
+<p>If you followed the previous tutorial (<code class="docutils literal"><span class="pre">Installing</span> <span class="pre">OpenCV</span> <span class="pre">for</span> <span class="pre">Java</span></code>), you should already have the OpenCV library set in your workspace&#8217;s user libraries, if not please check out the previous tutorial.
+Now you should be ready to add the library to your project.
+Inside Eclipse&#8217;s <code class="docutils literal"><span class="pre">Package</span> <span class="pre">Explorer</span></code> just right-click on your project&#8217;s folder and go to <code class="docutils literal"><span class="pre">Build</span> <span class="pre">Path</span> <span class="pre">--&gt;</span> <span class="pre">Add</span> <span class="pre">Libraries...</span></code>.</p>
+<img alt="_images/02-01.png" src="_images/02-01.png" />
+<p>Select <code class="docutils literal"><span class="pre">User</span> <span class="pre">Libraries</span></code> and click on <code class="docutils literal"><span class="pre">Next</span></code>, check the checkbox of the OpenCV library and click <code class="docutils literal"><span class="pre">Finish</span></code>.</p>
+<img alt="_images/02-02.png" src="_images/02-02.png" />
+</div>
+<div class="section" id="create-a-simple-application">
+<h2>Create a simple application<a class="headerlink" href="#create-a-simple-application" title="Permalink to this headline">¶</a></h2>
+<p>Now add a new Class to your project by  right-clicking on your project&#8217;s folder and go to <code class="docutils literal"><span class="pre">New</span> <span class="pre">--&gt;</span> <span class="pre">Class</span></code>.
+Write a name of your choice for both the package and the class then click on <code class="docutils literal"><span class="pre">Finish</span></code>.
+Now we are ready to write the code of our first application.
+Let&#8217;s start by define the <code class="docutils literal"><span class="pre">main</span></code> method:</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyFirstApp</span> <span class="o">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">){</span>
+                <span class="n">System</span><span class="o">.</span><span class="na">loadLibrary</span><span class="o">(</span><span class="n">Core</span><span class="o">.</span><span class="na">NATIVE_LIBRARY_NAME</span><span class="o">);</span>
+                <span class="n">Mat</span> <span class="n">mat</span> <span class="o">=</span> <span class="n">Mat</span><span class="o">.</span><span class="na">eye</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="mi">3</span><span class="o">,</span> <span class="n">CvType</span><span class="o">.</span><span class="na">CV_8UC1</span><span class="o">);</span>
+                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;mat = &quot;</span> <span class="o">+</span> <span class="n">mat</span><span class="o">.</span><span class="na">dump</span><span class="o">());</span>
+        <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+<p>First of all we need to load the Native Library previously set on our project.</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="n">System</span><span class="o">.</span><span class="na">loadLibrary</span><span class="o">(</span><span class="n">Core</span><span class="o">.</span><span class="na">NATIVE_LIBRARY_NAME</span><span class="o">);</span>
+</pre></div>
+</div>
+<p>Then we can define a new Mat.</p>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">The class <strong>Mat</strong> represents an n-dimensional dense numerical single-channel or multi-channel array. It can be used to store real or complex-valued vectors and matrices, grayscale or color images, voxel volumes, vector fields, point clouds, tensors, histograms.</p>
+</div>
+<p>For more details check out the OpenCV <a class="reference external" href="http://docs.opencv.org/modules/core/doc/basic_structures.html">page</a>.</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="n">Mat</span> <span class="n">mat</span> <span class="o">=</span> <span class="n">Mat</span><span class="o">.</span><span class="na">eye</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="mi">3</span><span class="o">,</span> <span class="n">CvType</span><span class="o">.</span><span class="na">CV_8UC1</span><span class="o">);</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal"><span class="pre">Mat.eye</span></code> represents a identity matrix, we set the dimensions of it (3x3) and the type of its elements.</p>
+<p>As you can notice, if you leave the code just like this, you will get some error; this is due to the fact that eclipse can&#8217;t resolve some variables. You can locate your mouse cursor on the words that seem to be errors and wait for a dialog to pop up and click on the voice <code class="docutils literal"><span class="pre">Import...</span></code>. If you do that for all the variables we have added to the code the following rows:</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="kn">import</span> <span class="nn">org.opencv.core.Core</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.opencv.core.CvType</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.opencv.core.Mat</span><span class="o">;</span>
+</pre></div>
+</div>
+<p>We can now try to build and run our application by clicking on the Run button.
+You should have the following output:</p>
+<img alt="_images/02-03.png" src="_images/02-03.png" />
+<p>Here I put the whole source <a class="reference external" href="https://github.com/java-opencv/Polito-Java-OpenCV-Tutorials-Source-Code/blob/master/MyFirstProject/src/mypackage/MyFirstApp.java">code</a>:</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="kn">package</span> <span class="nn">mypackage</span><span class="o">;</span>
+
+<span class="kn">import</span> <span class="nn">org.opencv.core.Core</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.opencv.core.CvType</span><span class="o">;</span>
+<span class="kn">import</span> <span class="nn">org.opencv.core.Mat</span><span class="o">;</span>
+
+<span class="kd">public</span> <span class="kd">class</span> <span class="nc">MyFirstApp</span> <span class="o">{</span>
+        <span class="kd">public</span> <span class="kd">static</span> <span class="kt">void</span> <span class="nf">main</span><span class="o">(</span><span class="n">String</span><span class="o">[]</span> <span class="n">args</span><span class="o">){</span>
+                <span class="n">System</span><span class="o">.</span><span class="na">loadLibrary</span><span class="o">(</span><span class="n">Core</span><span class="o">.</span><span class="na">NATIVE_LIBRARY_NAME</span><span class="o">);</span>
+                <span class="n">Mat</span> <span class="n">mat</span> <span class="o">=</span> <span class="n">Mat</span><span class="o">.</span><span class="na">eye</span><span class="o">(</span><span class="mi">3</span><span class="o">,</span> <span class="mi">3</span><span class="o">,</span> <span class="n">CvType</span><span class="o">.</span><span class="na">CV_8UC1</span><span class="o">);</span>
+                <span class="n">System</span><span class="o">.</span><span class="na">out</span><span class="o">.</span><span class="na">println</span><span class="o">(</span><span class="s">&quot;mat = &quot;</span> <span class="o">+</span> <span class="n">mat</span><span class="o">.</span><span class="na">dump</span><span class="o">());</span>
+        <span class="o">}</span>
+<span class="o">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">First Java Application with OpenCV</a><ul>
+<li><a class="reference internal" href="#introduction-to-a-opencv-application-with-java">Introduction to a OpenCV application with Java</a></li>
+<li><a class="reference internal" href="#what-we-will-do-in-this-tutorial">What we will do in this tutorial</a></li>
+<li><a class="reference internal" href="#create-a-new-project">Create a New Project</a></li>
+<li><a class="reference internal" href="#add-a-user-library">Add a User Library</a></li>
+<li><a class="reference internal" href="#create-a-simple-application">Create a simple application</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="01 - Installing OpenCV for Java.html" title="previous chapter">Installing OpenCV for Java</a></li>
+      <li>Next: <a href="03 - First JavaFX Application with OpenCV.html" title="next chapter">First JavaFX Application with OpenCV</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/02 - First Java Application with OpenCV.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2015, Luigi De Russis, Alberto Sacco.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.1</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.5</a>
+      
+      |
+      <a href="_sources/02 - First Java Application with OpenCV.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
