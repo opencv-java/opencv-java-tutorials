@@ -19,6 +19,7 @@ Contents:
    06 - Fourier Transform
    07 - Image Segmentation
    08 - Face Recognition and Tracking
+   09 - Object Detection
 
 
 
