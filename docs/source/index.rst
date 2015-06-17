@@ -1,5 +1,10 @@
-Welcome to Polito-Java-OpenCV-Tutorials's documentation!
-========================================================
+.. OpenCV Java Tutorials documentation master file, created by
+   sphinx-quickstart on Wed Jun 17 09:26:35 2015.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
+
+Welcome to OpenCV Java Tutorials's documentation!
+=================================================
 
 Contents:
 
@@ -14,6 +19,7 @@ Contents:
    06 - Fourier Transform
    07 - Image Segmentation
    08 - Face Recognition and Tracking
+
 
 
 Indices and tables

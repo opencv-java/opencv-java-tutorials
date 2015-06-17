@@ -1,4 +1,4 @@
-Polito-Java-OpenCV-Tutorials
+OpenCV Java Tutorials
 ============================
 
-Look at the tutorials at the readthedocs link:  http://polito-java-opencv-tutorials.readthedocs.org/en/latest/index.html.
+Look at the tutorials at the readthedocs link:  http://opencv-java-tutorials.readthedocs.org/en/latest/index.html.

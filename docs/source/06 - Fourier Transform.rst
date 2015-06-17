@@ -47,7 +47,7 @@ Let's create a new JavaFX project. In Scene Builder set the windows element so t
 
 The gui will look something like this one:
 
-.. image:: res/06-00.png
+.. image:: _static/06-00.png
 
 Load the file
 -------------
@@ -164,13 +164,13 @@ Analyzing the results
 ---------------------
 - *sinfunction.png*
 
-.. image:: res/06-01.png
+.. image:: _static/06-01.png
 
 The image is a horizontal sine of 4 cycles. Notice that the DFT just has a single component, represented by 2 bright spots symmetrically placed about the center of the DFT image. The center of the image is the origin of the frequency coordinate system. The x-axis runs left to right through the center and represents the horizontal component of frequency. The y-axis runs bottom to top through the center and represents the vertical component of frequency. There is a dot at the center that represents the (0,0) frequency term or average value of the image. Images usually have a large average value (like 128) and lots of low frequency information so FT images usually have a bright blob of components near the center. High frequencies in the horizontal direction will cause bright dots away from the center in the horizontal direction.
 
 - *circle.png*
 
-.. image:: res/06-02.png
+.. image:: _static/06-02.png
 
 In this case we have a circular aperture, and what is the Fourier transform of a circular aperture? The diffraction disk and rings. A large aperture produces a compact transform, instead a small one produces a larger Airy pattern; thus the disk is greater if aperture is smaller; according to Fourier properties, from the center to the middle of the first dark ring the distance is *(1.22 x N) / d*; in this case N is the size of the image, and d is the diameter of the circle.
 An *Airy disk* is the bright center of the diffraction pattern created from a circular aperture ideal

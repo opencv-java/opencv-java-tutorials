@@ -74,7 +74,7 @@ Let's create a new JavaFX project. In Scene Builder set the windows element so t
 
 The gui will look something like this one:
 
-.. image:: res/07-00.png
+.. image:: _static/07-00.png
 
 Using the Canny edge detection
 ------------------------------
@@ -127,7 +127,7 @@ Finally, we will use the function copyTo to map only the areas of the image that
 Canny Result
 ------------
 
-.. image:: res/07-01.png
+.. image:: _static/07-01.png
 
 Using the Background Removal
 ----------------------------
@@ -206,7 +206,7 @@ At last, we can apply the image we've just obtained as a mask to the original fr
 Background Removal Result
 -------------------------
 
-.. image:: res/07-02.png
+.. image:: _static/07-02.png
 
 Source Code
 -----------

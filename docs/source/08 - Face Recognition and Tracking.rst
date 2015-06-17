@@ -44,7 +44,7 @@ Let's create a new JavaFX project. In Scene Builder set the windows element so t
 
 The gui will look something like this one:
 
-.. image:: res/08-00.png
+.. image:: _static/08-00.png
 
 Loading the Classifiers
 -----------------------
@@ -133,9 +133,9 @@ The last parameter just set the thickness of the rectangle's border.
 
 The tracking part can be implemented by calling the ``detectAndDisplay`` method for each frame.
 
-.. image:: res/08-01.png
+.. image:: _static/08-01.png
 
-.. image:: res/08-02.png
+.. image:: _static/08-02.png
 
 Source Code
 -----------

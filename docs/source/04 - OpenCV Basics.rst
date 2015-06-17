@@ -51,7 +51,7 @@ Let's also add a title to this section by putting before our new checkbox, but s
 
 In the Scene Builder we now have:
 
-.. image:: res/04-00.png
+.. image:: _static/04-00.png
 
 The graphic interface is complete for the first task, now we need to work on the controller; in the previous tutorial we could control the number of channels displayed on screen with the line (98):
 
@@ -295,9 +295,9 @@ Let's convert the obtained Mat to an Image with our method ``mat2Image`` and upd
        }
     });
 
-.. image:: res/04-01.png
+.. image:: _static/04-01.png
 
-.. image:: res/04-02.png
+.. image:: _static/04-02.png
 
 Source Code
 -----------

@@ -19,7 +19,7 @@ Create a New Project
 --------------------
 Open Eclipse and create a new Java project; open the ``File`` menu, go to ``New`` and click on ``Java Project``.
 
-.. image:: res/02-00.png
+.. image:: _static/02-00.png
 
 In the ``New Java Project`` dialog write the name of your project and click on ``Finish``.
 
@@ -29,11 +29,11 @@ If you followed the previous tutorial (``Installing OpenCV for Java``), you shou
 Now you should be ready to add the library to your project.
 Inside Eclipse's ``Package Explorer`` just right-click on your project's folder and go to ``Build Path --> Add Libraries...``.
 
-.. image:: res/02-01.png
+.. image:: _static/02-01.png
 
 Select ``User Libraries`` and click on ``Next``, check the checkbox of the OpenCV library and click ``Finish``.
 
-.. image:: res/02-02.png
+.. image:: _static/02-02.png
 
 Create a simple application
 ---------------------------
@@ -80,7 +80,7 @@ As you can notice, if you leave the code just like this, you will get some error
 We can now try to build and run our application by clicking on the Run button.
 You should have the following output:
 
-.. image:: res/02-03.png
+.. image:: _static/02-03.png
 
 Here I put the whole source `code <https://github.com/java-opencv/Polito-Java-OpenCV-Tutorials-Source-Code/blob/master/MyFirstProject/src/mypackage/MyFirstApp.java>`_:
 

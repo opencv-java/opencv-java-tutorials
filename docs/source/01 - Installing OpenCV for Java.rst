@@ -29,7 +29,7 @@ As first step, if you don't have these already, download and install `CMake <htt
 Extract the downloaded OpenCV file in a location of your choice and open CMake ( cmake-gui ).
 Put the location of the extracted OpenCV library in the ``Where is the source code field`` (e.g., /opencv2.4.6.1/) and put the destination directory of your build in the ``Where to build the binaries`` field (e.g., /opencv2.4.6.1/build), at last, check the ``Grouped`` and ``Advanced`` checkboxes.
 
-.. image:: res/01-00.png
+.. image:: _static/01-00.png
 
 Now press ``Configure`` and use the default compilers for ``Unix Makefiles``.
 In the ``Ungrouped Entries`` group, insert the path to the Apache Ant executable (e.g., ``/apacheant1.9.2/bin/ant``).
@@ -46,7 +46,7 @@ insert the Java include path (e.g., ``/usr/lib/jvm/java7oracle/include/``)
 insert the alternative Java include path (e.g., ``/usr/lib/jvm/java7oracle/include/linux``)
 Once we have pressed ``Generate`` twice the CMake window should appear with a white background. Now close CMake.
 
-.. image:: res/01 - 01.png
+.. image:: _static/01 - 01.png
 
 Now open the terminal , go to the ``build`` folder of OpenCV and build everything with the command: ``make -j8`` (wait for the process to be completed...).
 If everything went well you should have ``opencv-246.jar`` and ``libopencv_java246.so`` files in the ``/opencv-2.4.6.1/build/bin`` directory and the ``data`` folder in the ``/opencv-2.4.6.1/`` directory.
@@ -55,13 +55,13 @@ Set up OpenCV for Java in Eclipse
 ---------------------------------
 Open Eclipse and select a workspace of your choice. Create a User Library, ready to be used on all the next projects: go to  ``Window > Preferences...``.
 
-.. image:: res/01 - 02.png
+.. image:: _static/01 - 02.png
 
 From the menu navigate under ``Java > Build Path > User Libraries`` and choose ``New...``.
 Enter a name for the library (e.g., opencv246) and select the newly created user library.
 Choose ``Add External JARs...``, browse to select ``opencv246.jar``.
 After adding the jar, extend it and select ``Native library location`` and press ``Edit...``.
 
-.. image:: res/01 - 03.png
+.. image:: _static/01 - 03.png
 
 Select ``External Folder...`` and browse to select the folder containing the OpenCV libraries (e.g., ``C:\opencv\build\java\x64`` under Windows).

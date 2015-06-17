@@ -16,7 +16,7 @@ Calibration Pattern
 -------------------
 As we said earlier we are going to need some sort of pattern that the program can recognize in order to make the calibration work. The pattern that we are going to use is a chessboard image.
 
-.. image:: res/05-00.png
+.. image:: _static/05-00.png
 
 The reason why we use this image is because there are some OpenCV functions that can recognize this pattern and draw a scheme which highlights the intersections between each block.
 To make the calibration work you need to print the chessboard image and show it to the cam; it is important to maintain the sheet still, better if stick to a surface.
@@ -80,7 +80,7 @@ For the button instead, set the id and a method for the onAction field:
 
 Your GUI will look something like this:
 
-.. image:: res/05-03.png
+.. image:: _static/05-03.png
 
 Pattern Recognition
 -------------------
@@ -148,9 +148,9 @@ Now we can activate the Snapshot button to save the data.
 
     this.snapshotButton.setDisable(false);
 
-.. image:: res/05-01.png
+.. image:: _static/05-01.png
 
-.. image:: res/05-02.png
+.. image:: _static/05-02.png
 
 We should take the set number of "snapshots" from different angles and depth, in order to make the calibration.
 
