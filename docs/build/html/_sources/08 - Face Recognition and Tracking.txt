@@ -95,7 +95,7 @@ Then we have to set the minimum size of the face to be detected (this required i
     if (this.absoluteFaceSize == 0)
     {
 	int height = grayFrame.rows();
-	if (Math.round(height * 0.2f) > 0)ù
+	if (Math.round(height * 0.2f) > 0)
 	{
 		this.absoluteFaceSize = Math.round(height * 0.2f);
 	}
@@ -109,6 +109,7 @@ Now we can start the detection:
 
 The ``detectMultiScale`` function detects objects of different sizes in the input image. The detected objects are returned as a list of rectangles.
 The parameters are:
+
  - **image** Matrix of the type CV_8U containing an image where objects are detected. 
  - **objects** Vector of rectangles where each rectangle contains the detected object. 
  - **scaleFactor** Parameter specifying how much the image size is reduced at each image scale. 

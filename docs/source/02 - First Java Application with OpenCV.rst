@@ -60,8 +60,7 @@ First of all we need to load the Native Library previously set on our project.
 
 Then we can define a new Mat.
 
-.. note:: The class **Mat** represents an n-dimensional dense numerical single-channel or multi-channel array. It can be used to store real or complex-valued vectors and matrices, grayscale or color images, voxel volumes, vector fields, point clouds, tensors, histograms.
-For more details check out the OpenCV `page <http://docs.opencv.org/modules/core/doc/basic_structures.html>`_.
+.. note:: The class **Mat** represents an n-dimensional dense numerical single-channel or multi-channel array. It can be used to store real or complex-valued vectors and matrices, grayscale or color images, voxel volumes, vector fields, point clouds, tensors, histograms. For more details check out the OpenCV `page <http://docs.opencv.org/modules/core/doc/basic_structures.html>`_.
 
 .. code-block:: java
 

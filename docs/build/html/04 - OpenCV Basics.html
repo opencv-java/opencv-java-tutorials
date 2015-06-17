@@ -177,8 +177,28 @@ The <code class="docutils literal"><span class="pre">addWeighted</span></code> f
 </dd>
 </dl>
 <p>So we&#8217;ll have:</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="n">Core</span><span class="o">.</span><span class="na">addWeighted</span><span class="o">(</span><span class="n">imageROI</span><span class="o">,</span> <span class="mf">1.0</span><span class="o">,</span> <span class="n">logo</span><span class="o">,</span> <span class="mf">0.7</span><span class="o">,</span> <span class="mf">0.0</span><span class="o">,</span> <span class="n">imageROI</span><span class="o">);</span>
+</pre></div>
+</div>
 <p>The second method (<code class="docutils literal"><span class="pre">copyTo</span></code>) simply copies a Mat into the other. We&#8217;ll have:</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="n">Mat</span> <span class="n">mask</span> <span class="o">=</span> <span class="n">logo</span><span class="o">.</span><span class="na">clone</span><span class="o">();</span>
+<span class="n">logo</span><span class="o">.</span><span class="na">copyTo</span><span class="o">(</span><span class="n">imageROI</span><span class="o">,</span> <span class="n">mask</span><span class="o">);</span>
+</pre></div>
+</div>
 <p>Everything we have done so far to add the logo to the image has to perform only IF our checkbox is check and the image loading process has ended successfully. So we have to add an if condition:</p>
+<div class="highlight-java"><div class="highlight"><pre><span class="k">if</span> <span class="o">(</span><span class="n">logoCheckBox</span><span class="o">.</span><span class="na">isSelected</span><span class="o">()</span> <span class="o">&amp;&amp;</span> <span class="k">this</span><span class="o">.</span><span class="na">logo</span> <span class="o">!=</span> <span class="kc">null</span><span class="o">)</span>
+<span class="o">{</span>
+    <span class="n">Rect</span> <span class="n">roi</span> <span class="o">=</span> <span class="k">new</span> <span class="n">Rect</span><span class="o">(</span><span class="n">frame</span><span class="o">.</span><span class="na">cols</span><span class="o">()</span> <span class="o">-</span> <span class="n">logo</span><span class="o">.</span><span class="na">cols</span><span class="o">(),</span> <span class="n">frame</span><span class="o">.</span><span class="na">rows</span><span class="o">()</span> <span class="o">-</span> <span class="n">logo</span><span class="o">.</span><span class="na">rows</span><span class="o">(),</span> <span class="n">logo</span><span class="o">.</span><span class="na">cols</span><span class="o">(),</span><span class="n">logo</span><span class="o">.</span><span class="na">rows</span><span class="o">());</span>
+    <span class="n">Mat</span> <span class="n">imageROI</span> <span class="o">=</span> <span class="n">frame</span><span class="o">.</span><span class="na">submat</span><span class="o">(</span><span class="n">roi</span><span class="o">);</span>
+    <span class="c1">// add the logo: method #1</span>
+
+    <span class="n">Core</span><span class="o">.</span><span class="na">addWeighted</span><span class="o">(</span><span class="n">imageROI</span><span class="o">,</span> <span class="mf">1.0</span><span class="o">,</span> <span class="n">logo</span><span class="o">,</span> <span class="mf">0.7</span><span class="o">,</span> <span class="mf">0.0</span><span class="o">,</span> <span class="n">imageROI</span><span class="o">);</span>
+    <span class="c1">// add the logo: method #2</span>
+    <span class="c1">// Mat mask = logo.clone();</span>
+    <span class="c1">// logo.copyTo(imageROI, mask);</span>
+<span class="o">}</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="calculate-a-histogram">
 <h2>Calculate a Histogram<a class="headerlink" href="#calculate-a-histogram" title="Permalink to this headline">¶</a></h2>

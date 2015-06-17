@@ -78,9 +78,8 @@ In order to make a good calibration, we need to have about 20 samples of the pat
 <p>Create a new JavaFX project (e.g. &#8220;CameraCalibration&#8221;) with the usual OpenCV user library.
 Open Scene Builder and add a Border Pane with:</p>
 <ul class="simple">
-<li>on <strong>TOP</strong> we need to have the possibility to set the number of samples for the calibration, the number of horizontal corners we have in the test image, the number of vertical corners we have in the test image and a button to update this data.</li>
+<li>on <strong>TOP</strong> we need to have the possibility to set the number of samples for the calibration, the number of horizontal corners we have in the test image, the number of vertical corners we have in the test image and a button to update this data. To make things cleaner let&#8217;s put all these elements inside a HBox.</li>
 </ul>
-<p>To make things cleaner let&#8217;s put all these elements inside a HBox.</p>
 <div class="highlight-xml"><div class="highlight"><pre><span class="nt">&lt;HBox</span> <span class="na">alignment=</span><span class="s">&quot;CENTER&quot;</span> <span class="na">spacing=</span><span class="s">&quot;10&quot;</span><span class="nt">&gt;</span>
 </pre></div>
 </div>

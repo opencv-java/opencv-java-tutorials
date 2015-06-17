@@ -45,6 +45,7 @@ Getting Started
 Let's create a new JavaFX project. In Scene Builder set the windows element so that we have a Border Pane with:
 
 - on **TOP** a VBox containing two HBox, each one followed by a separator.
+
  + In the first HBox we are goning to need a checkbox and a *slider*, the first one is to select the Canny e.d. mode and the second one is going to be used to control the value of the threshold to be passed to the Canny e.d. function.
 
 	.. code-block:: xml
@@ -104,7 +105,7 @@ where the arguments are:
  - ``detectedEdges``: Source image, grayscale
  - ``detectedEdges``: Output of the detector (can be the same as the input)
  - ``this.threshold.getValue()``: The value entered by the user moving the Slider
- - ``this.threshold.getValue() * 3``: Set in the program as three times the lower threshold (following Canny’s recommendation)
+ - ``this.threshold.getValue() * 3``: Set in the program as three times the lower threshold (following Canny's recommendation)
  - ``3``: The size of the Sobel kernel to be used internally
  - ``false``: a flag, indicating whether to use a more accurate calculation of the magnitude gradient.
 

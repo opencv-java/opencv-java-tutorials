@@ -229,7 +229,7 @@ Source Code
 		
 		launch(args);
 	}
-}
+    }
 
 -  `FT_Controller.java <https://github.com/java-opencv/Polito-Java-OpenCV-Tutorials-Source-Code/blob/master/Fourier%20Transform/src/application/FT_Controller.java>`_
 

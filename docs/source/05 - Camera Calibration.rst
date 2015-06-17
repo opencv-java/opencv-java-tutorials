@@ -34,8 +34,7 @@ Getting Started
 Create a new JavaFX project (e.g. "CameraCalibration") with the usual OpenCV user library.
 Open Scene Builder and add a Border Pane with:
 
-- on **TOP** we need to have the possibility to set the number of samples for the calibration, the number of horizontal corners we have in the test image, the number of vertical corners we have in the test image and a button to update this data.
-To make things cleaner let's put all these elements inside a HBox.
+- on **TOP** we need to have the possibility to set the number of samples for the calibration, the number of horizontal corners we have in the test image, the number of vertical corners we have in the test image and a button to update this data. To make things cleaner let's put all these elements inside a HBox.
 
 .. code-block:: xml
 

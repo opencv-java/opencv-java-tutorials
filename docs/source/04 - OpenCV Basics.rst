@@ -114,6 +114,7 @@ Adapt the code.
 We are going to add some variants to the code in order to display our logo in a specific region of the stream. This means that for each frame capture, before the image could be converted into 1 or 3 channels, we have to set a **ROI** (region of interest) in which we want to place the logo.
 Usually a ROI of an Image is a portion of it, we can define the roi as a Rect object.
 Rect is a template class for 2D rectangles, described by the following parameters:
+
  * Coordinates of the top-left corner. This is a default interpretation of Rect.x and Rect.y in OpenCV. Though, in your algorithms you may count x and y from the bottom-left corner.
  * Rectangle width and height.
 
@@ -148,20 +149,20 @@ Parameters:
 
 So we'll have:
 
-.. block-code:: java
+.. code-block:: java
 
     Core.addWeighted(imageROI, 1.0, logo, 0.7, 0.0, imageROI);
 
 The second method (``copyTo``) simply copies a Mat into the other. We'll have:
 
-.. block-code:: java
+.. code-block:: java
 
     Mat mask = logo.clone();
     logo.copyTo(imageROI, mask);
 
 Everything we have done so far to add the logo to the image has to perform only IF our checkbox is check and the image loading process has ended successfully. So we have to add an if condition:
 
-.. block-code:: java
+.. code-block:: java
 
     if (logoCheckBox.isSelected() && this.logo != null)
     {
@@ -202,7 +203,8 @@ First thing we need to do is to divide the frame into other *n* frames, where *n
 
 Before we could calculate the histogram of each channel we have to prepare all the inputs that the ``calcHist`` function needs.
 The functions calcHist calculate the histogram of one or more arrays. The elements of a tuple used to increment a histogram bin are taken from the corresponding input arrays at the same location.
-Parameters: 
+Parameters:
+
  - **images** Source arrays. They all should have the same depth, CV_8U or CV_32F, and the same size. Each of them can have an arbitrary number of channels. 
  - **channels** List of the dims channels used to compute the histogram. The first array channels are numerated from 0 to images[0].channels()-1, the second array channels are counted from images[0].channels() to images[0].channels() + images[1].channels()-1, and so on. 
  - **mask** Optional mask. If the matrix is not empty, it must be an 8-bit array of the same size as images[i]. The non-zero mask elements mark the array elements counted in the histogram. 
