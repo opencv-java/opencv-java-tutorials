@@ -6,7 +6,9 @@ Object Detection
 
 Goal
 ----
-In this tutorial we are going to use well-known classifiers that have been already trained and distributed by OpenCV in order to detect and track a moving face into a video stream.
+In this tutorial we are going to identify and track one or more tennis balls. It performs the detection of the tennis balls upon a webcam video stream by using the color range of the balls, erosion and dilation, and the findContours method.
+
+A project, made in Eclipse (Luna), for  Some screenshots of the running project are available in the screenshots folder.
 
 
 What we will do in this tutorial
