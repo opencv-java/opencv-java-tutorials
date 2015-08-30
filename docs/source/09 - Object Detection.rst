@@ -47,7 +47,7 @@ Source Code
 				scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 				// create the stage with the given title and the previously created
 				// scene
-				primaryStage.setTitle("Lab7");
+				primaryStage.setTitle("Object Detection");
 				primaryStage.setScene(scene);
 				// show the GUI
 				primaryStage.show();
