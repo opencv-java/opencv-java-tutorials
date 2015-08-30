@@ -26,24 +26,13 @@ Let's create a new JavaFX project. In Scene Builder set the windows element so t
 
 Source Code
 -----------
--  `FaceDetection.java <https://github.com/opencv-java/object-detection/blob/master/src/it/polito/teaching/cv/Lab7.java>`_
+-  `ObjectDetection.java <https://github.com/opencv-java/object-detection/blob/master/src/it/polito/teaching/cv/Lab7.java>`_
 
 .. code-block:: java
 
-	    public class Lab7 extends Application
+	    public class ObjectDetection extends Application
 	{
-		/**
-		 * The main class for a JavaFX application. It creates and handles the main
-		 * window with its resources (style, graphics, etc.).
-		 * 
-		 * This application looks for any tennis ball in the camera video stream and
-		 * try to select them according to their HSV values. Found tennis balls are
-		 * framed with a blue line.
-		 * 
-		 * @author <a href="mailto:luigi.derussis@polito.it">Luigi De Russis</a>
-		 * @since 2015-01-13
-		 * 
-		 */
+	
 		@Override
 		public void start(Stage primaryStage)
 		{
@@ -78,7 +67,7 @@ Source Code
 		}
 	}
 
-- `FD_Controller.java <https://github.com/opencv-java/object-detection/blob/master/src/it/polito/teaching/cv/ObjRecognitionController.java>`_
+- `ObjRecognitionController.java <https://github.com/opencv-java/object-detection/blob/master/src/it/polito/teaching/cv/ObjRecognitionController.java>`_
 
 .. code-block:: java
 
@@ -383,7 +372,7 @@ Source Code
 	}
 
 
-- `FD_FX.fxml <https://github.com/opencv-java/object-detection/blob/master/src/it/polito/teaching/cv/ObjRecognition.fxml>`_
+- `ObjRecognition.fxml <https://github.com/opencv-java/object-detection/blob/master/src/it/polito/teaching/cv/ObjRecognition.fxml>`_
 
 .. code-block:: xml
 
