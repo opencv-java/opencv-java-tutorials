@@ -49,7 +49,7 @@ If you have installed *Scene Builder* you can now right click on your *FXML file
 At fist the *FXML file* will have just an *AnchorPane*.
 An AnchorPane allows the edges of child nodes to be anchored to an offset from the anchorpane's edges. If the anchorpane has a border and/or padding set, the offsets will be measured from the inside edge of those insets.
 The anchorpane lays out each managed child regardless of the child's visible property value; unmanaged children are ignored for all layout calculations.
-You can go ahead and delete the anchorpane and add a *BorderPane* instaed.
+You can go ahead and delete the anchorpane and add a *BorderPane* instead.
 A BorderPane lays out children in top, left, right, bottom, and center positions.
 
 .. image:: _static/03-04.png
