@@ -17,7 +17,7 @@ In this guide, we will:
 
 Our First Application in JavaFX
 -------------------------------
-Our application is going to capture a video stream from our webcam and it will display it on our gui. We will create the gui with Scene Builder and it is going to have a button, which will allow us to stat and stop the stream and a simple image view container where we will put the stream frames.
+Our application is going to capture a video stream from our webcam and it will display it on our gui. We will create the gui with Scene Builder and it is going to have a button, which will allow us to start and stop the stream and a simple image view container where we will put the stream frames.
 
 Installing e(fx)clipse plugin and Scene Builder
 -----------------------------------------------
