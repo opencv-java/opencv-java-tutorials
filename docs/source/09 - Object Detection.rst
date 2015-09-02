@@ -75,8 +75,7 @@ The gui will look something like this one:
 
 Image processing
 ----------------
-First of all we need to add a folder ``resource`` to our project and put the classifiers in it.
-In order to use the classifiers we need to load them from the resource folder, so every time that we check one of the two checkboxes we will load the correct classifier.
+In order to use the morphological operators and obtain good results we need to process the image and remove the noise, change the image to HSV allows to get the contours of image easily.
 
 - ``Remove noise``
 	We can remove some noise of the image using the method blur of the Imgproc class and then apply a conversion to 
@@ -125,8 +124,7 @@ In order to use the classifiers we need to load them from the resource folder, s
 
 Morphological Operators
 -----------------------
-First of all we need to add a folder ``resource`` to our project and put the classifiers in it.
-In order to use the classifiers we need to load them from the resource folder, so every time that we check one of the two checkboxes we will load the correct classifier.
+First of all we need to define the two matrices of mopholocial operator dilation and erosion then with the methods erode and dilate of the class Imgproc we process the image twice in each operation, the result is the matrix morphOutput that will be the partial output.
 
 
 	.. code-block:: java
@@ -147,9 +145,9 @@ In order to use the classifiers we need to load them from the resource folder, s
 		
 		
 
-Trackin the Object
+Object tracking
 ------------------
-Given a binary image containing one or more closed surfaces, use it as a mask to find and highlight the objects contours.
+With the partial output obtained before we can use the method findContours of the class Imgpoc to get a matrix with the mapping of the objects recognized, then we draw the contours of these objects.
 
 
 	.. code-block:: java
