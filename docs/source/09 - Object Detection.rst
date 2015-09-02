@@ -19,8 +19,8 @@ The opening is a compound operation that consist in an erosion followed by a dil
 What we will do in this tutorial
 --------------------------------
 In this guide, we will:
- * Insert a 3 groups of sliders to control the quantity of HSV values (Hue,Saturation and Value) of the image.
- * Capture the image from the web cam and processing the image removing noise in order to facilitate the object recognition
+ * Insert 3 groups of sliders to control the quantity of HSV (Hue, Saturation and Value) of the image.
+ * Capture and process the image from the web cam removing noise in order to facilitate the object recognition.
  * Finally using morphological operator such as erosion and dilation we can identify the objects using the contornous obtained after the image processing.
 
 Getting Started
@@ -170,8 +170,6 @@ Given a binary image containing one or more closed surfaces, use it as a mask to
 				Imgproc.drawContours(frame, contours, idx, new Scalar(250, 0, 0));
 			}
 		}
-
-.. todo:: complete
 
 
 Source Code
