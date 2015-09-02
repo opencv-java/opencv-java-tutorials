@@ -96,6 +96,8 @@ In order to use the classifiers we need to load them from the resource folder, s
 	that allow increase or decrease the capactity to recognize object into the image. .
 
 	.. code-block:: java
+	
+	
 		// get thresholding values from the UI
 		// remember: H ranges 0-180, S and V range 0-255
 		Scalar minValues = new Scalar(this.hueStart.getValue(), this.saturationStart.getValue(),
@@ -139,8 +141,8 @@ In order to use the classifiers we need to load them from the resource folder, s
 		
 		
 
-Morphological Operators
------------------------
+Trackin the Object
+------------------
 Given a binary image containing one or more closed surfaces, use it as a mask to find and highlight the objects contours.
 
 
