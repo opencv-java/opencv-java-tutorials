@@ -132,7 +132,7 @@ Canny Result
 
 Using the Background Removal
 ----------------------------
-If we seletced the background removal checkbox we can perform the method ``doBackgroundRemoval``
+If we selected the background removal checkbox we can perform the method ``doBackgroundRemoval``
 
 .. code-block:: java
 
@@ -162,7 +162,7 @@ Calculate the Hue component mean value:
     average = average / hsvImg.size().height / hsvImg.size().width;
 
 If the background is uniform and fills most of the frame, its value should be close to mean just calculated.
-Then we can use the mean as the threshold to separate the background from the foreground, depending on the invert chackbox we need to perform a back(fore)ground removal:
+Then we can use the mean as the threshold to separate the background from the foreground, depending on the invert checkbox we need to perform a back(fore)ground removal:
 
 .. code-block:: java
 
