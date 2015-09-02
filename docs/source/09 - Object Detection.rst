@@ -21,7 +21,7 @@ Getting Started
 ---------------
 Let's create a new JavaFX project. In Scene Builder set the windows element so that we have a Border Pane with:
 
-- on CENTER a VBox. In this one we are goning to need 6 sliders, the first couple will control hue, the next one saturation and finally hue, with these sliders is posibly change the values of the HSV image.
+- on CENTER we can add a VBox. in this one we are goning to need 6 sliders, the first couple will control hue, the next one saturation and finally hue, with these sliders is posibly change the values of the HSV image.
 
 	.. code-block:: xml
 
@@ -38,7 +38,9 @@ Let's create a new JavaFX project. In Scene Builder set the windows element so t
 		<Label text="Value Stop" />
 		<Slider fx:id="valueStop" min="0" max="255" value="255" blockIncrement="1" />	
 
-- in the CENTRE we are going to put tree ImageViews the first one show normal image from the web cam stream, the second one will show mask image and the lastone will show morph image,  the HBox is used to normal image and VBox to put the other ones. 
+
+- in the CENTRE. we are going to put tree ImageViews the first one show normal image from the web cam stream, the second one will show mask image and the lastone will show morph image. The HBox is used to normal image and VBox to put the other ones. 
+
 	.. code-block:: xml
 
 		<HBox alignment="CENTER" spacing="5">
