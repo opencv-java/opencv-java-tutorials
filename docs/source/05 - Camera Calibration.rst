@@ -157,7 +157,7 @@ We should take the set number of "snapshots" from different angles and depth, in
 
 Saving Data
 -----------
-By clicking on the snapshot button we cal the ``takeSnapshot`` method. Here we need to save the data (2D and 3D points)  if we did not make enough sample:
+By clicking on the snapshot button we call the ``takeSnapshot`` method. Here we need to save the data (2D and 3D points)  if we did not make enough sample:
 
 .. code-block:: java
 
