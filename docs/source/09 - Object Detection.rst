@@ -28,7 +28,7 @@ Getting Started
 ---------------
 Let's create a new JavaFX project. In Scene Builder we set the window elements so that we have a Border Pane with:
 
-- on RIGHT CENTER we can add a VBox. In this one we are goning to need 6 sliders, the first couple will control hue, the next one saturation and finally brightness, with these sliders is possible to change the values of the HSV image.
+- on RIGHT CENTER we can add a VBox. In this one we are going to need 6 sliders, the first couple will control hue, the next one saturation and finally brightness, with these sliders is possible to change the values of the HSV image.
 
 	.. code-block:: xml
 
