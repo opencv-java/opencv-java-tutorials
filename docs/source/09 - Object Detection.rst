@@ -64,7 +64,7 @@ Let's create a new JavaFX project. In Scene Builder set the windows element so t
 
 The gui will look something like this one:
 
-.. image:: _static/sceneObjectDet.png
+.. image:: _static/09-00.png
 
 
 .. todo:: complete
