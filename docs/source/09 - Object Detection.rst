@@ -26,9 +26,9 @@ In this guide, we will:
 
 Getting Started
 ---------------
-Let's create a new JavaFX project. In Scene Builder set the windows element so that we have a Border Pane with:
+Let's create a new JavaFX project. In Scene Builder we set the window elements so that we have a Border Pane with:
 
-- on RIGHT CENTER we can add a VBox. in this one we are goning to need 6 sliders, the first couple will control hue, the next one saturation and finally hue, with these sliders is posibly change the values of the HSV image.
+- on RIGHT CENTER we can add a VBox. In this one we are goning to need 6 sliders, the first couple will control hue, the next one saturation and finally brightness, with these sliders is possible to change the values of the HSV image.
 
 	.. code-block:: xml
 
@@ -46,7 +46,7 @@ Let's create a new JavaFX project. In Scene Builder set the windows element so t
 		<Slider fx:id="valueStop" min="0" max="255" value="255" blockIncrement="1" />	
 
 
-- in the CENTER. we are going to put tree ImageViews the first one show normal image from the web cam stream, the second one will show mask image and the lastone will show morph image. The HBox is used to normal image and VBox to put the other ones. 
+- in the CENTER. we are going to put three ImageViews, the first one shows normal image from the web cam stream, the second one will show mask image and the last one will show morph image. The HBox is used to normal image and VBox to put the other ones. 
 
 	.. code-block:: xml
 
@@ -61,7 +61,7 @@ Let's create a new JavaFX project. In Scene Builder set the windows element so t
 			</VBox>
 		</HBox>
 
-- on the BOTTOM we can add the usual button to start/stop the stream and the currents values HSV selected with the sliders.
+- on the BOTTOM we can add the usual button to start/stop the stream and the current values HSV selected with the sliders.
 
 	.. code-block:: xml
 
@@ -76,11 +76,11 @@ The gui will look something like this one:
 
 Image processing
 ----------------
-In order to use the morphological operators and obtain good results we need to process the image and remove the noise, change the image to HSV allows to get the contours of image easily.
+In order to use the morphological operators and obtain good results we need to process the image and remove the noise, change the image to HSV allows to get the contours easily.
 
 - ``Remove noise``
 	We can remove some noise of the image using the method blur of the Imgproc class and then apply a conversion to 
-	HSV in order to facilitated the process of object recognition.
+	HSV in order to facilitate the process of object recognition.
 
 	.. code-block:: java
 	
@@ -99,7 +99,7 @@ In order to use the morphological operators and obtain good results we need to p
 
 - ``Values of HSV image``
 	With the sliders we can modify the values of the HSV Image, the image will be updtated in real time,
-	that allow increase or decrease the capactity to recognize object into the image. .
+	that allows to increase or decrease the capactity to recognize object into the image. .
 
 	.. code-block:: java
 	
@@ -125,7 +125,7 @@ In order to use the morphological operators and obtain good results we need to p
 
 Morphological Operators
 -----------------------
-First of all we need to define the two matrices of mopholocial operator dilation and erosion then with the methods erode and dilate of the class Imgproc we process the image twice in each operation, the result is the matrix morphOutput that will be the partial output.
+First of all we need to define the two matrices of morphological operator dilation and erosion, then with the methods erode and dilate of the class Imgproc we process the image twice in each operation, the result is the matrix morphOutput that will be the partial output.
 
 
 	.. code-block:: java
