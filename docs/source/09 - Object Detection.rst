@@ -8,14 +8,20 @@ Goal
 ----
 In this tutorial we are going to identify and track one or more tennis balls. It performs the detection of the tennis balls upon a webcam video stream by using the color range of the balls, erosion and dilation, and the findContours method.
 
-A project, made in Eclipse (Luna), for  Some screenshots of the running project are available in the screenshots folder.
+Morphological Image Processing
+------------------------------
+Is a collection of non-linear operations related to the morphology of features in an image. The morphological operations rely only on the relative ordering of pixel values and not on their numerical values.
+Some of the fundamental morphological operations are dilation and erosion. Dilation causes objects to dilate or grow in size adding pixels to the boundaries of objects in an image and therefore the holes within different regions become smaller. The dilation allows, for example, to join parts of an object that appear separated.
+Erosion causes objects to shrink by stripping away layers of pixels from the boundaries of objects in an image and therefore the holes within different regions become larger. The erosion can be used to remove noise or small errors from the image due to the scanning process.
+The opening is a compound operation that consist in an erosion followed by a dilation using the same structuring element for both operations. This operation removes small objects from the foreground of an image and can be used to find things into which a specific structuring element can fit. The opening can open up a gap between objects connected by a thin bridge of pixels. Any regions that have survived the erosion are restored to their original size by the dilation.
 
 
 What we will do in this tutorial
 --------------------------------
 In this guide, we will:
- * Insert a checkbox to select the Haar Classifier, detect and track a face, and draw a green rectangle around the detected face.
- * Inesrt a checkbox to select the LBP Classifier, detect and track a face, and draw a green rectangle around the detected face.
+ * Insert a 3 groups of sliders to control the quantity of HSV values (Hue,Saturation and Value) of the image.
+ * Capture the image from the web cam and processing the image removing noise in order to facilitate the object recognition
+ * Finally using morphological operator such as erosion and dilation we can identify the objects using the contornous obtained after the image processing.
 
 Getting Started
 ---------------
