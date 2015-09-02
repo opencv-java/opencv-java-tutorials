@@ -53,7 +53,7 @@ In order to use the classifiers we need to load them from the resource folder, s
 To do so, let's implement the ``OnAction`` methods we already declared before:
 
 - ``haarSelected``
-	inside this method we are going to load the disired Haar Classifier (e.g. ``haarcascade_frontalface.xml``) as follows:
+	inside this method we are going to load the desired Haar Classifier (e.g. ``haarcascade_frontalface.xml``) as follows:
 
 	.. code-block:: java
 
@@ -120,7 +120,7 @@ The parameters are:
 
 So the result of the detection is going to be in the **objects** parameter or in our case ``faces``.
 
-Let's put this result in an array of Rects and draw them on the frame, by doing so we can display the detected face are:
+Let's put this result in an array of rects and draw them on the frame, by doing so we can display the detected face are:
 
 .. code-block:: java
 
