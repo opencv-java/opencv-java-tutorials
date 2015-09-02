@@ -13,7 +13,7 @@ In this guide, we will:
 
 Getting started
 ---------------
-For this tutorial we can create a new JavaFX project and build a scene as the one realized in the previous one. So we've got a window with a border pane in witch:
+For this tutorial we can create a new JavaFX project and build a scene as the one realized in the previous one. So we've got a window with a border pane in which:
 
 - in the **BOTTOM** we have a button inside a *HBox*:
 
@@ -37,7 +37,7 @@ Color channel checkbox
 Let's open our fxml file with Scene Builder and add to the **RIGHT** field of our BP a vertical box ``VBox``. A VBox lays out its children in a single vertical column. If the VBox has a border and/or padding set, then the contents will be layed out within those insets. Also it will resize children (if resizable) to their preferred heights and uses its ``fillWidth`` property to determine whether to resize their widths to fill its own width or keep their widths to their preferred (fillWidth defaults to true).
 A ``HBox`` works just like a VBox but it lays out its children horizontally instead of vertically.
 
-Now we can put inside the VBox a new checkbox, change its text to "Show in gray scale" and set a id (e.g. "grayscale").
+Now we can put inside the VBox a new checkbox, change its text to "Show in gray scale" and set an id (e.g. "grayscale").
 
 .. code-block:: xml
 
@@ -66,7 +66,7 @@ In order to control this conversion with the check box, we have to link the chec
     @FXML
     private CheckBox grayscale;
 
-Now we can implement the control by adding a simple if condition which will perform the conversion only if our check box is checked:
+Now we can implement the control by adding a simple "if" condition which will perform the conversion only if our check box is checked:
 
 .. code-block:: java
 
@@ -80,7 +80,7 @@ The next step is to add another check box which, if checked, will trigger the di
 Let's start by adding the image to the project; create a new folder in the root directory of your project and put the image in there.
 In my project I have a ``resources`` folder with a ``Poli.png`` image.
 Go back to Eclipse and refresh your project (you should have the new folder in it).
-Let's open the fxml file with Scene Builder and add a new checkbox below the one that controls the stream colors; we have to set the text, the name of the method in the ``OnAction`` field and a id.
+Let's open the fxml file with Scene Builder and add a new checkbox below the one that controls the stream colors; we have to set the text, the name of the method in the ``OnAction`` field and an id.
 In the code we will have for example:
 
 .. code-block:: xml
@@ -99,7 +99,7 @@ Variable:
 ``loadLogo`` metheod:
 In this method we are going to load the image whenever the logoCheckBox id selected (checked).
 In order to load the image we have to use a basic OpenCV function: imread.
-It return a Mat and takes the path of the image and a flag (> 0 RGB image, =0 grayscale, <0 with the alpha channel).
+It returns a Mat and takes the path of the image and a flag (> 0 RGB image, =0 grayscale, <0 with the alpha channel).
 
 .. code-block:: java
 
@@ -112,7 +112,7 @@ It return a Mat and takes the path of the image and a flag (> 0 RGB image, =0 gr
 Adapt the code.
 
 We are going to add some variants to the code in order to display our logo in a specific region of the stream. This means that for each frame capture, before the image could be converted into 1 or 3 channels, we have to set a **ROI** (region of interest) in which we want to place the logo.
-Usually a ROI of an Image is a portion of it, we can define the roi as a Rect object.
+Usually a ROI of an image is a portion of it, we can define the ROI as a Rect object.
 Rect is a template class for 2D rectangles, described by the following parameters:
 
  * Coordinates of the top-left corner. This is a default interpretation of Rect.x and Rect.y in OpenCV. Though, in your algorithms you may count x and y from the bottom-left corner.
@@ -193,7 +193,7 @@ For this task we are going to define a method in our controller class that takes
 
     private void showHistogram(Mat frame, boolean gray){ ... }
 
-First thing we need to do is to divide the frame into other *n* frames, where *n* represents the number of channels of which our frame is composed. To do so we need to use the ``Core.split`` function; it need a source Mat and a List<Mat> where to put the different channels. Obviously if the frame is in grayscale the list will have just one element.
+First thing we need to do is to divide the frame into other *n* frames, where *n* represents the number of channels of which our frame is composed. To do so we need to use the ``Core.split`` function; it needs a source Mat and a List<Mat> where to put the different channels. Obviously if the frame is in grayscale the list will have just one element.
 
 .. code-block: java
 
@@ -202,7 +202,7 @@ First thing we need to do is to divide the frame into other *n* frames, where *n
 
 
 Before we could calculate the histogram of each channel we have to prepare all the inputs that the ``calcHist`` function needs.
-The functions calcHist calculate the histogram of one or more arrays. The elements of a tuple used to increment a histogram bin are taken from the corresponding input arrays at the same location.
+The functions calcHist calculates the histogram of one or more arrays. The elements of a tuple used to increment a histogram bin are taken from the corresponding input arrays at the same location.
 Parameters:
 
  - **images** Source arrays. They all should have the same depth, CV_8U or CV_32F, and the same size. Each of them can have an arbitrary number of channels.
