@@ -17,7 +17,7 @@ What we will do in this tutorial
 --------------------------------
 In this guide, we will:
  * Load an image from a *file chooser*.
- * Apply the *DFT* to the loaded image  and show it.
+ * Apply the *DFT* to the loaded image and show it.
  * Apply the *iDFT* to the transformed image and show it.
 
 Getting Started
