@@ -171,6 +171,12 @@ With the partial output obtained before we can use the method findContours of th
 		}
 
 
+Finally we can get this results:
+
+.. image:: _static/09-01.png
+
+.. image:: _static/09-02.png
+
 Source Code
 -----------
 -  `ObjectDetection.java <https://github.com/opencv-java/object-detection/blob/master/src/it/polito/teaching/cv/Lab7.java>`_
