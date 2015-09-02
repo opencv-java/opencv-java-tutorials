@@ -21,7 +21,7 @@ Getting Started
 ---------------
 Let's create a new JavaFX project. In Scene Builder set the windows element so that we have a Border Pane with:
 
-- on CENTER we can add a VBox. in this one we are goning to need 6 sliders, the first couple will control hue, the next one saturation and finally hue, with these sliders is posibly change the values of the HSV image.
+- on RIGHT CENTER we can add a VBox. in this one we are goning to need 6 sliders, the first couple will control hue, the next one saturation and finally hue, with these sliders is posibly change the values of the HSV image.
 
 	.. code-block:: xml
 
@@ -39,7 +39,7 @@ Let's create a new JavaFX project. In Scene Builder set the windows element so t
 		<Slider fx:id="valueStop" min="0" max="255" value="255" blockIncrement="1" />	
 
 
-- in the CENTRE. we are going to put tree ImageViews the first one show normal image from the web cam stream, the second one will show mask image and the lastone will show morph image. The HBox is used to normal image and VBox to put the other ones. 
+- in the CENTER. we are going to put tree ImageViews the first one show normal image from the web cam stream, the second one will show mask image and the lastone will show morph image. The HBox is used to normal image and VBox to put the other ones. 
 
 	.. code-block:: xml
 
@@ -66,6 +66,102 @@ The gui will look something like this one:
 
 .. image:: _static/09-00.png
 
+
+Image processing
+----------------
+First of all we need to add a folder ``resource`` to our project and put the classifiers in it.
+In order to use the classifiers we need to load them from the resource folder, so every time that we check one of the two checkboxes we will load the correct classifier.
+
+- ``Remove noise``
+	We can remove some noise of the image using the method blur of the Imgproc class and then apply a conversion to 
+	HSV in order to facilitated the process of object recognition.
+
+	.. code-block:: java
+	
+		Mat blurredImage = new Mat();
+		Mat hsvImage = new Mat();
+		Mat mask = new Mat();
+		Mat morphOutput = new Mat();
+					
+		// remove some noise
+		Imgproc.blur(frame, blurredImage, new Size(7, 7));
+					
+		// convert the frame to HSV
+		Imgproc.cvtColor(blurredImage, hsvImage, Imgproc.COLOR_BGR2HSV);
+	
+	
+
+- ``Values of HSV image``
+	With the sliders we can modify the values of the HSV Image, the image will be updtated in real time,
+	that allow increase or decrease the capactity to recognize object into the image. .
+
+	.. code-block:: java
+		// get thresholding values from the UI
+		// remember: H ranges 0-180, S and V range 0-255
+		Scalar minValues = new Scalar(this.hueStart.getValue(), this.saturationStart.getValue(),
+		this.valueStart.getValue());
+		Scalar maxValues = new Scalar(this.hueStop.getValue(), this.saturationStop.getValue(),
+		this.valueStop.getValue());
+				
+		// show the current selected HSV range
+		String valuesToPrint = "Hue range: " + minValues.val[0] + "-" + maxValues.val[0]
+		+ "\tSaturation range: " + minValues.val[1] + "-" + maxValues.val[1] + "\tValue range: "
+		+ minValues.val[2] + "-" + maxValues.val[2];
+		this.onFXThread(this.hsvValuesProp, valuesToPrint);
+				
+		// threshold HSV image to select tennis balls
+		Core.inRange(hsvImage, minValues, maxValues, mask);
+		// show the partial output
+		this.onFXThread(maskProp, this.mat2Image(mask));
+		
+
+Morphological Operators
+-----------------------
+First of all we need to add a folder ``resource`` to our project and put the classifiers in it.
+In order to use the classifiers we need to load them from the resource folder, so every time that we check one of the two checkboxes we will load the correct classifier.
+
+
+	.. code-block:: java
+		
+	       // morphological operators
+	       // dilate with large element, erode with small ones
+	        Mat dilateElement = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(24, 24));
+		Mat erodeElement = Imgproc.getStructuringElement(Imgproc.MORPH_RECT, new Size(12, 12));
+					
+		Imgproc.erode(mask, morphOutput, erodeElement);
+		Imgproc.erode(mask, morphOutput, erodeElement);
+				
+		Imgproc.dilate(mask, morphOutput, dilateElement);
+		Imgproc.dilate(mask, morphOutput, dilateElement);
+				
+		// show the partial output
+		this.onFXThread(this.morphProp, this.mat2Image(morphOutput));
+		
+		
+
+Morphological Operators
+-----------------------
+Given a binary image containing one or more closed surfaces, use it as a mask to find and highlight the objects contours.
+
+
+	.. code-block:: java
+	
+		// init
+		List<MatOfPoint> contours = new ArrayList<>();
+		Mat hierarchy = new Mat();
+		
+		// find contours
+		Imgproc.findContours(maskedImage, contours, hierarchy, Imgproc.RETR_CCOMP, Imgproc.CHAIN_APPROX_SIMPLE);
+		
+		// if any contour exist...
+		if (hierarchy.size().height > 0 && hierarchy.size().width > 0)
+		{
+			// for each contour, display it in blue
+			for (int idx = 0; idx >= 0; idx = (int) hierarchy.get(0, idx)[0])
+			{
+				Imgproc.drawContours(frame, contours, idx, new Scalar(250, 0, 0));
+			}
+		}
 
 .. todo:: complete
 
