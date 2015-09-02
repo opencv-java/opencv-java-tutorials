@@ -21,6 +21,50 @@ Getting Started
 ---------------
 Let's create a new JavaFX project. In Scene Builder set the windows element so that we have a Border Pane with:
 
+- on CENTER a VBox. In this one we are goning to need 6 sliders, the first couple will control hue, the next one saturation and finally hue, with these sliders is posibly change the values of the HSV image.
+
+	.. code-block:: xml
+
+               	<Label text="Hue Start" />
+		<Slider fx:id="hueStart" min="0" max="180" value="20" blockIncrement="1" />
+		<Label text="Hue Stop" />
+		<Slider fx:id="hueStop" min="0" max="180" value="50" blockIncrement="1" />
+		<Label text="Saturation Start" />
+		<Slider fx:id="saturationStart" min="0" max="255" value="60" blockIncrement="1" />
+		<Label text="Saturation Stop" />
+		<Slider fx:id="saturationStop" min="0" max="255" value="200" blockIncrement="1" />
+		<Label text="Value Start" />
+		<Slider fx:id="valueStart" min="0" max="255" value="50" blockIncrement="1" />
+		<Label text="Value Stop" />
+		<Slider fx:id="valueStop" min="0" max="255" value="255" blockIncrement="1" />	
+
+- in the CENTRE we are going to put tree ImageViews the first one show normal image from the web cam stream, the second one will show mask image and the lastone will show morph image,  the HBox is used to normal image and VBox to put the other ones. 
+	.. code-block:: xml
+
+		<HBox alignment="CENTER" spacing="5">
+			<padding>
+				<Insets right="10" left="10" />
+			</padding>
+			<ImageView fx:id="originalFrame" />
+			<VBox alignment="CENTER" spacing="5">
+				<ImageView fx:id="maskImage" />
+				<ImageView fx:id="morphImage" />
+			</VBox>
+		</HBox>
+
+- on the BOTTOM we can add the usual button to start/stop the stream and the currents values HSV selected with the sliders.
+
+	.. code-block:: xml
+
+		<Button fx:id="cameraButton" alignment="center" text="Start camera" onAction="#startCamera" />
+		<Separator />
+		<Label fx:id="hsvCurrentValues" />
+
+The gui will look something like this one:
+
+.. image:: _static/sceneObjectDet.png
+
+
 .. todo:: complete
 
 
