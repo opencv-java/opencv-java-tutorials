@@ -1,18 +1,19 @@
-==================================
-First Java Application with OpenCV
-==================================
+=======================================
+Your First Java Application with OpenCV
+=======================================
 
 .. note:: We assume that by now you have already read the previous tutorials. If not, please check previous tutorials at `<http://opencv-java-tutorials.readthedocs.org/en/latest/index.html>`_. You can also find the source code and resources at `<https://github.com/opencv-java/>`_
 
-Introduction to a OpenCV application with Java
-----------------------------------------------
-This tutorial will guide you through the creation of a simple Java console application using the  OpenCV library by mean of Eclipse.
+A Java application with OpenCV
+------------------------------
+This tutorial will guide you through the creation of a simple Java console application using the  OpenCV library in Eclipse.
 
 What we will do in this tutorial
 --------------------------------
 In this guide, we will:
  * Create a new Java Project
  * Add a User Library to the project
+ * Write some OpenCV code
  * Build and Run the application
 
 Create a New Project
@@ -25,7 +26,7 @@ In the ``New Java Project`` dialog write the name of your project and click on `
 
 Add a User Library
 ------------------
-If you followed the previous tutorial (``Installing OpenCV for Java``), you should already have the OpenCV library set in your workspace's user libraries, if not please check out the previous tutorial.
+If you followed the previous tutorial (``Installing OpenCV for Java``), you should already have the OpenCV library set in your workspace's user libraries; if not please check out the previous tutorial.
 Now you should be ready to add the library to your project.
 Inside Eclipse's ``Package Explorer`` just right-click on your project's folder and go to ``Build Path --> Add Libraries...``.
 
@@ -44,7 +45,7 @@ Let's start by define the ``main`` method:
 
 .. code-block:: java
 
-    public class MyFirstApp {
+    public class HelloCV {
 	    public static void main(String[] args){
 		    System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 		    Mat mat = Mat.eye(3, 3, CvType.CV_8UC1);
@@ -52,7 +53,7 @@ Let's start by define the ``main`` method:
 	    }
     }
 
-First of all we need to load the Native Library previously set on our project.
+First of all we need to load the OpenCV Native Library previously set on our project.
 
 .. code-block:: java
 
@@ -60,7 +61,7 @@ First of all we need to load the Native Library previously set on our project.
 
 Then we can define a new Mat.
 
-.. note:: The class **Mat** represents an n-dimensional dense numerical single-channel or multi-channel array. It can be used to store real or complex-valued vectors and matrices, grayscale or color images, voxel volumes, vector fields, point clouds, tensors, histograms. For more details check out the OpenCV `page <http://docs.opencv.org/modules/core/doc/basic_structures.html>`_.
+.. note:: The class **Mat** represents an n-dimensional dense numerical single-channel or multi-channel array. It can be used to store real or complex-valued vectors and matrices, grayscale or color images, voxel volumes, vector fields, point clouds, tensors, histograms. For more details check out the OpenCV `page <http://docs.opencv.org/3.0.0/dc/d84/group__core__basic.html>`_.
 
 .. code-block:: java
 
@@ -81,20 +82,4 @@ You should have the following output:
 
 .. image:: _static/02-03.png
 
-Here I put the whole source `code <https://github.com/opencv-java/getting-started/blob/master/HelloCV/src/it/polito/elite/teaching/cv/HelloCV.java>`_:
-
-.. code-block:: java
-
-    package mypackage;
-
-    import org.opencv.core.Core;
-    import org.opencv.core.CvType;
-    import org.opencv.core.Mat;
-
-    public class MyFirstApp {
-    	    public static void main(String[] args){
-		    System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-		    Mat mat = Mat.eye(3, 3, CvType.CV_8UC1);
-		    System.out.println("mat = " + mat.dump());
-	    }
-    }
+The whole source code is available on `GitHub <https://github.com/opencv-java/getting-started/blob/master/HelloCV/>`_.

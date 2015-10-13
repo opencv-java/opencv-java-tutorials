@@ -1,31 +1,31 @@
-====================================
-First JavaFX Application with OpenCV
-====================================
+=========================================
+Your First JavaFX Application with OpenCV
+=========================================
 
 .. note:: We assume that by now you have already read the previous tutorials. If not, please check previous tutorials at `<http://opencv-java-tutorials.readthedocs.org/en/latest/index.html>`_. You can also find the source code and resources at `<https://github.com/opencv-java/>`_
 
-Introduction to a OpenCV application with JavaFX
-------------------------------------------------
-This tutorial will guide you through the creation of a simple JavaFX gui application using the  OpenCV library by mean of Eclipse.
+A JavaFX application with OpenCV
+--------------------------------
+This tutorial will guide you through the creation of a simple JavaFX GUI application using the  OpenCV library in Eclipse.
 
 What we will do in this tutorial
 --------------------------------
 In this guide, we will:
- * Install the ``e(fx)clipse`` plugin and (optional) *Scene Builder*.
+ * Install the ``e(fx)clipse`` plugin and (optionally) *Scene Builder*.
  * Work with *Scene Builder*.
  * Write and Run our application.
 
-Our First Application in JavaFX
--------------------------------
-Our application is going to capture a video stream from our webcam and it will display it on our gui. We will create the gui with Scene Builder and it is going to have a button, which will allow us to start and stop the stream and a simple image view container where we will put the stream frames.
+Your First Application in JavaFX
+--------------------------------
+The application you will write by following this tutorial is going to capture a video stream from a webcam and, then, it will display it on the user interface (GUI). We will create the GUI with Scene Builder: it is will have a button, which will allow us to start and stop the stream, and a simple image view container where we will put each stream frame.
 
 Installing e(fx)clipse plugin and Scene Builder
 -----------------------------------------------
 In Eclipse, install the ``e(fx)clipse`` plugin, by following the guide at `<http://www.eclipse.org/efxclipse/install.html#fortheambitious>`_.
-If you choose not to install such a plugin, you have to create a traditional **Java project** and add ``jfxrt.jar`` (present in the JDK folder) to the ``project/library``.
-Download and install the *JavaFX Scene Builder* from `<http://www.oracle.com/technetwork/java/javafx/tools/index.html>`_.
+If you choose not to install such a plugin, you have to create a traditional **Java project**, only.
+Download and install *JavaFX Scene Builder* 2.0 from `<http://www.oracle.com/technetwork/java/javafxscenebuilder-1x-archive-2199384.html>`_.
 
-Now you can create a new JavaFX project. ``Go to File-->New-->Project...`` and select ``JavaFx project...``.
+Now you can create a new JavaFX project. ``Go to File > New > Project...`` and select ``JavaFX project...``.
 
 .. image:: _static/03-00.png
 
@@ -37,8 +37,8 @@ Now add your OpenCV user library to your project and click ``Next``.
 
 .. image:: _static/03-02.png
 
-Choose a name for your package, *FXML file* and *Controller Class*.
-The *FXML file* will contain the description of your GUI in FXML language, the controller class will handle all the method and event which have to be called and managed  when the user interacts with the GUI's components.
+Choose a name for your package, for the *FXML file* and for the *Controller Class*.
+The *FXML file* will contain the description of your GUI in FXML language, while the *Controller Class* will handle all the method and event which have to be called and managed when the user interacts with the GUI's components.
 
 .. image:: _static/03-03.png
 
@@ -77,7 +77,7 @@ Finally we have to tell which Controller class will mange the GUI, we can do so 
 
 We just created our first GUI by using Scene Builder, if you save the file and return to Eclipse you will notice that some FXML code has been generated automatically.
 
-Key concepts in JavaFX
+Key Concepts in JavaFX
 ----------------------
 The **Stage** is where the application will be displayed (e.g., a Windows' window).
 A **Scene** is one container of Nodes that compose one "page" of your application.
@@ -92,11 +92,11 @@ and load the fxml file that will populate our stage, the *root element* of the s
 
 .. code-block:: java
 
-    FXMLLoader loader = new FXMLLoader(getClass().getResource("MyFirstJFX.fxml"));
+    FXMLLoader loader = new FXMLLoader(getClass().getResource("FXHelloCV.fxml"));
     BorderPane root = (BorderPane) loader.load();
     FXController controller = loader.getController();
 
-Managing GUI interactions with the Controller class
+Managing GUI Interactions With the Controller Class
 ---------------------------------------------------
 For our application we need to do basically two thing: control the button push and the refreshment of the image view.
 To do so we have to create a reference between the gui components and a variable used in our controller class:
@@ -104,7 +104,7 @@ To do so we have to create a reference between the gui components and a variable
 .. code-block:: java
 
     @FXML
-    private Button start_btn;
+    private Button button;
     @FXML
     private ImageView currentFrame;
 
@@ -116,14 +116,14 @@ for:
 
 .. code-block:: xml
 
-    <Button fx:id="start_btn" mnemonicParsing="false" onAction="#startCamera" text="Start Camera" BorderPane.alignment="CENTER">
+    <Button fx:id="button" mnemonicParsing="false" onAction="#startCamera" text="Start Camera" BorderPane.alignment="CENTER">
 
 we set:
 
 .. code-block:: java
 
     @FXML
-    protected void startCamera(ActionEvent event){ ...
+    protected void startCamera(ActionEvent event) { ...
 
 Video Capturing
 ---------------
@@ -134,19 +134,19 @@ Essentially, all the functionalities required for video manipulation is integrat
     private VideoCapture capture = new VideoCapture();
 
 This on itself builds on the FFmpeg open source library. A video is composed of a succession of images, we refer to these in the literature as frames. In case of a video file there is a frame rate specifying just how long is between two frames. While for the video cameras usually there is a limit of just how many frames they can digitalize per second.
-In our case we set as frame rate 30 frames per sec. To do so we initialize a timer that will open a background task every *33 milliseconds*.
+In our case we set as frame rate 30 frames per sec. To do so we initialize a timer (i.e., a ```ScheduledExecutorService```) that will open a background task every *33 milliseconds*.
 
 .. code-block:: java
 
-    TimerTask frameGrabber = new TimerTask() { ... }
-    this.timer = new Timer();
-    this.timer.schedule(frameGrabber, 0, 33);
+    Runnable frameGrabber = new Runnable() { ... }
+    this.timer = Executors.newSingleThreadScheduledExecutor();
+		this.timer.scheduleAtFixedRate(frameGrabber, 0, 33, TimeUnit.MILLISECONDS);
 
 To check if the binding of the class to a video source was successful or not use the ``isOpened`` function:
 
 .. code-block:: java
 
-    if (this.capture.isOpened()){ ... }
+    if (this.capture.isOpened()) { ... }
 
 Closing the video is automatic when the objects destructor is called. However, if you want to close it before this you need to call its release function.
 
@@ -175,7 +175,7 @@ Now we are going to convert our image from *BGR* to *Grayscale* format. OpenCV h
 As you can see, cvtColor takes as arguments:
  - a source image (frame)
  - a destination image (frame), in which we will save the converted image.
- - an additional parameter that indicates what kind of transformation will be performed. In this case we usev ``CV_BGR2GRAY`` (because of ``imread`` has BGR default channel order in case of color images).
+ - an additional parameter that indicates what kind of transformation will be performed. In this case we use ``COLOR_BGR2GRAY`` (because of ``imread`` has BGR default channel order in case of color images).
 
 Now in order to put the captured frame into the ImageView we need to convert the Mat in a Image.
 We first create a buffer to store the Mat.
@@ -188,11 +188,11 @@ Then we can put the frame into the buffer by using the ``imencode`` function:
 
 .. code-block:: java
 
-    Highgui.imencode(".png", frame, buffer);
+    Imgcodecs.imencode(".png", frame, buffer);
 
 This encodes an image into a memory buffer. The function compresses the image and stores it in the memory buffer that is resized to fit the result.
 
-.. note:: ``cvEncodeImage`` returns single-row matrix of type ``CV_8UC1`` that contains encoded image as array of bytes.
+.. note:: ``imencode`` returns single-row matrix of type ``CV_8UC1`` that contains encoded image as array of bytes.
 
 It takes three parameters:
  - (".png") File extension that defines the output format.
@@ -206,196 +206,15 @@ Once we filled the buffer we have to stream it into an Image by using ``ByteArra
     new Image(new ByteArrayInputStream(buffer.toArray()));
 
 Now we can put the new image in the ImageView.
-With *Java 1.8* we cannot perform an update of a gui element in a thread that differs from the main thread; so we need to get the new frame in a second thread and refresh our ImageView in the main thread:
+With *Java 1.8* we cannot perform an update of a GUI element in a thread that differs from the main thread; so we need to get the new frame in a second thread and refresh our ImageView in the main thread:
 
 .. code-block:: java
 
-    Image tmp = grabFrame();
+    Image imageToShow = grabFrame();
     Platform.runLater(new Runnable() {
-	    @Override public void run(){frameView.setImage(tmp);}
+	    @Override public void run() { currentFrame.setImage(imageToShow); }
     });
 
 .. image:: _static/03-09.png
 
-Source Code
------------
-- `Main.java <https://github.com/opencv-java/getting-started/blob/master/FXHelloCV/src/it/polito/elite/teaching/cv/FXHelloCV.java>`_
-
-.. code-block:: java
-
-    public class Main extends Application {
-	    @Override
-	    public void start(Stage primaryStage) {
-		    try {
-			    // load the FXML resource
-			    FXMLLoader loader = new FXMLLoader(getClass().getResource("MyFirstJFX.fxml"));
-			    // store the root element so that the controllers can use it
-			    BorderPane root = (BorderPane) loader.load();
-			    // create and style a scene
-			    Scene scene = new Scene(root);
-			    scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-			    // create the stage with the given title and the previously created scene
-			    primaryStage.setTitle("JavaFX meets OpenCV");
-			    primaryStage.setScene(scene);
-			    // show the GUI
-			    primaryStage.show();
-			    // set a reference of this class for its controller
-			    FXController controller = loader.getController();
-			    controller.setRootElement(root);
-
-		    } catch(Exception e) {
-			    e.printStackTrace();
-		    }
-	    }
-
-	    public static void main(String[] args) {
-		    // load the native OpenCV library
-		    System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-		    launch(args);
-	    }
-    }
-
-- `FXController.java <https://github.com/opencv-java/getting-started/blob/master/FXHelloCV/src/it/polito/elite/teaching/cv/FXHelloCVController.java>`_
-
-.. code-block:: java
-
-    public class FXController {
-
-	@FXML
-	private Button start_btn;
-	@FXML
-	private ImageView currentFrame;
-
-	private Pane rootElement;
-	private Timer timer;
-	private VideoCapture capture = new VideoCapture();
-
-	@FXML
-	protected void startCamera(ActionEvent event)
-	{
-		// check: the main class is accessible?
-		if (this.rootElement != null)
-		{
-			// get the ImageView object for showing the video stream
-			final ImageView frameView = currentFrame;
-			// check if the capture stream is opened
-			if (!this.capture.isOpened())
-			{
-				// start the video capture
-				this.capture.open(0);
-				// grab a frame every 33 ms (30 frames/sec)
-				TimerTask frameGrabber = new TimerTask() {
-					@Override
-					public void run()
-					{
-						Image tmp = grabFrame();
-						Platform.runLater(new Runnable() {
-							@Override
-				            public void run()
-							{
-								frameView.setImage(tmp);
-				            }
-						});
-
-					}
-				};
-				this.timer = new Timer();
-				//set the timer scheduling, this allow you to perform frameGrabber every 33ms;
-				this.timer.schedule(frameGrabber, 0, 33);
-				this.start_btn.setText("Stop Camera");
-			}
-			else
-			{
-				this.start_btn.setText("Start Camera");
-				// stop the timer
-				if (this.timer != null)
-				{
-					this.timer.cancel();
-					this.timer = null;
-				}
-				// release the camera
-				this.capture.release();
-				// clear the image container
-				frameView.setImage(null);
-			}
-		}
-	}
-
-	private Image grabFrame()
-	{
-		//init
-		Image imageToShow = null;
-		Mat frame = new Mat();
-		// check if the capture is open
-		if (this.capture.isOpened())
-		{
-			try
-			{
-				// read the current frame
-				this.capture.read(frame);
-				// if the frame is not empty, process it
-				if (!frame.empty())
-				{
-					// convert the image to gray scale
-					Imgproc.cvtColor(frame, frame, Imgproc.COLOR_BGR2GRAY);
-					// convert the Mat object (OpenCV) to Image (JavaFX)
-					imageToShow = mat2Image(frame);
-				}
-			}
-			catch (Exception e)
-			{
-				// log the error
-				System.err.println("ERROR: " + e.getMessage());
-			}
-		}
-		return imageToShow;
-	}
-
-	private Image mat2Image(Mat frame)
-	{
-		// create a temporary buffer
-		MatOfByte buffer = new MatOfByte();
-		// encode the frame in the buffer
-		Highgui.imencode(".png", frame, buffer);
-		// build and return an Image created from the image encoded in the buffer
-		return new Image(new ByteArrayInputStream(buffer.toArray()));
-	}
-
-	public void setRootElement(Pane root)
-	{
-		this.rootElement = root;
-	}
-
-    }
-
-- `MyFirstJFX.fxml <https://github.com/opencv-java/getting-started/blob/master/FXHelloCV/src/it/polito/elite/teaching/cv/FXHelloCV.fxml>`_
-
-.. code-block:: xml
-
-    <?xml version="1.0" encoding="UTF-8"?>
-
-    <?import java.lang.*?>
-    <?import javafx.geometry.*?>
-    <?import javafx.scene.control.*?>
-    <?import javafx.scene.image.*?>
-    <?import javafx.scene.layout.*?>
-    <?import javafx.scene.layout.BorderPane?>
-    <?import javafx.scene.image.ImageView?>
-    <?import javafx.scene.layout.HBox?>
-    <?import javafx.scene.control.Button?>
-    <?import javafx.geometry.Insets?>
-
-    <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.FXController">
-       <bottom>
-          <Button fx:id="start_btn" mnemonicParsing="false" onAction="#startCamera" text="Start Camera" BorderPane.alignment="CENTER">
-             <BorderPane.margin>
-                <Insets bottom="10.0" />
-             </BorderPane.margin></Button>
-       </bottom>
-       <center>
-          <ImageView fx:id="currentFrame" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER">
-             <BorderPane.margin>
-                <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
-             </BorderPane.margin></ImageView>
-       </center>
-    </BorderPane>
+The source code of the entire tutorial is available on `GitHub <https://github.com/opencv-java/getting-started/blob/master/FXHelloCV/>`_.

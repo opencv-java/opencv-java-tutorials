@@ -1,4 +1,4 @@
 OpenCV Java Tutorials
 ============================
 
-Look at the tutorials at the readthedocs link:  http://opencv-java-tutorials.readthedocs.org/en/latest/index.html.
+Look at the tutorials on using OpenCV with Java (and JavaFX) at: http://opencv-java-tutorials.readthedocs.org/en/latest/index.html
