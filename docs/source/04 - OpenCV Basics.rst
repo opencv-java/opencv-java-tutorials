@@ -292,7 +292,7 @@ Let's convert the obtained Mat to an Image with our method ``mat2Image`` and upd
 .. code-block:: java
 
     histo = mat2Image(histImage);
-	  histogram.setImage(histo);
+    histogram.setImage(histo);
 
 .. image:: _static/04-01.png
 
