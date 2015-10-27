@@ -26,7 +26,7 @@ For this tutorial we can create a new JavaFX project and build a scene as the on
        <Button fx:id="button" alignment="center" text="Start camera" onAction="#startCamera" />
     </HBox>
 
-- in the **CENTRE** we have a ImageView:
+- in the **CENTER** we have a ImageView:
 
 .. code-block:: xml
 
@@ -34,16 +34,16 @@ For this tutorial we can create a new JavaFX project and build a scene as the on
 
 Color channel checkbox
 ----------------------
-Let's open our fxml file with Scene Builder and add to the **RIGHT** field of our BP a vertical box ``VBox``. A VBox lays out its children in a single vertical column. If the VBox has a border and/or padding set, then the contents will be layed out within those insets. Also it will resize children (if resizable) to their preferred heights and uses its ``fillWidth`` property to determine whether to resize their widths to fill its own width or keep their widths to their preferred (fillWidth defaults to true).
+Let's open our fxml file with Scene Builder and add to the **RIGHT** field of our BorderPane a vertical box ``VBox``. A VBox lays out its children in a single vertical column. If the VBox has a border and/or padding set, then the contents will be layed out within those insets. Also it will resize children (if resizable) to their preferred heights and uses its ``fillWidth`` property to determine whether to resize their widths to fill its own width or keep their widths to their preferred (fillWidth defaults to true).
 A ``HBox`` works just like a VBox but it lays out its children horizontally instead of vertically.
 
-Now we can put inside the VBox a new checkbox, change its text to "Show in gray scale" and set an id (e.g. "grayscale").
+Now we can put inside the VBox a new checkbox, change its text to "Show in gray scale", and set an id (e.g., "grayscale").
 
 .. code-block:: xml
 
     <CheckBox fx:id="grayscale" text="Show in gray scale" />
 
-Let's also add a title to this section by putting before our new checkbox, but still inside the VBox, a text and set its text as "Controls" (we can find the text element under the ``Shapes`` menu).
+Let's also add a title to this section by putting a text before our new checkbox, but still inside the VBox. Then, set its text to "Controls" (we can find the text element under the ``Shapes`` menu).
 
 .. code-block:: xml
 
@@ -53,7 +53,7 @@ In the Scene Builder we now have:
 
 .. image:: _static/04-00.png
 
-The graphic interface is complete for the first task, now we need to work on the controller; in the previous tutorial we could control the number of channels displayed on screen with the line (98):
+The graphic interface is complete for the first task, now we need to work on the controller; in the previous tutorial we could control the number of channels displayed on screen with the line:
 
 .. code-block:: java
 
@@ -70,7 +70,8 @@ Now we can implement the control by adding a simple "if" condition which will pe
 
 .. code-block:: java
 
-    if (grayscale.isSelected()){
+    if (grayscale.isSelected())
+    {
        Imgproc.cvtColor(frame, frame, Imgproc.COLOR_BGR2GRAY);
     }
 
@@ -96,7 +97,7 @@ Variable:
     private CheckBox logoCheckBox;
 
 
-``loadLogo`` metheod:
+``loadLogo`` method:
 In this method we are going to load the image whenever the logoCheckBox id selected (checked).
 In order to load the image we have to use a basic OpenCV function: imread.
 It returns a Mat and takes the path of the image and a flag (> 0 RGB image, =0 grayscale, <0 with the alpha channel).
@@ -104,9 +105,10 @@ It returns a Mat and takes the path of the image and a flag (> 0 RGB image, =0 g
 .. code-block:: java
 
     @FXML
-    protected void loadLogo(){
-	if (logoCheckBox.isSelected())
-		this.logo = Highgui.imread("resources/Poli.png");
+    protected void loadLogo()
+    {
+     if (logoCheckBox.isSelected())
+        this.logo = Imgcodecs.imread("resources/Poli.png");
     }
 
 Adapt the code.
@@ -235,11 +237,11 @@ We are now ready to do the histogram calculation:
 	Imgproc.calcHist(images.subList(2, 3), channels, new Mat(), hist_r, histSize, 	histRange, false);
     }
 
-Where ``gray`` is the flag we passed to the ``showHistogram`` method.
+where ``gray`` is the flag we passed to the ``showHistogram`` method.
 
 Draw the Histogram
 ------------------
-Next step is to draw the calculated histogram in our gui.
+Next step is to draw the calculated histogram in our GUI.
 Open the fxml file with Scene Builder and add an ImageView above the "Controls" text in the right of the BP and set its id:
 
 .. code-block:: xml
@@ -278,10 +280,10 @@ Now we can draw the histogram in our Mat:
 .. code-block:: java
 
     for (int i = 1; i < histSize.get(0, 0)[0]; i++){
-       Core.line(histImage, new Point(bin_w * (i - 1), hist_h - Math.round(hist_b.get(i - 1, 0)[0])), new Point(bin_w * (i), hist_h - Math.round(hist_b.get(i, 0)[0])), new Scalar(255, 0, 0), 2, 8, 0);
+       Imgproc.line(histImage, new Point(bin_w * (i - 1), hist_h - Math.round(hist_b.get(i - 1, 0)[0])), new Point(bin_w * (i), hist_h - Math.round(hist_b.get(i, 0)[0])), new Scalar(255, 0, 0), 2, 8, 0);
        if (!gray){
-          Core.line(histImage, new Point(bin_w * (i - 1), hist_h - Math.round(hist_g.get(i - 1, 0)[0])),new Point(bin_w * (i), hist_h - Math.round(hist_g.get(i, 0)[0])), new Scalar(0, 255, 0), 2, 8, 0);
-          Core.line(histImage, new Point(bin_w * (i - 1), hist_h - Math.round(hist_r.get(i - 1, 0)[0])),Math.round(hist_r.get(i, 0)[0])), new Scalar(0, 0, 255), 2, 8, 0);
+          Imgproc.line(histImage, new Point(bin_w * (i - 1), hist_h - Math.round(hist_g.get(i - 1, 0)[0])),new Point(bin_w * (i), hist_h - Math.round(hist_g.get(i, 0)[0])), new Scalar(0, 255, 0), 2, 8, 0);
+          Imgproc.line(histImage, new Point(bin_w * (i - 1), hist_h - Math.round(hist_r.get(i - 1, 0)[0])),Math.round(hist_r.get(i, 0)[0])), new Scalar(0, 0, 255), 2, 8, 0);
        }
     }
 
@@ -290,353 +292,10 @@ Let's convert the obtained Mat to an Image with our method ``mat2Image`` and upd
 .. code-block:: java
 
     histo = mat2Image(histImage);
-    Platform.runLater(new Runnable() {
-       @Override
-       public void run() {
 	  histogram.setImage(histo);
-       }
-    });
 
 .. image:: _static/04-01.png
 
 .. image:: _static/04-02.png
 
-Source Code
------------
-- `Basics.java <https://github.com/opencv-java/video-basics/blob/master/src/it/polito/teaching/cv/Lab3.java>`_
-
-.. code-block:: java
-
-    public class Basics extends Application {
-	@Override
-	public void start(Stage primaryStage) {
-		try
-		{
-			// load the FXML resource
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("BasicsFX.fxml"));
-			// store the root element so that the controllers can use it
-			BorderPane rootElement = (BorderPane) loader.load();
-			// create and style a scene
-			Scene scene = new Scene(rootElement, 800, 600);
-			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-			// create the stage with the given title and the previously created
-			// scene
-			primaryStage.setTitle("OpenCV Basics");
-			primaryStage.setScene(scene);
-			// show the GUI
-			primaryStage.show();
-
-		}
-		catch (Exception e)
-		{
-			e.printStackTrace();
-		}
-	}
-
-	public static void main(String[] args) {
-		// load the native OpenCV library
-		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
-
-		launch(args);
-	}
-    }
-
-- `BasicsController.java <https://github.com/opencv-java/video-basics/blob/master/src/it/polito/teaching/cv/VideoController.java>`_
-
-.. code-block:: java
-
-    public class BasicsController {
-	// the FXML button
-		@FXML
-		private Button button;
-		// the FXML grayscale checkbox
-		@FXML
-		private CheckBox grayscale;
-		// the FXML logo checkbox
-		@FXML
-		private CheckBox logoCheckBox;
-		// the FXML grayscale checkbox
-		@FXML
-		private ImageView histogram;
-		// the FXML area for showing the current frame
-		@FXML
-		private ImageView currentFrame;
-
-		// a timer for acquiring the video stream
-		private Timer timer;
-		// the OpenCV object that realizes the video capture
-		private VideoCapture capture = new VideoCapture();
-		// a flag to change the button behavior
-		private boolean cameraActive = false;
-		// the logo to be loaded
-		private Mat logo;
-		private Image i,histo;
-
-		/**
-		 * The action triggered by pushing the button on the GUI
-		 */
-		@FXML
-		protected void startCamera()
-		{
-			if (!this.cameraActive)
-			{
-				// start the video capture
-				this.capture.open(0);
-
-				// is the video stream available?
-				if (this.capture.isOpened())
-				{
-					this.cameraActive = true;
-
-					// grab a frame every 33 ms (30 frames/sec)
-					TimerTask frameGrabber = new TimerTask() {
-						@Override
-						public void run()
-						{
-							i = grabFrame();
-							Platform.runLater(new Runnable() {
-								@Override
-					            		public void run() {
-									currentFrame.setImage(i);
-					            		}
-							});
-						}
-					};
-					this.timer = new Timer();
-					this.timer.schedule(frameGrabber, 0, 33);
-
-					// update the button content
-					this.button.setText("Stop Camera");
-				}
-				else
-				{
-					// log the error
-					System.err.println("Impossible to open the camera connection...");
-				}
-			}
-			else
-			{
-				// the camera is not active at this point
-				this.cameraActive = false;
-				// update again the button content
-				this.button.setText("Start Camera");
-				// stop the timer
-				if (this.timer != null)
-				{
-					this.timer.cancel();
-					this.timer = null;
-				}
-				// release the camera
-				this.capture.release();
-				// clean the image area
-				Platform.runLater(new Runnable() {
-					@Override
-		            		public void run() {
-						currentFrame.setImage(null);
-		            		}
-				});
-			}
-		}
-
-		/**
-		 * The action triggered by selecting/deselecting the logo checkbox
-		 */
-		@FXML
-		protected void loadLogo()
-		{
-			if (logoCheckBox.isSelected())
-			{
-				// read the logo only when the checkbox has been selected
-				this.logo = Highgui.imread("resources/Poli.png");
-			}
-		}
-
-		/**
-		 * Get a frame from the opened video stream (if any)
-		 *
-		 * @return the {@link Image} to show
-		 */
-		private Image grabFrame()
-		{
-			// init everything
-			Image imageToShow = null;
-			Mat frame = new Mat();
-
-			// check if the capture is open
-			if (this.capture.isOpened())
-			{
-				try
-				{
-					// read the current frame
-					this.capture.read(frame);
-
-					// if the frame is not empty, process it
-					if (!frame.empty())
-					{
-						// add a logo...
-						if (logoCheckBox.isSelected() && this.logo != null)
-						{
-							Rect roi = new Rect(frame.cols() - logo.cols(), frame.rows() - logo.rows(), logo.cols(),logo.rows());
-							Mat imageROI = frame.submat(roi);
-							// add the logo: method #1
-							Core.addWeighted(imageROI, 1.0, logo, 0.7, 0.0, imageROI);
-
-							// add the logo: method #2
-							// Mat mask = logo.clone();
-							// logo.copyTo(imageROI, mask);
-						}
-
-						// if the grayscale checkbox is selected, convert the image
-						// (frame + logo) accordingly
-						if (grayscale.isSelected())
-						{
-							Imgproc.cvtColor(frame, frame, Imgproc.COLOR_BGR2GRAY);
-						}
-
-						// show the histogram
-						this.showHistogram(frame, grayscale.isSelected());
-
-						// convert the Mat object (OpenCV) to Image (JavaFX)
-						imageToShow = mat2Image(frame);
-					}
-
-				}
-				catch (Exception e)
-				{
-					// log the (full) error
-					System.err.println("ERROR: " + e);
-				}
-			}
-
-			return imageToShow;
-		}
-
-		/**
-		 * Compute and show the histogram for the given {@link Mat} image
-		 *
-		 * @param frame
-		 *            the {@link Mat} image for which compute the histogram
-		 * @param gray
-		 *            is a grayscale image?
-		 */
-		private void showHistogram(Mat frame, boolean gray)
-		{
-			// split the frames in multiple images
-			List<Mat> images = new ArrayList<Mat>();
-			Core.split(frame, images);
-
-			// set the number of bins at 256
-			MatOfInt histSize = new MatOfInt(256);
-			// only one channel
-			MatOfInt channels = new MatOfInt(0);
-			// set the ranges
-			MatOfFloat histRange = new MatOfFloat(0, 256);
-
-			// compute the histograms for the B, G and R components
-			Mat hist_b = new Mat();
-			Mat hist_g = new Mat();
-			Mat hist_r = new Mat();
-
-			// B component or gray image
-			Imgproc.calcHist(images.subList(0, 1), channels, new Mat(), hist_b, histSize, histRange, false);
-
-			// G and R components (if the image is not in gray scale)
-			if (!gray)
-			{
-				Imgproc.calcHist(images.subList(1, 2), channels, new Mat(), hist_g, histSize, histRange, false);
-				Imgproc.calcHist(images.subList(2, 3), channels, new Mat(), hist_r, histSize, histRange, false);
-			}
-
-			// draw the histogram
-			int hist_w = 150; // width of the histogram image
-			int hist_h = 150; // height of the histogram image
-			int bin_w = (int) Math.round(hist_w / histSize.get(0, 0)[0]);
-
-			Mat histImage = new Mat(hist_h, hist_w, CvType.CV_8UC3, new Scalar(0, 0, 0));
-			// normalize the result to [0, histImage.rows()]
-			Core.normalize(hist_b, hist_b, 0, histImage.rows(), Core.NORM_MINMAX, -1, new Mat());
-
-			// for G and R components
-			if (!gray)
-			{
-				Core.normalize(hist_g, hist_g, 0, histImage.rows(), Core.NORM_MINMAX, -1, new Mat());
-				Core.normalize(hist_r, hist_r, 0, histImage.rows(), Core.NORM_MINMAX, -1, new Mat());
-			}
-
-			// effectively draw the histogram(s)
-			for (int i = 1; i < histSize.get(0, 0)[0]; i++)
-			{
-				// B component or gray image
-				Core.line(histImage, new Point(bin_w * (i - 1), hist_h - Math.round(hist_b.get(i - 1, 0)[0])), new Point(
-						bin_w * (i), hist_h - Math.round(hist_b.get(i, 0)[0])), new Scalar(255, 0, 0), 2, 8, 0);
-				// G and R components (if the image is not in gray scale)
-				if (!gray)
-				{
-					Core.line(histImage, new Point(bin_w * (i - 1), hist_h - Math.round(hist_g.get(i - 1, 0)[0])),
-							new Point(bin_w * (i), hist_h - Math.round(hist_g.get(i, 0)[0])), new Scalar(0, 255, 0), 2, 8,
-							0);
-					Core.line(histImage, new Point(bin_w * (i - 1), hist_h - Math.round(hist_r.get(i - 1, 0)[0])),
-							new Point(bin_w * (i), hist_h - Math.round(hist_r.get(i, 0)[0])), new Scalar(0, 0, 255), 2, 8,
-							0);
-				}
-			}
-
-			histo = mat2Image(histImage);
-
-			// display the whole
-			Platform.runLater(new Runnable() {
-				@Override
-	            public void run() {
-					histogram.setImage(histo);
-	            	}
-				});
-
-		}
-
-		/**
-		 * Convert a Mat object (OpenCV) in the corresponding Image for JavaFX
-		 *
-		 * @param frame
-		 *            the {@link Mat} representing the current frame
-		 * @return the {@link Image} to show
-		 */
-		private Image mat2Image(Mat frame)
-		{
-			// create a temporary buffer
-			MatOfByte buffer = new MatOfByte();
-			// encode the frame in the buffer, according to the PNG format
-			Highgui.imencode(".png", frame, buffer);
-			// build and return an Image created from the image encoded in the
-			// buffer
-			return new Image(new ByteArrayInputStream(buffer.toArray()));
-		}
-    }
-
-- `BasicsFX.fxml <https://github.com/opencv-java/video-basics/blob/master/src/it/polito/teaching/cv/Video.fxml>`_
-
-.. code-block:: xml
-
-    <BorderPane xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.BasicsController">
-	    <center>
-	       <ImageView fx:id="currentFrame" />
-       </center>
-       <right>
-          <VBox alignment="CENTER_LEFT" spacing="10">
-             <padding>
-                <Insets left="25" right="25"/>
-             </padding>
-             <ImageView fx:id="histogram" />
-             <Text text="Controls" />
-             <CheckBox fx:id="grayscale" text="Show in gray scale" />
-             <CheckBox fx:id="logoCheckBox" text="Show logo" onAction="#loadLogo" />
-          </VBox>
-       </right>
-       <bottom>
-          <HBox alignment="CENTER" >
-             <padding>
-                <Insets top="25" right="25" bottom="25" left="25"/>
-             </padding>
-             <Button fx:id="button" alignment="center" text="Start camera" onAction="#startCamera" />
-          </HBox>
-       </bottom>
-    </BorderPane>
+The source code of the entire tutorial is available on `GitHub <https://github.com/opencv-java/video-basics>`_.
