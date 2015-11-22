@@ -110,7 +110,7 @@ Its parameters are:
 	- ``CV_CALIB_CB_FILTER_QUADS`` Use additional criteria (like contour area, perimeter, square-like shape) to filter out false quads extracted at the contour retrieval stage.
 	- ``CALIB_CB_FAST_CHECK`` Run a fast check on the image that looks for chessboard corners, and shortcut the call if none is found. This can drastically speed up the call in the degenerate condition when no chessboard is observed.
 
-.. warning:: Before doing the ``findChessboardCorners`` convert the image to gayscale and save the board size into a Size variable:
+.. warning:: Before doing the ``findChessboardCorners`` convert the image to grayscale and save the board size into a Size variable:
 
 	.. code-block:: java
 
