@@ -10,7 +10,7 @@ Install the latest Java version.
 --------------------------------
 Download the latest Java JDK at the `Oracle link <http://www.oracle.com/technetwork/java/javase/downloads/index.html>`_. Now you should be able to install the last Java JDK by open the file just downloaded.
 
-Install the latest Eclispe version.
+Install the latest Eclipse version.
 -----------------------------------
 Download the latest Eclipse version at the `Eclipse Download page <https://www.eclipse.org/downloads/>`_ choosing the ``Eclipse IDE for Java Developers`` version (suggested).
 Extract the downloaded compressed file and put the resulting folder wherever you want to. You don't need to install anything. Alternatively, you can try the Eclipse installer.

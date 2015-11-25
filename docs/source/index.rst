@@ -6,24 +6,22 @@
 Welcome to OpenCV Java Tutorials documentation!
 =================================================
 
-.. note:: We are in the process to update these tutorials to OpenCV 3.0 and JavaFX 8.
+.. note:: We are in the process to update these tutorials to use Java 8, only.
 
 Contents:
 
 .. toctree::
    :maxdepth: 2
 
-   01 - Installing OpenCV for Java
-   02 - First Java Application with OpenCV
-   03 - First JavaFX Application with OpenCV
-   04 - OpenCV Basics
-   05 - Camera Calibration
-   06 - Fourier Transform
-   07 - Image Segmentation
-   08 - Face Recognition and Tracking
-   09 - Object Detection
-
-
+   01-installing-opencv-for-java
+   02-first-java-application-with-opencv
+   03-first-javafx-application-with-opencv
+   04-opencv-basics
+   05-fourier-transform
+   06-face-detection-and-tracking
+   07-image-segmentation
+   08-object-detection
+   09-camera-calibration
 
 Indices and tables
 ==================

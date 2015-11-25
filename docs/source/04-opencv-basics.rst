@@ -81,7 +81,7 @@ The next step is to add another check box which, if checked, will trigger the di
 Let's start by adding the image to the project; create a new folder in the root directory of your project and put the image in there.
 In my project I have a ``resources`` folder with a ``Poli.png`` image.
 Go back to Eclipse and refresh your project (you should have the new folder in it).
-Let's open the fxml file with Scene Builder and add a new checkbox below the one that controls the stream colors; we have to set the text, the name of the method in the ``OnAction`` field and an id.
+Let's open the FXML file with Scene Builder and add a new checkbox below the one that controls the stream colors; we have to set the text, the name of the method in the ``OnAction`` field and an id.
 In the code we will have for example:
 
 .. code-block:: xml
