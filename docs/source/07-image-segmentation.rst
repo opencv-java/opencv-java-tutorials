@@ -167,9 +167,9 @@ Then we can use the mean as the threshold to separate the background from the fo
 .. code-block:: java
 
     if (this.inverse.isSelected())
-	Imgproc.threshold(hsvPlanes.get(0), thresholdImg, threshValue, 180.0, Imgproc.THRESH_BINARY_INV);
+	Imgproc.threshold(hsvPlanes.get(0), thresholdImg, threshValue, 179.0, Imgproc.THRESH_BINARY_INV);
    else
-	Imgproc.threshold(hsvPlanes.get(0), thresholdImg, threshValue, 180.0, Imgproc.THRESH_BINARY);
+	Imgproc.threshold(hsvPlanes.get(0), thresholdImg, threshValue, 179.0, Imgproc.THRESH_BINARY);
 
 Now we apply a low pass filter (blur) with a 5x5 kernel mask to enhance the result:
 
@@ -195,7 +195,7 @@ After the closing we need to do a new binary threshold:
 
 .. code-block:: java
 
-    Imgproc.threshold(thresholdImg, thresholdImg, threshValue, 180.0, Imgproc.THRESH_BINARY);
+    Imgproc.threshold(thresholdImg, thresholdImg, threshValue, 179.0, Imgproc.THRESH_BINARY);
 
 At last, we can apply the image we've just obtained as a mask to the original frame:
 
