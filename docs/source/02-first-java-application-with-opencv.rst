@@ -41,7 +41,7 @@ Create a simple application
 Now add a new Class to your project by  right-clicking on your project's folder and go to ``New --> Class``.
 Write a name of your choice for both the package and the class then click on ``Finish``.
 Now we are ready to write the code of our first application.
-Let's start by define the ``main`` method:
+Let's start by defining the ``main`` method:
 
 .. code-block:: java
 
