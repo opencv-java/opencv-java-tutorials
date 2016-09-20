@@ -69,3 +69,7 @@ After adding the jar, extend it, select ``Native library location`` and press ``
 .. image:: _static/01 - 03.png
 
 Select ``External Folder...`` and browse to select the folder containing the OpenCV libraries (e.g., ``C:\opencv\build\java\x64`` under Windows).
+In case of OSX, create a soft link with .dylib extension for the .so file.
+``ln -s libopencv_java300.so libopencv_java300.dylib``
+
+And if you are using IntelliJ, you can specify the location of the library with th VM argument ``-Djava.library.path=/opencv/build/lib``.
