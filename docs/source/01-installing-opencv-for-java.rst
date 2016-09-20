@@ -21,9 +21,10 @@ First of all you should download the OpenCV library (version 3.0) from `here <ht
 Then, extract the downloaded OpenCV file in a location of your choice. Once you get the folder ``opencv`` put in wherever you prefer.
 Now the only two things that you will need are: the ``opencv-300.jar`` file located at ``\opencv\build\java`` and the ``opencv_java300.dll`` library located at ``\opencv\build\java\x64`` (for 64-bit systems) or ``\opencv\build\java\x86`` (for 32-bit systems).
 
-Install OpenCV 3.0 under Linux or Mac.
+Install OpenCV 3.0 under Linux or MacOS.
 -----------------------------------------
-Please, note: the following instructions are also useful if you want to compile OpenCV under Windows.
+Please, note: the following instructions are also useful if you want to compile OpenCV under Windows. Linux package management systems (`apt-get`, `yum`, etc.) and [Homebrew](http://brew.sh/) for MacOS *may* provide the needed version of the OpenCV library.
+
 As first step, download and install `CMake <http://www.cmake.org/download/>`_ and `Apache Ant <http://ant.apache.org/>`_, if you don't have any of these. Download the OpenCV library from the `its website <http://opencv.org/downloads.html>`_.
 Extract the downloaded OpenCV file in a location of your choice and open CMake ( cmake-gui ).
 Put the location of the extracted OpenCV library in the ``Where is the source code field`` (e.g., /opencv/) and insert the destination directory of your build in the ``Where to build the binaries`` field (e.g., /opencv/build).
@@ -34,6 +35,7 @@ At last, check the ``Grouped`` and ``Advanced`` checkboxes.
 Now press ``Configure`` and use the default compilers for ``Unix Makefiles``. Please, be sure to have installed a C/C++ compiler.
 In the ``Ungrouped Entries`` group, insert the path to the Apache Ant executable (e.g., ``/apache-ant-1.9.6/bin/ant``).
 In the ``BUILD`` group, unselect:
+
 * ``BUILD_PERF_TESTS``.
 * ``BUILD_SHARED_LIBRARY`` to make the Java bindings dynamic library all-sufficient.
 * ``BUILD_TESTS``.
