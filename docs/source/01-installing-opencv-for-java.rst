@@ -27,7 +27,7 @@ The quickest way to obtain OpenCV under macOS is to use `Homebrew <http://brew.s
 
 To do so, open the `Terminal` and execute:
 ``xcode-select --install``
-If MacOS ask you for installing such tools, proceed with the download and installation. Otherwise, continue with the OpenCV installation.
+If macOS asks for installing such tools, proceed with the download and installation. Otherwise, continue with the OpenCV installation.
 
 To install OpenCV (with Java support) through Homebrew, you need to add the *science* tap to Homebrew:
 ``brew tap homebrew/science``
