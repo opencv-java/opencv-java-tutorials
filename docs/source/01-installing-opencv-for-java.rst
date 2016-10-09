@@ -15,15 +15,28 @@ Install the latest Eclipse version.
 Download the latest Eclipse version at the `Eclipse Download page <https://www.eclipse.org/downloads/>`_ choosing the ``Eclipse IDE for Java Developers`` version (suggested).
 Extract the downloaded compressed file and put the resulting folder wherever you want to. You don't need to install anything. Alternatively, you can try the Eclipse installer.
 
-Install OpenCV 3.0 under Windows.
+Install OpenCV 3.x under Windows.
 ------------------------------------
-First of all you should download the OpenCV library (version 3.0) from `here <http://opencv.org/downloads.html>`_.
+First of all you should download the OpenCV library (version 3.x) from `here <http://opencv.org/downloads.html>`_.
 Then, extract the downloaded OpenCV file in a location of your choice. Once you get the folder ``opencv`` put in wherever you prefer.
-Now the only two things that you will need are: the ``opencv-300.jar`` file located at ``\opencv\build\java`` and the ``opencv_java300.dll`` library located at ``\opencv\build\java\x64`` (for 64-bit systems) or ``\opencv\build\java\x86`` (for 32-bit systems).
+Now the only two things that you will need are: the ``opencv-3xx.jar`` file located at ``\opencv\build\java`` and the ``opencv_java3xx.dll`` library located at ``\opencv\build\java\x64`` (for 64-bit systems) or ``\opencv\build\java\x86`` (for 32-bit systems). The `3xx` suffix of each file is a shortcut for the current OpenCV version, e.g., it will be `300` for OpenCV 3.0 and `310` for OpenCV 3.1. 
 
-Install OpenCV 3.0 under Linux or MacOS.
------------------------------------------
-Please, note: the following instructions are also useful if you want to compile OpenCV under Windows. Linux package management systems (`apt-get`, `yum`, etc.) and [Homebrew](http://brew.sh/) for MacOS *may* provide the needed version of the OpenCV library.
+Install OpenCV 3.x under macOS.
+---------------------------------
+The quickest way to obtain OpenCV under macOS is to use `Homebrew <http://brew.sh>`_. After installing Homebrew, you have to check whether the `XCode Command Line Tools` are already installed on your system. To do so, open the `Terminal` and execute:
+``xcode-select --install``
+If MacOS ask you for installing such tools, proceed with the download and installation. Otherwise, continue with the OpenCV installation.
+
+To install OpenCV (with Java support) through Homebrew, you need to add the *science* tap to Homebrew:
+``brew tap homebrew/science``
+and effectively install OpenCV:
+``brew install opencv3 --HEAD --with-contrib --with-java``
+
+After the installation of OpenCV, the needed jar file and the dylib library will be located at ``/usr/local/opt/opencv3/share/OpenCV/java/``. 
+
+Install OpenCV 3.x under Linux.
+-----------------------------------
+Please, note: the following instructions are also useful if you want to compile OpenCV under Windows or macOS. Linux package management systems (`apt-get`, `yum`, etc.) *may* provide the needed version of the OpenCV library.
 
 As first step, download and install `CMake <http://www.cmake.org/download/>`_ and `Apache Ant <http://ant.apache.org/>`_, if you don't have any of these. Download the OpenCV library from the `its website <http://opencv.org/downloads.html>`_.
 Extract the downloaded OpenCV file in a location of your choice and open CMake ( cmake-gui ).
@@ -55,7 +68,7 @@ Press ``Configure`` twice, and the CMake window should appear with a white backg
 
 Now open the terminal, go to the ``build`` folder of OpenCV and compile everything with the command: ``make -j``. Notice that the `-j` flag tells `make` to run in parallel with the maximum number of allowed job threads, which makes the build theoretically faster.
 Wait for the process to be completed...
-If everything went well you should have ``opencv-300.jar`` in the ``/opencv/build/bin`` directory and ``libopencv_java300.so`` in the ``/opencv/build/lib`` directory. This is everything you need.
+If everything went well you should have ``opencv-3xx.jar`` in the ``/opencv/build/bin`` directory and ``libopencv_java3xx.so`` in the ``/opencv/build/lib`` directory. The `3xx` suffix of each file is a shortcut for the current OpenCV version, e.g., it will be `300` for OpenCV 3.0 and `310` for OpenCV 3.1. This is everything you need.
 
 Set up OpenCV for Java in Eclipse
 ---------------------------------
@@ -65,13 +78,14 @@ Open Eclipse and select a workspace of your choice. Create a User Library, ready
 
 From the menu navigate under ``Java > Build Path > User Libraries`` and choose ``New...``.
 Enter a name for the library (e.g., opencv) and select the newly created user library.
-Choose ``Add External JARs...``, browse to select ``opencv-300.jar`` from your computer.
+Choose ``Add External JARs...``, browse to select ``opencv-3xx.jar`` from your computer.
 After adding the jar, extend it, select ``Native library location`` and press ``Edit...``.
 
 .. image:: _static/01 - 03.png
 
 Select ``External Folder...`` and browse to select the folder containing the OpenCV libraries (e.g., ``C:\opencv\build\java\x64`` under Windows).
-In case of OSX, create a soft link with .dylib extension for the .so file.
+
+In case of MacOS, if you installed OpenCV *without* Homebrew, you need to create a soft link with .dylib extension for the .so file. E.g., from the terminal, type:
 ``ln -s libopencv_java300.so libopencv_java300.dylib``
 
-And if you are using IntelliJ, you can specify the location of the library with th VM argument ``-Djava.library.path=/opencv/build/lib``.
+Finally, if you are using IntelliJ, you can specify the location of the library with the VM argument ``-Djava.library.path=/opencv/build/lib``.
