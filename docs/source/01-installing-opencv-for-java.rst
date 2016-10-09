@@ -8,7 +8,7 @@ As of OpenCV 2.4.4, OpenCV supports desktop Java development. This tutorial will
 
 Install the latest Java version
 --------------------------------
-Download the latest Java JDK at the `Oracle link <http://www.oracle.com/technetwork/java/javase/downloads/index.html>`_. Now you should be able to install the last Java JDK by open the file just downloaded.
+Download the latest Java JDK from the `Oracle <http://www.oracle.com/technetwork/java/javase/downloads/index.html>`_ website. Now you should be able to install the last Java JDK by open the file just downloaded.
 
 Install the latest Eclipse version
 -----------------------------------
@@ -31,6 +31,7 @@ If MacOS ask you for installing such tools, proceed with the download and instal
 
 To install OpenCV (with Java support) through Homebrew, you need to add the *science* tap to Homebrew:
 ``brew tap homebrew/science``
+
 and effectively install OpenCV:
 ``brew install opencv3 --HEAD --with-contrib --with-java``
 
