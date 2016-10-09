@@ -31,7 +31,6 @@ If MacOS ask you for installing such tools, proceed with the download and instal
 
 To install OpenCV (with Java support) through Homebrew, you need to add the *science* tap to Homebrew:
 ``brew tap homebrew/science``
-
 and effectively install OpenCV:
 ``brew install opencv3 --HEAD --with-contrib --with-java``
 
@@ -58,12 +57,13 @@ In the ``BUILD`` group, unselect:
 * ``BUILD_opencv_python``.
 
 In the ``CMAKE`` group, set to ``Debug`` (or ``Release``) the ``CMAKE_BUILD_TYPE``
+
 In the ``JAVA`` group:
-insert the Java AWT include path (e.g., ```/usr/lib/jvm/java-1.8.0/include/``)
-insert the Java AWT library path (e.g., ``/usr/lib/jvm/java-1.8.0/include/jawt.h``)
-insert the Java include path (e.g., ``/usr/lib/jvm/java-1.8.0/include/``)
-insert the alternative Java include path (e.g., ``/usr/lib/jvm/java-1.8.0/include/linux``)
-insert the JVM  library path (e.g., ``/usr/lib/jvm/java-1.8.0/include/jni.h``)
+* insert the Java AWT include path (e.g., ```/usr/lib/jvm/java-1.8.0/include/``)
+* insert the Java AWT library path (e.g., ``/usr/lib/jvm/java-1.8.0/include/jawt.h``)
+* insert the Java include path (e.g., ``/usr/lib/jvm/java-1.8.0/include/``)
+* insert the alternative Java include path (e.g., ``/usr/lib/jvm/java-1.8.0/include/linux``)
+* insert the JVM  library path (e.g., ``/usr/lib/jvm/java-1.8.0/include/jni.h``)
 
 Press ``Configure`` twice, and the CMake window should appear with a white background. Now, press ``Generate`` and close CMake.
 
