@@ -51,14 +51,15 @@ Now press ``Configure`` and use the default compilers for ``Unix Makefiles``. Pl
 In the ``Ungrouped Entries`` group, insert the path to the Apache Ant executable (e.g., ``/apache-ant-1.9.6/bin/ant``).
 In the ``BUILD`` group, unselect:
 
-* ``BUILD_PERF_TESTS``.
-* ``BUILD_SHARED_LIBRARY`` to make the Java bindings dynamic library all-sufficient.
-* ``BUILD_TESTS``.
-* ``BUILD_opencv_python``.
+* ``BUILD_PERF_TESTS``
+* ``BUILD_SHARED_LIBRARY`` to make the Java bindings dynamic library all-sufficient
+* ``BUILD_TESTS``
+* ``BUILD_opencv_python``
 
 In the ``CMAKE`` group, set to ``Debug`` (or ``Release``) the ``CMAKE_BUILD_TYPE``
 
 In the ``JAVA`` group:
+
 * insert the Java AWT include path (e.g., ```/usr/lib/jvm/java-1.8.0/include/``)
 * insert the Java AWT library path (e.g., ``/usr/lib/jvm/java-1.8.0/include/jawt.h``)
 * insert the Java include path (e.g., ``/usr/lib/jvm/java-1.8.0/include/``)
