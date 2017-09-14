@@ -12,12 +12,12 @@ Download the latest Java JDK from the `Oracle <http://www.oracle.com/technetwork
 
 Install the latest Eclipse version
 -----------------------------------
-Download the latest Eclipse version at the `Eclipse Download page <https://www.eclipse.org/downloads/>`_ choosing the ``Eclipse IDE for Java Developers`` version (suggested).
+Download the latest Eclipse version at the `Eclipse Download page <https://www.eclipse.org/downloads/eclipse-packages/>`_ choosing the ``Eclipse IDE for Java Developers`` version (suggested).
 Extract the downloaded compressed file and put the resulting folder wherever you want to. You don't need to install anything. Alternatively, you can try the Eclipse installer.
 
 Install OpenCV 3.x under Windows
 ------------------------------------
-First of all you should download the OpenCV library (version 3.x) from `here <http://opencv.org/downloads.html>`_.
+First of all you should download the OpenCV library (version 3.x) from `here <http://opencv.org/releases.html>`_.
 Then, extract the downloaded OpenCV file in a location of your choice. Once you get the folder ``opencv`` put in wherever you prefer.
 Now the only two things that you will need are: the ``opencv-3xx.jar`` file located at ``\opencv\build\java`` and the ``opencv_java3xx.dll`` library located at ``\opencv\build\java\x64`` (for 64-bit systems) or ``\opencv\build\java\x86`` (for 32-bit systems). The `3xx` suffix of each file is a shortcut for the current OpenCV version, e.g., it will be `300` for OpenCV 3.0 and `310` for OpenCV 3.1. 
 
@@ -32,7 +32,7 @@ If macOS asks for installing such tools, proceed with the download and installat
 To install OpenCV (with Java support) through Homebrew, you need to add the *science* tap to Homebrew:
 ``brew tap homebrew/science``
 and effectively install OpenCV:
-``brew install opencv3 --HEAD --with-contrib --with-java``
+``brew install opencv3 --with-contrib --with-java``
 
 After the installation of OpenCV, the needed jar file and the dylib library will be located at ``/usr/local/opt/opencv3/share/OpenCV/java/``. 
 
@@ -40,7 +40,7 @@ Install OpenCV 3.x under Linux
 ---------------------------------
 Please, note: the following instructions are also useful if you want to compile OpenCV under Windows or macOS. Linux package management systems (`apt-get`, `yum`, etc.) *may* provide the needed version of the OpenCV library.
 
-As first step, download and install `CMake <http://www.cmake.org/download/>`_ and `Apache Ant <http://ant.apache.org/>`_, if you don't have any of these. Download the OpenCV library from the `its website <http://opencv.org/downloads.html>`_.
+As first step, download and install `CMake <http://www.cmake.org/download/>`_ and `Apache Ant <http://ant.apache.org/>`_, if you don't have any of these. Download the OpenCV library from the `its website <http://opencv.org/releases.html>`_.
 Extract the downloaded OpenCV file in a location of your choice and open CMake ( cmake-gui ).
 Put the location of the extracted OpenCV library in the ``Where is the source code field`` (e.g., /opencv/) and insert the destination directory of your build in the ``Where to build the binaries`` field (e.g., /opencv/build).
 At last, check the ``Grouped`` and ``Advanced`` checkboxes.
