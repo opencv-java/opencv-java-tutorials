@@ -38,7 +38,7 @@ in
 then, after saving the file, you can effectively install OpenCV:
 ``brew install --build-from-source opencv``
 
-After the installation of OpenCV, the needed jar file and the dylib library will be located at ``/usr/local/Cellar/opencv/3.3.0/share/OpenCV/java/``. 
+After the installation of OpenCV, the needed jar file and the dylib library will be located at ``/usr/local/Cellar/opencv/3.x.x/share/OpenCV/java/``, e.g., ``/usr/local/Cellar/opencv/3.3.0_3/share/OpenCV/java/``.
 
 Install OpenCV 3.x under Linux
 ---------------------------------
