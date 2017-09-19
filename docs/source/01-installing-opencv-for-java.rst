@@ -29,10 +29,14 @@ To do so, open the `Terminal` and execute:
 ``xcode-select --install``
 If macOS asks for installing such tools, proceed with the download and installation. Otherwise, continue with the OpenCV installation.
 
-To install OpenCV (with Java support) through Homebrew, you need to add the *science* tap to Homebrew:
-``brew tap homebrew/science``
-and effectively install OpenCV:
-``brew install opencv3 --with-contrib --with-java``
+To install OpenCV (with Java support) through Homebrew, you need to edit the *opencv* formula in Homebrew, to add support for Java:
+``brew edit opencv``
+In the text editor that will open, change the line:
+```-DBUILD_opencv_java=OFF```
+in
+```-DBUILD_opencv_java=ON```
+then, after saving the file, you can effectively install OpenCV:
+``brew install --build-from-source opencv``
 
 After the installation of OpenCV, the needed jar file and the dylib library will be located at ``/usr/local/opt/opencv3/share/OpenCV/java/``. 
 
