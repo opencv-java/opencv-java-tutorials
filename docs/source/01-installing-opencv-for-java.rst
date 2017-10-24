@@ -8,7 +8,7 @@ As of OpenCV 2.4.4, OpenCV supports desktop Java development. This tutorial will
 
 Install the latest Java version
 --------------------------------
-Download the latest Java JDK from the `Oracle <http://www.oracle.com/technetwork/java/javase/downloads/index.html>`_ website. Now you should be able to install the last Java JDK by open the file just downloaded.
+Download the latest Java JDK from the `Oracle <http://www.oracle.com/technetwork/java/javase/downloads/index.html>`_ website. Now you should be able to install the last Java JDK by opening the file just downloaded.
 
 Install the latest Eclipse version
 -----------------------------------
@@ -47,7 +47,7 @@ Install OpenCV 3.x under Linux
 ---------------------------------
 Please, note: the following instructions are also useful if you want to compile OpenCV under Windows or macOS. Linux package management systems (`apt-get`, `yum`, etc.) *may* provide the needed version of the OpenCV library.
 
-As first step, download and install `CMake <http://www.cmake.org/download/>`_ and `Apache Ant <http://ant.apache.org/>`_, if you don't have any of these. Download the OpenCV library from the `its website <http://opencv.org/releases.html>`_.
+As first step, download and install `CMake <http://www.cmake.org/download/>`_ and `Apache Ant <http://ant.apache.org/>`_, if you don't have any of these. Download the OpenCV library from `its website <http://opencv.org/releases.html>`_.
 Extract the downloaded OpenCV file in a location of your choice and open CMake ( cmake-gui ).
 Put the location of the extracted OpenCV library in the ``Where is the source code field`` (e.g., /opencv/) and insert the destination directory of your build in the ``Where to build the binaries`` field (e.g., /opencv/build).
 At last, check the ``Grouped`` and ``Advanced`` checkboxes.
@@ -73,7 +73,7 @@ In the ``JAVA`` group:
 * insert the alternative Java include path (e.g., ``/usr/lib/jvm/java-1.8.0/include/linux``)
 * insert the JVM  library path (e.g., ``/usr/lib/jvm/java-1.8.0/include/jni.h``)
 
-Press ``Configure`` twice, and the CMake window should appear with a white background. Now, press ``Generate`` and close CMake.
+Press ``Configure`` twice, and the CMake window should appear with a white background. If not, fix the red lines and press ``Configure`` again. Now, press ``Generate`` and close CMake.
 
 .. image:: _static/01 - 01.png
 
