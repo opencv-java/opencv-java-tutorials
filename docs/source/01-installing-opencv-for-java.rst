@@ -13,13 +13,16 @@ Download the latest Java JDK from the `Oracle <http://www.oracle.com/technetwork
 Install the latest Eclipse version
 -----------------------------------
 Download the latest Eclipse version at the `Eclipse Download page <https://www.eclipse.org/downloads/eclipse-packages/>`_ choosing the ``Eclipse IDE for Java Developers`` version (suggested).
+
 Extract the downloaded compressed file and put the resulting folder wherever you want to. You don't need to install anything. Alternatively, you can try the Eclipse installer.
 
 Install OpenCV 3.x under Windows
 ------------------------------------
 First of all you should download the OpenCV library (version 3.x) from `here <http://opencv.org/releases.html>`_.
+
 Then, extract the downloaded OpenCV file in a location of your choice. Once you get the folder ``opencv`` put in wherever you prefer.
-Now the only two things that you will need are: the ``opencv-3xx.jar`` file located at ``\opencv\build\java`` and the ``opencv_java3xx.dll`` library located at ``\opencv\build\java\x64`` (for 64-bit systems) or ``\opencv\build\java\x86`` (for 32-bit systems). The `3xx` suffix of each file is a shortcut for the current OpenCV version, e.g., it will be `300` for OpenCV 3.0 and `310` for OpenCV 3.1. 
+
+Now the only two things that you will need are: the ``opencv-3xx.jar`` file located at ``\opencv\build\java`` and the ``opencv_java3xx.dll`` library located at ``\opencv\build\java\x64`` (for 64-bit systems) or ``\opencv\build\java\x86`` (for 32-bit systems). The `3xx` suffix of each file is a shortcut for the current OpenCV version, e.g., it will be `300` for OpenCV 3.0 and `330` for OpenCV 3.3. 
 
 Install OpenCV 3.x under macOS
 ---------------------------------
@@ -76,7 +79,7 @@ Press ``Configure`` twice, and the CMake window should appear with a white backg
 
 Now open the terminal, go to the ``build`` folder of OpenCV and compile everything with the command: ``make -j``. Notice that the `-j` flag tells `make` to run in parallel with the maximum number of allowed job threads, which makes the build theoretically faster.
 Wait for the process to be completed...
-If everything went well you should have ``opencv-3xx.jar`` in the ``/opencv/build/bin`` directory and ``libopencv_java3xx.so`` in the ``/opencv/build/lib`` directory. The `3xx` suffix of each file is a shortcut for the current OpenCV version, e.g., it will be `300` for OpenCV 3.0 and `310` for OpenCV 3.1. This is everything you need.
+If everything went well you should have ``opencv-3xx.jar`` in the ``/opencv/build/bin`` directory and ``libopencv_java3xx.so`` in the ``/opencv/build/lib`` directory. The `3xx` suffix of each file is a shortcut for the current OpenCV version, e.g., it will be `300` for OpenCV 3.0 and `330` for OpenCV 3.3. This is everything you need.
 
 Set up OpenCV for Java in Eclipse
 ----------------------------------
