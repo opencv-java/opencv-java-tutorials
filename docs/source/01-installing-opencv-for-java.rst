@@ -43,7 +43,7 @@ then, after saving the file, you can effectively install OpenCV:
 
 After the installation of OpenCV, the needed jar file and the dylib library will be located at ``/usr/local/Cellar/opencv/3.x.x/share/OpenCV/java/``, e.g., ``/usr/local/Cellar/opencv/3.3.1/share/OpenCV/java/``.
 
-Please, notice that this method doesn't work if you update OpenCV from a previous version: you need to uninstall OpenCV and install it again. Also, in some systems without Apache Ant (e.g., in `/usr/local/bin/ant`) Homebrew doesn't produce the needed files.
+Please, notice that this method doesn't work if you update OpenCV from a previous version: you need to uninstall OpenCV and install it again. Also, Homebrew doesn't produce the needed files in some systems without Apache Ant (e.g., in ``/usr/local/bin/ant``).
 
 Install OpenCV 3.x under Linux
 ---------------------------------
