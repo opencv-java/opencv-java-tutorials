@@ -41,7 +41,9 @@ in
 then, after saving the file, you can effectively install OpenCV:
 ``brew install --build-from-source opencv``
 
-After the installation of OpenCV, the needed jar file and the dylib library will be located at ``/usr/local/Cellar/opencv/3.x.x/share/OpenCV/java/``, e.g., ``/usr/local/Cellar/opencv/3.3.0_3/share/OpenCV/java/``.
+After the installation of OpenCV, the needed jar file and the dylib library will be located at ``/usr/local/Cellar/opencv/3.x.x/share/OpenCV/java/``, e.g., ``/usr/local/Cellar/opencv/3.3.1/share/OpenCV/java/``.
+
+Please, notice that this method doesn't work if you update OpenCV from a previous version: you need to uninstall OpenCV and install it again. Also, in some systems without Apache Ant (e.g., in `/usr/local/bin/ant`) Homebrew doesn't produce the needed files.
 
 Install OpenCV 3.x under Linux
 ---------------------------------
@@ -67,7 +69,7 @@ In the ``CMAKE`` group, set to ``Debug`` (or ``Release``) the ``CMAKE_BUILD_TYPE
 
 In the ``JAVA`` group:
 
-* insert the Java AWT include path (e.g., ```/usr/lib/jvm/java-1.8.0/include/``)
+* insert the Java AWT include path (e.g., ``/usr/lib/jvm/java-1.8.0/include/``)
 * insert the Java AWT library path (e.g., ``/usr/lib/jvm/java-1.8.0/include/jawt.h``)
 * insert the Java include path (e.g., ``/usr/lib/jvm/java-1.8.0/include/``)
 * insert the alternative Java include path (e.g., ``/usr/lib/jvm/java-1.8.0/include/linux``)
