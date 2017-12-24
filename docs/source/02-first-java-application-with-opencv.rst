@@ -69,7 +69,7 @@ Then we can define a new Mat.
 
 The ``Mat.eye`` represents an identity matrix, we set the dimensions of it (3x3) and the type of its elements.
 
-As you can notice, if you leave the code just like this, you will get some error; this is due to the fact that eclipse can't resolve some variables. You can locate your mouse cursor on the words that seems to be errors and waiting for a dialog box to pop up and click on the voice ``Import...``. If you do that for all the variables we have added to the code the following rows:
+As you can notice, if you leave the code just like this, you will get some error; this is due to the fact that eclipse can't resolve some variables. You can locate your mouse cursor on the words that seems to be errors(red underlined line) and wait for a dialog box to pop up and click on the voice ``Import...``. If you do that for all the variables we have added to the code the following rows:
 
 .. code-block:: java
 
