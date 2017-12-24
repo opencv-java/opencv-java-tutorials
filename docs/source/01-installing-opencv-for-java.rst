@@ -8,7 +8,7 @@ As of OpenCV 2.4.4, OpenCV supports desktop Java development. This tutorial will
 
 Install the latest Java version
 --------------------------------
-Download the latest Java JDK from the `Oracle <http://www.oracle.com/technetwork/java/javase/downloads/index.html>`_ website. Now you should be able to install the last Java JDK by opening the file just downloaded.
+Download the latest Java JDK from the `Oracle <http://www.oracle.com/technetwork/java/javase/downloads/index.html>`_ website. Now you should be able to install the latest Java JDK by opening the file just downloaded.
 
 Install the latest Eclipse version
 -----------------------------------
