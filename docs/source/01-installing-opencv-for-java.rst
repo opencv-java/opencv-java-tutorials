@@ -107,4 +107,4 @@ In case of MacOS, if you installed OpenCV *without* Homebrew, you need to create
 
 Set up OpenCV for Java in other IDEs (experimental)
 ---------------------------------------------------
-If you are using IntelliJ, you can specify the location of the library with the VM argument ``-Djava.library.path=/opencv/build/lib``.
+If you are using IntelliJ, you can specify the location of the library with the VM options argument in Run/Debug Configuration ``-Djava.library.path=/opencv/build/lib``.
