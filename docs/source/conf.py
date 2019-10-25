@@ -56,8 +56,8 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'OpenCV Java Tutorials'
-copyright = u'2014-2016, Luigi De Russis, Alberto Sacco'
-author = u'Luigi De Russis, Alberto Sacco'
+copyright = u'2014-2019, Luigi De Russis, Alberto Sacco'
+author = u'Luigi De Russis, Alberto Sacco, Suyash Joshi'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
