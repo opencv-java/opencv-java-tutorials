@@ -61,7 +61,7 @@ At last, check the ``Grouped`` and ``Advanced`` checkboxes.
 .. image:: _static/01-00.png
 
 Now press ``Configure`` and use the default compilers for ``Unix Makefiles``. Please, be sure to have installed a C/C++ compiler.
-In the ``Ungrouped Entries`` group, insert the path to the Apache Ant executable (e.g., ``/apache-ant-1.9.6/bin/ant``).
+In the ``Ungrouped Entries`` group, insert the path to the Apache Ant (Add entry with the ``ANT_EXECUTABLE`` name) executable (e.g., ``/apache-ant-1.9.6/bin/ant``).
 In the ``BUILD`` group, unselect:
 
 * ``BUILD_PERF_TESTS``
