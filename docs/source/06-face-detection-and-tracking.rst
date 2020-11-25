@@ -17,7 +17,7 @@ What we will do in this tutorial
 --------------------------------
 In this guide, we will:
  * Insert a checkbox to select the Haar Classifier, detect and track a face, and draw a green rectangle around the detected face.
- * Inesrt a checkbox to select the LBP Classifier, detect and track a face, and draw a green rectangle around the detected face.
+ * Insert a checkbox to select the LBP Classifier, detect and track a face, and draw a green rectangle around the detected face.
 
 Getting Started
 ---------------
