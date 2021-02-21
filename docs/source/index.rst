@@ -6,7 +6,7 @@
 Welcome to OpenCV Java Tutorials documentation!
 =================================================
 
-.. note:: These tutorials were last updated on 2019: they use OpenCV 3.x and Java 7-8. They are currently unmaintained: if you are interested in maintaining them, contact me on `GitHub <https://github.com/orgs/opencv-java/people>`.
+.. note:: These tutorials were last updated on 2019: they use OpenCV 3.x and Java 7-8. They are currently unmaintained: if you are interested in maintaining them, contact me on `GitHub <https://github.com/orgs/opencv-java/people>`_.
 
 Contents:
 
