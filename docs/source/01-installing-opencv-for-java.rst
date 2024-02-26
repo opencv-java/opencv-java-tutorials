@@ -111,3 +111,99 @@ If you are using IntelliJ, you can specify the location of the library with the 
 
 .. image:: _static/01 - 04.png
 .. image:: _static/01 - 05.png
+
+
+Set up OpenCV for Java with Gradle
+----------------------------------
+Install gradle in your system as described in `Gradle's Website  <https://gradle.org/install/>`_.
+
+Create a new directory
+
+.. code-block:: bash
+
+    mkdir opencv-with-gradle
+
+
+Generate a gradle project:
+
+.. code-block:: bash
+
+    cd opencv-with-gradle
+    gradle init
+
+
+Follow the init wizard. Example:
+
+.. code-block:: bash
+
+    Select type of project to generate:
+      ...
+      2: application
+    
+    Select implementation language:
+    ...
+      3: Java
+
+    Select build script DSL:
+    ...
+      2: Kotlin
+    
+    Select test framework:
+    ...
+      4: JUnit Jupiter
+    ...
+    BUILD SUCCESSFUL in 1m 43s
+    2 actionable tasks: 2 executed
+
+Edit the `build.gradle` file and add the OpenCV dependency in the `dependencies` block. Example:
+
+.. code-block:: bash
+    
+    dependencies {
+        ...
+        // This dependency is used by the application.
+        implementation 'com.google.guava:guava:28.2-jre'
+    
+        // Add the desired OpenCV version dependency
+        compile group: 'org.openpnp', name: 'opencv', version: '4.3.0-1'
+    
+        // Use JUnit Jupiter API for testing.
+        testImplementation 'org.junit.jupiter:junit-jupiter-api:5.6.0'
+        ...
+    }
+
+At this point the project is ready to be imported in your favorite IDE.
+
+You are also able to run your application directly via Gradle. During initialization, Gradle generated a main file, we can edit that file and test OpenCV integration. Example:
+
+*src/main/java/opencv/with/gradle/App.java*
+
+.. code-block:: java
+
+    package opencv.with.gradle;
+
+    import nu.pattern.OpenCV;
+    import org.opencv.core.CvType;
+    import org.opencv.core.Mat;
+
+    public class App {
+        public static void main(String[] args){
+            OpenCV.loadShared();
+            Mat mat = Mat.eye(3, 3, CvType.CV_8UC1);
+            System.out.println("mat = " + mat.dump());
+        }
+    }
+
+
+Run the application:
+
+.. code-block:: bash
+
+    gradle run
+
+    mat = [  1,   0,   0;
+        0,   1,   0;
+        0,   0,   1]
+    
+    BUILD SUCCESSFUL in 1s
+    2 actionable tasks: 2 executed
